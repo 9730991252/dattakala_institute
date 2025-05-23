@@ -115,3 +115,18 @@ class Student_received_Fee_Cash(models.Model):
     admin_verify_status = models.IntegerField(default=0) # 0 = not verify, 1 = verify
     verify_date = models.DateTimeField(null=True, blank=True)
     verify_by = models.ForeignKey(Admin_detail, on_delete=models.CASCADE, null=True, related_name='veryfy_by_student_received_fee')
+    
+class Expenses(models.Model):
+    batch = models.ForeignKey(Batch, on_delete=models.CASCADE)
+    amount = models.FloatField(default=0)
+    remark = models.CharField(max_length=500)
+    type = models.CharField(max_length=100)
+    added_by = models.ForeignKey(Clerk, on_delete=models.CASCADE, null=True, related_name='added_by_clerk')
+    from_bank = models.ForeignKey(Bank_Account, on_delete=models.CASCADE, null=True, blank=True, related_name='from_bank')
+    check_number = models.CharField(max_length=100,null=True)
+    added_date = models.DateTimeField(auto_now_add=True)
+    date = models.DateField(null=True)
+    updated_by = models.ForeignKey(Clerk, on_delete=models.CASCADE, null=True, related_name='updated_by_clerk')
+    updated_date = models.DateTimeField(null=True)
+    admin_verify_status = models.IntegerField(default=0) # 0 = not verify, 1 = verify
+    verify_date = models.DateTimeField(null=True, blank=True)

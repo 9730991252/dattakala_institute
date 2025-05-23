@@ -226,3 +226,75 @@ def student_fee_detail(request, id):
         return redirect('office_login')
     
     
+def office_expenses(request):
+    if request.session.has_key('office_mobile'):
+        mobile = request.session['office_mobile']
+        clerk = Clerk.objects.filter(mobile=mobile).first()
+        if not clerk:
+            return redirect('office_login')
+        if 'add_cash_expenses'in request.POST:
+            amount = request.POST.get('amount')
+            remark = request.POST.get('remark')
+            cdate = request.POST.get('date')
+            Expenses(
+                batch=clerk.batch,
+                amount=amount,
+                remark=remark,
+                type='cash',
+                added_by=clerk,
+                date=cdate
+            ).save()
+            messages.success(request, 'Cash Expenses Added Successfully!')
+            return redirect('office_expenses')
+        if 'add_bank_expenses'in request.POST:
+            amount = request.POST.get('amount')
+            remark = request.POST.get('remark')
+            from_bank = request.POST.get('from_bank')
+            check_number = request.POST.get('check_number')
+            bdate = request.POST.get('date')
+            Expenses(
+                batch=clerk.batch,
+                amount=amount,
+                remark=remark,
+                type='bank',
+                added_by=clerk,
+                from_bank_id=from_bank,
+                check_number=check_number,
+                date=bdate
+            ).save()
+            messages.success(request, 'Bank Expenses Added Successfully!')
+            return redirect('office_expenses')
+        if 'edit_cash_expenses' in request.POST:
+            exp_id = request.POST.get('id')
+            expense = Expenses.objects.get(id=exp_id)
+            expense.amount = request.POST.get('amount')
+            expense.remark = request.POST.get('remark')
+            expense.date = request.POST.get('date')
+            expense.updated_by = clerk
+            expense.updated_date = datetime.now()
+            expense.save()
+            messages.success(request, 'Cash Expense Updated Successfully!')
+            return redirect('office_expenses')
+
+        if 'edit_bank_expenses' in request.POST:
+            exp_id = request.POST.get('id')
+            expense = Expenses.objects.get(id=exp_id)
+            expense.amount = request.POST.get('amount')
+            expense.remark = request.POST.get('remark')
+            expense.date = request.POST.get('date')
+            expense.from_bank_id = request.POST.get('from_bank')
+            expense.check_number = request.POST.get('check_number')
+            expense.updated_by = clerk
+            expense.updated_date = datetime.now()
+            expense.save()
+            messages.success(request, 'Bank Expense Updated Successfully!')
+            return redirect('office_expenses')
+        context={
+            'clerk':clerk,
+            'expenses':Expenses.objects.filter(batch=clerk.batch),
+            'bank_accounts':Bank_Account.objects.filter(status=1),
+            'today_date':date.today()
+        }
+        return render(request, 'office_expenses.html', context)
+    else:
+        return redirect('office_login')

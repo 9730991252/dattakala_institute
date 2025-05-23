@@ -6,5 +6,6 @@ urlpatterns = [
     path('office_account_category/',    views.office_account_category, name='office_account_category'),
     path('student_fees/',    views.student_fees, name='student_fees'),
     path('student_fee_detail/<id>',    views.student_fee_detail, name='student_fee_detail'),
-     
+    path('office_expenses/', views.office_expenses, name='office_expenses'),
+
 ] 

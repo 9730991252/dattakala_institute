@@ -1,0 +1,121 @@
+<style>
+.facilities {
+    background: #f4f8fb;
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.facilities h2 {
+    font-size: 36px;
+    color: #2c3e50;
+    margin-bottom: 40px;
+    font-weight: bold;
+}
+
+.facility_container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 25px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.facility {
+    background: white;
+    width: 240px;
+    padding: 30px 20px;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.facility:hover {
+    transform: translateY(-8px);
+    box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.facility i {
+    font-size: 45px;
+    color: #007bff;
+    margin-bottom: 15px;
+}
+
+.facility p {
+    font-size: 16px;
+    font-weight: 500;
+    color: #2c3e50;
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .facility {
+        width: 200px;
+        padding: 20px;
+    }
+    .facility i {
+        font-size: 36px;
+    }
+    .facility p {
+        font-size: 15px;
+    }
+}
+
+</style>
+
+<div class="facilities">
+    <h2>Features & Facilities</h2>
+    <div class="facility_container">
+        <div class="facility">
+            <i class="fas fa-wifi"></i>
+            <p>Wi-Fi with 64 Mbps Leased Line</p>
+        </div>
+        <div class="facility">
+            <i class="fas fa-bed"></i>
+            <p>Separate Hostel for Boys & Girls</p>
+        </div>
+        <div class="facility">
+            <i class="fas fa-bus"></i>
+            <p>Transport Facility with 20 Buses</p>
+        </div>
+        <div class="facility">
+            <i class="fas fa-book"></i>
+            <p>Spacious 9000 Sq.ft Library</p>
+        </div>
+        <div class="facility">
+            <i class="fas fa-parking"></i>
+            <p>2 & 4 Wheeler Parking Zone</p>
+        </div>
+        <div class="facility">
+            <i class="fas fa-hospital"></i>
+            <p>Emergency Hospital Treatment</p>
+        </div>
+        <div class="facility">
+            <i class="fas fa-football-ball"></i>
+            <p>Multiple Sports Grounds & Equipment</p>
+        </div>
+        <div class="facility">
+            <i class="fas fa-store"></i>
+            <p>On-campus Shops for Essentials</p>
+        </div>
+        <div class="facility">
+            <i class="fas fa-utensils"></i>
+            <p>Monthly Mess for Students & Staff</p>
+        </div>
+        <div class="facility">
+            <i class="fas fa-coffee"></i>
+            <p>Cafeteria Open Daily 7AM–7PM</p>
+        </div>
+        <div class="facility">
+            <i class="fas fa-desktop"></i>
+            <p>Modern Computer & IT Center</p>
+        </div>
+        <div class="facility">
+            <i class="fas fa-theater-masks"></i>
+            <p>Cultural Center for Art & Heritage</p>
+        </div>
+    </div>
+</div>

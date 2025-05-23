@@ -1,0 +1,135 @@
+{% load static %}
+<style>
+/* NavBar Start */
+    .navbar{
+        position: sticky;
+        top: 0;
+        left: 0;
+        right: 0;
+        background-color: rgb(255, 255, 255) !important;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+        z-index: +645456132496;
+        display: flex !important;
+    }
+/* NavBar End */
+</style>
+<style>
+    .side_btn{
+        transform: rotate(90deg);
+        background-color: rgba(240, 248, 255, 0);
+        border: none;
+        font-size: 25px;
+        width: fit-content;
+    }
+    .href_btn{
+      background-color: #343a40;
+      border-radius: 10px;
+      color: white !important;
+
+    }
+    .href_btn:hover{
+        background-color: #0080ff;
+        border-radius: 10px;
+        color: white !important;
+    }
+    .at_page{
+      background-color: #0080ff;
+      border-radius: 10px;
+      color: white !important;
+      }
+      .offcanvas{
+        width: 20%;
+      }
+      @media screen and (max-width: 450px) {
+        .offcanvas {
+          width: 80%;
+        }
+        .navbar-brand {
+          font-size: 14px;
+        }
+        .side_btn {
+          font-size: 20px;
+        }
+        .href_btn {
+          font-size: 12px;
+          padding: 5px 10px;
+        }
+      }
+  </style>
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+
+    <div class="container-fluid">
+        <button class="btn side_btn form-control" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">|||</button>
+        <img src="{% static 'img/logo.jpg' %}" width="40px" style="border-radius: 50%;" alt="">
+      <a class="navbar-brand" style="font-weight: 700;" href="/#home"> &nbsp; DattaKala </a>
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        {{clerk.batch.name}}
+      </div>
+    </div>
+  </nav>
+
+
+
+  <div class="offcanvas offcanvas-start" style="z-index: +654654654645;" data-bs-scroll="true" tabindex="+1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">
+        <img src="{% static 'img/logo.jpg' %}" width="40px" style="border-radius: 50%;" alt="">
+      <a class="navbar-brand" style="font-weight: 700;" href="/#home"> &nbsp; DattaKala</a>
+      </h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      {{clerk.batch.name}}
+
+      <div><i class="fa-solid fa-house"></i> &nbsp; <a href="/office/office_home/" class="btn {% if request.path == '/office/office_home/' %} at_page {% endif %}">Home</a></div>
+
+      <div>
+        <i class="fa-solid fa-user"></i> &nbsp;
+            <button class="btn dropdown-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#department" aria-expanded="false" aria-controls="collapseExample">Department</button>
+
+            <div class="collapse" id="department" style="width: 90%;margin-left: auto;margin-right: 20px;">
+              <div class="card card-body">
+                <a href="/office/add_department/" class="btn href_btn {% if request.path == '/office/add_department/' %} at_page {% endif %}">Add Department & Branch</a>
+              </div>
+            </div>
+      </div>
+
+      <div>
+            <i class="fa-solid fa-user-tie"></i> &nbsp;
+            <button class="btn dropdown-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#student" aria-expanded="false" aria-controls="collapseExample">Student</button>
+
+            <div class="collapse" id="student" style="width: 90%;margin-left: auto;margin-right: 20px;">
+              <div class="card card-body">
+                <a href="/office/add_student/" class="btn href_btn {% if request.path == '/office/add_student/' %} at_page {% endif %}">Add & View Student</a>
+                <!-- <a href="/office/student_image/" class="btn href_btn {% if request.path == '/office/student_image/' %} at_page {% endif %} mt-2">Student Image</a> -->
+              </div>
+            </div>
+      </div>
+      <div>
+        <i class="fa-solid fa-indian-rupee-sign"></i>&nbsp;
+        <button class="btn dropdown-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#account" aria-expanded="false" aria-controls="collapseExample">Account</button>
+        
+        <div class="collapse" id="account" style="width: 90%;margin-left: auto;margin-right: 20px;">
+          <div class="card card-body">
+            <a href="/account/student_fees/" class="btn href_btn mt-2 {% if request.path == '/office/student_fees/' %} at_page {% endif %}">Student Fees</a>
+                <a href="/account/office_expenses/" class="btn href_btn mt-2 {% if request.path == '/office/office_expenses/' %} at_page {% endif %}">Expenses</a>
+                <a href="/account/office_cash_transfer/" class="btn href_btn mt-2 {% if request.path == '/office/office_cash_transfer/' %} at_page {% endif %}">Cash Transfer</a>
+                <a href="/account/office_account_category/" class="btn href_btn mt-2 {% if request.path == '/office/office_account_category/' %} at_page {% endif %}">Category</a>
+                <a href="/account/add_bank_account/" class="btn href_btn mt-2 {% if request.path == '/office/add_bank_account/' %} at_page {% endif %}">Add Bank Account</a>
+                <a href="/account/add_bank_opening_balance/" class="btn mt-2 href_btn {% if request.path == '/office/add_bank_opening_balance/' %} at_page {% endif %}">Add Bank Opening Balance</a>
+              </div>
+            </div>
+          </div>
+          <div>
+                <i class="fa-solid fa-square-poll-vertical"></i> &nbsp;
+                <button class="btn dropdown-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#report" aria-expanded="false" aria-controls="collapseExample">Report</button>
+
+                <div class="collapse" id="report" style="width: 90%;margin-left: auto;margin-right: 20px;">
+                  <div class="card card-body">
+                    <!-- <a href="/office/add_student/" class="btn href_btn {% if request.path == '/office/add_student/' %} at_page {% endif %}">Add & View Student</a> -->
+                    <!-- <a href="/office/student_image/" class="btn href_btn {% if request.path == '/office/student_image/' %} at_page {% endif %} mt-2">Student Image</a> -->
+                  </div>
+                </div>
+          </div>
+        </div>
+      </div>

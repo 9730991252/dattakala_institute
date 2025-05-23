@@ -1,0 +1,228 @@
+from dattakala_institute.includes import *
+
+# Create your views here.
+def add_bank_account(request):
+    if request.session.has_key('office_mobile'):
+        mobile = request.session['office_mobile']
+        clerk = Clerk.objects.filter(mobile=mobile).first()
+        if not clerk:
+            return redirect('office_login')
+        if 'Add_Bank_Account' in request.POST:
+            bank_name = request.POST.get('bank_name')
+            account_number = request.POST.get('account_number')
+            
+            Bank_Account(
+                added_by=clerk,
+                bank_name=bank_name,
+                account_number=account_number
+            ).save()
+            messages.success(request, 'Bank Account Added Successfully!')
+            return redirect('add_bank_account')
+        if 'edit_bank_account' in request.POST:
+            id = request.POST.get('id')
+            bank_name = request.POST.get('bank_name')
+            account_number = request.POST.get('account_number')
+            Bank_Account.objects.filter(id=id).update(
+                bank_name=bank_name,
+                account_number=account_number
+            )
+            messages.success(request, 'Bank Account Updated Successfully!')
+            return redirect('add_bank_account')
+        if 'active'in request.POST:
+            bank_id = request.POST.get('id')
+            bank = Bank_Account.objects.get(id=bank_id)
+            bank.status = 0
+            bank.save()
+            return redirect('add_bank_account')
+        if 'deactive'in request.POST:
+            bank_id = request.POST.get('id')
+            bank = Bank_Account.objects.get(id=bank_id)
+            bank.status = 1
+            bank.save()
+            return redirect('add_bank_account')
+        context={
+            'clerk': clerk,
+            'bank_accounts': Bank_Account.objects.filter(added_by=clerk)
+        }
+        return render(request, 'add_bank_account.html', context)
+    else:
+        return redirect('office_login')
+    
+def add_bank_opening_balance(request):
+    if request.session.has_key('office_mobile'):
+        mobile = request.session['office_mobile']
+        clerk = Clerk.objects.filter(mobile=mobile).first()
+        if not clerk:
+            return redirect('office_login')
+        if 'add_opening_balance' in request.POST:
+            account_id = request.POST.get('account_id')
+            amount = request.POST.get('amount')
+            if Bank_Account_Opening_Balance.objects.filter(account_id=account_id).exists():
+                messages.error(request, 'This account already has an opening balance!')
+            else:
+                Bank_Account_Opening_Balance.objects.create(
+                    account_id=account_id,
+                    opening_balance=amount,
+                    added_by=clerk
+                )
+                messages.success(request, 'Opening balance added successfully!')
+            return redirect('add_bank_opening_balance')
+        context={
+            'clerk':clerk,
+            'bank_accounts':Bank_Account.objects.filter(status=1),
+            'opening_balances':Bank_Account_Opening_Balance.objects.filter(),
+        }
+        return render(request, 'add_bank_opening_balance.html', context)
+    else:
+        return redirect('office_login')
+
+def office_account_category(request):
+    if request.session.has_key('office_mobile'):
+        mobile = request.session['office_mobile']
+        clerk = Clerk.objects.filter(mobile=mobile).first()
+        if not clerk:
+            return redirect('office_login')
+        if 'add_category'in request.POST:
+            name = request.POST.get('name')
+            Credit_Debit_category(
+                category_name=name,
+                added_by=clerk
+            ).save()
+            messages.success(request, 'Account Category Added Successfully!')
+            return redirect('office_account_category')
+        if 'edit_category'in request.POST:
+            name = request.POST.get('name')
+            id = request.POST.get('id')
+            Credit_Debit_category.objects.filter(id=id).update(category_name=name)
+            messages.success(request, 'Account Category Updated Successfully!')
+            return redirect('office_account_category')
+        if 'change_status'in request.POST:
+            id = request.POST.get('id')
+            c = Credit_Debit_category.objects.filter(id=id).first()
+            if c.status == 1:
+                c.status = 0
+            else:
+                c.status = 1
+            c.save() 
+            messages.success(request, 'Account Category Status Updated Successfully!')
+            return redirect('office_account_category')                    
+        context={
+            'clerk':clerk,
+            'category':Credit_Debit_category.objects.filter(added_by__batch=clerk.batch)
+        }
+        return render(request, 'office_account_category.html', context)
+    else:
+        return redirect('office_login')
+    
+def student_fees(request):
+    if request.session.has_key('office_mobile'):
+        mobile = request.session['office_mobile']
+        clerk = Clerk.objects.filter(mobile=mobile).first()
+        if not clerk:
+            return redirect('office_login')
+        context={
+            'clerk':clerk,
+        }
+        return render(request, 'student_fees.html', context)
+    else:
+        return redirect('office_login')
+    
+    
+@csrf_exempt
+def student_fee_detail(request, id):
+    if request.session.has_key('office_mobile'):
+        mobile = request.session['office_mobile']
+        clerk = Clerk.objects.filter(mobile=mobile).first()
+        if not clerk:
+            return redirect('office_login')
+        student = get_object_or_404(Student, id=id)
+        student_img = Student_Image.objects.filter(student=student).first()
+        cash_fee = Student_received_Fee_Cash.objects.filter(student=student, added_by__batch=clerk.batch)
+        bank_fee = Student_received_Fee_Bank.objects.filter(student=student, added_by__batch=clerk.batch)
+        paid_fee = int(cash_fee.aggregate(Sum('received_amount'))['received_amount__sum'] or 0) + int(bank_fee.aggregate(Sum('received_amount'))['received_amount__sum'] or 0)
+
+        if 'save_fee' in request.POST:
+            total_fee = request.POST.get('received_amount')
+            credit_debit_category = request.POST.get('credit_debit_category')
+            student_fee.objects.create(
+                batch=clerk.batch,
+                student=student,
+                added_by=clerk,
+                amount=total_fee,
+                credit_debit_category_id=credit_debit_category
+            )
+            messages.success(request, 'Total Fee Saved successfully')
+            return redirect('student_fee_detail', id=id)
+
+        # Save cash fee logic
+        if 'save_cash_fee' in request.POST:
+            cash_amount = request.POST.get('received_amount')
+            credit_debit_category = request.POST.get('credit_debit_category')
+            pdate = request.POST.get('date')
+            # Save cash fee to database (if model exists)
+            Student_received_Fee_Cash.objects.create(
+                student=student,
+                added_by=clerk,
+                received_amount=cash_amount,
+                paid_date=pdate,
+                credit_debit_category_id=credit_debit_category
+            )
+            messages.success(request, 'Cash Fee Saved successfully')
+            return redirect('student_fee_detail', id=id)
+        
+        # Save cash fee logic
+        if 'save_bank_fee' in request.POST:
+            bank = request.POST.get('bank')
+            received_amount = request.POST.get('received_amount')
+            pdate = request.POST.get('date')
+            utr_number = request.POST.get('utr_number')
+            credit_debit_category = request.POST.get('credit_debit_category')
+            
+            # Save cash fee to database (if model exists)
+            Student_received_Fee_Bank.objects.create(
+                student=student,
+                added_by=clerk,
+                received_amount=received_amount,
+                paid_date=pdate,
+                account_id=bank,
+                utr_number=utr_number,
+                credit_debit_category_id=credit_debit_category
+                
+            )
+            messages.success(request, 'Bank Fee Saved successfully')
+            return redirect('student_fee_detail', id=id)
+        total_fee = student_fee.objects.filter(student=student, batch=clerk.batch).aggregate(Sum('amount'))['amount__sum'] or 0
+        print('total_fee', total_fee)
+        student_fee_detail = []
+        for cdt in Credit_Debit_category.objects.filter(status=1):
+            detail_total_fee = student_fee.objects.filter(credit_debit_category=cdt, student=student).aggregate(Sum('amount'))['amount__sum'] or 0
+            detail_paid_fee = Student_received_Fee_Cash.objects.filter(credit_debit_category=cdt, student=student).aggregate(Sum('received_amount'))['received_amount__sum'] or 0
+            detail_paid_fee += Student_received_Fee_Bank.objects.filter(credit_debit_category=cdt, student=student).aggregate(Sum('received_amount'))['received_amount__sum'] or 0
+            if detail_total_fee >0:
+                student_fee_detail.append({
+                    'category': cdt,
+                    'total_fee': detail_total_fee,
+                    'detail_paid_fee': detail_paid_fee,
+                    'remaining_fee': detail_total_fee - detail_paid_fee
+                })
+
+        context = {
+            'student_fee_detail': student_fee_detail,
+            'clerk': clerk,
+            'student': student,
+            'student_img': student_img,
+            'today_date':date.today(),
+            'cash_fee':cash_fee,
+            'bank_fee':bank_fee,
+            'paid_fee':paid_fee,
+            'remaining_fee':int(total_fee)-int(paid_fee),
+            'accounts':Bank_Account.objects.filter(status=1),
+            'total_fee': total_fee,
+            'credit_debit_category': Credit_Debit_category.objects.filter(status=1),
+            'student_fee': student_fee.objects.filter(student=student, batch=clerk.batch),
+        }
+        return render(request, 'student_fee_detail.html', context)
+    else:
+        return redirect('office_login')
+    
+    

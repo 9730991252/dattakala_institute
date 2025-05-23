@@ -5,20 +5,20 @@ test-1234567890
 _______________________________________
 
 root
-cd received_institute
+cd dattakala_institute
 git pull
 source venv/bin/activate
 python3 manage.py makemigrations
 python3 manage.py migrate
 systemctl daemon-reload
-systemctl restart received_institute.com.gunicorn
+systemctl restart dattakala_institute.com.gunicorn
 exit
  
 root
-cd received_institute
+cd dattakala_institute
 git pull
 systemctl daemon-reload
-systemctl restart received_institute.com.gunicorn
+systemctl restart dattakala_institute.com.gunicorn
 exit
 
 
@@ -26,11 +26,11 @@ exit
 _______________________________________
 
 
-git clone https://github.com/9730991252/received_institute.git
+git clone https://github.com/9730991252/dattakala_institute.git
 
 --------------------------------------
 
-cd received_institute
+cd dattakala_institute
 _______________________________________
 ********** Create Virtual env *****
 
@@ -71,15 +71,15 @@ Example:-  nano /etc/systemd/system/crenta.in.gunicorn.socket
 
 cd  /etc/systemd/system/
 
- nano received_institute.com.gunicorn.socket
+ nano dattakala_institute.com.gunicorn.socket
 
 
 
 [Unit]
-Description=received_institute.com.gunicorn socket
+Description=dattakala_institute.com.gunicorn socket
 
 [Socket]
-ListenStream=/run/received_institute.com.gunicorn.sock
+ListenStream=/run/dattakala_institute.com.gunicorn.sock
 
 [Install]
 WantedBy=sockets.target
@@ -91,50 +91,50 @@ Example:-  nano /etc/systemd/system/narayaniorder.com.gunicorn.service
 
 cd  /etc/systemd/system/
 
- nano received_institute.com.gunicorn.service
+ nano dattakala_institute.com.gunicorn.service
 
 
 [Unit]
-Description=received_institute.com.gunicorn daemon
-Requires=received_institute.com.gunicorn.socket
+Description=dattakala_institute.com.gunicorn daemon
+Requires=dattakala_institute.com.gunicorn.socket
 After=network.target
 
 [Service]
 User=root
 Group=root
-WorkingDirectory=/root/received_institute
-ExecStart=/root/received_institute/venv/bin/gunicorn \
+WorkingDirectory=/root/dattakala_institute
+ExecStart=/root/dattakala_institute/venv/bin/gunicorn \
           --access-logfile - \
           --workers 3 \
-          --bind unix:/run/received_institute.com.gunicorn.sock \
-          received_institute.wsgi:application
+          --bind unix:/run/dattakala_institute.com.gunicorn.sock \
+          dattakala_institute.wsgi:application
 
 [Install]
 WantedBy=multi-user.target
 
 ----------------------------------------------------------------
- systemctl start received_institute.com.gunicorn.socket
+ systemctl start dattakala_institute.com.gunicorn.socket
 
- systemctl start received_institute.com.gunicorn.service
+ systemctl start dattakala_institute.com.gunicorn.service
 
 
 -----------------------------------------------------------------
 
- systemctl enable received_institute.com.gunicorn.socket
+ systemctl enable dattakala_institute.com.gunicorn.socket
 
- systemctl enable received_institute.com.gunicorn.service
+ systemctl enable dattakala_institute.com.gunicorn.service
 
 
 -----------------------------------------------------------------------
 
- systemctl status received_institute.com.gunicorn.socket
+ systemctl status dattakala_institute.com.gunicorn.socket
 
- systemctl status received_institute.com.gunicorn.service
+ systemctl status dattakala_institute.com.gunicorn.service
 
 -------------------------------------------
 
  systemctl daemon-reload
- systemctl restart received_institute.com.gunicorn
+ systemctl restart dattakala_institute.com.gunicorn
 
 
 
@@ -149,7 +149,7 @@ Example:-  nano /etc/nginx/sites-available/crenta.in
 
 cd /etc/nginx/sites-available
 
- nano received_institute.com
+ nano dattakala_institute.com
 
 
 
@@ -167,7 +167,7 @@ server{
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_pass http://unix:/run/received_institute.com.gunicorn.sock;
+        proxy_pass http://unix:/run/dattakala_institute.com.gunicorn.sock;
     }    
 }
 
@@ -176,7 +176,7 @@ server{
 
 ########## Enable Virtual Host or Create Symbolic Link of Virtual Host File ########
 
- ln -s /etc/nginx/sites-available/received_institute.com /etc/nginx/sites-enabled/received_institute.com
+ ln -s /etc/nginx/sites-available/dattakala_institute.com /etc/nginx/sites-enabled/dattakala_institute.com
 
 
 %%%%%%%%%%%%%%%%%%%%% Check Configuration is Correct or Not %%%%%
@@ -191,14 +191,14 @@ server{
 ********** restart ******
 
  systemctl daemon-reload
- systemctl restart received_institute.com.gunicorn
+ systemctl restart dattakala_institute.com.gunicorn
 
 
 --------------------------------------- ssl ------------------
 
  certbot --nginx
                                                                                                                     
- certbot --nginx -d navbharatkarmala.com -d www.navbharatkarmala.com                                                                                                                                          
+ certbot --nginx -d dattakala.com -d www.dattakala.com                                                                                                                                          
 
 
 

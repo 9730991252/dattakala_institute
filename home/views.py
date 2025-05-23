@@ -8,26 +8,6 @@ from django.db.models import *
 from django.db.models import Avg, Sum, Min, Max
 from django.db.models import F
 # Create your views here.
-def check_new_visitor(request):
-
-    v = 1
-    if request.session.has_key('admin_mobile'):
-        v = 0
-    if request.session.has_key('school_mobile'):
-        v = 0
-    if request.session.has_key('parent_mobile'):
-        v = 0
-    if request.session.has_key('teacher_mobile'):
-        v = 0
-    if not web_visitor.objects.all().first():
-        web_visitor.objects.create(
-            count=v
-        )
-    else:
-        web_visitor.objects.all().update(
-            count=F('count') + v
-        )
-    return web_visitor.objects.all().first().count
 
 # def check_clerk_available_amount(request, batch):
 #     clerks = []
@@ -59,7 +39,6 @@ def check_new_visitor(request):
 
 def index(request):
     context = {
-        'visitor': check_new_visitor(request),
     }
     return render(request, 'index.html', context)
 

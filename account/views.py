@@ -113,7 +113,7 @@ def office_account_category(request):
         return render(request, 'office_account_category.html', context)
     else:
         return redirect('office_login')
-    
+
 def student_fees(request):
     if request.session.has_key('office_mobile'):
         mobile = request.session['office_mobile']
@@ -296,5 +296,53 @@ def office_expenses(request):
             'today_date':date.today()
         }
         return render(request, 'office_expenses.html', context)
+    else:
+        return redirect('office_login')
+    
+def hostel_fee(request):
+    if request.session.has_key('office_mobile'):
+        mobile = request.session['office_mobile']
+        clerk = Clerk.objects.filter(mobile=mobile).first()
+        if not clerk:
+            return redirect('office_login')
+        if 'add_hostel_fee' in request.POST:
+            amount = request.POST.get('amount')
+            installment_name = request.POST.get('installment_name')
+            Hostel_Fee_installment.objects.create(
+                batch=clerk.batch,
+                amount=amount,
+                installment_name=installment_name,
+                added_by=clerk
+            )
+            messages.success(request, 'Hostel Fee added successfully!')
+            return redirect('hostel_fee')
+        if 'edit_hostel_fee' in request.POST:
+            id = request.POST.get('hostel_fee_id')
+            amount = request.POST.get('amount')
+            installment_name = request.POST.get('installment_name')
+            hostel_fee = Hostel_Fee_installment.objects.filter(id=id).first()
+            if hostel_fee:
+                hostel_fee.amount = amount
+                hostel_fee.installment_name = installment_name
+                hostel_fee.save()
+                messages.success(request, 'Hostel Fee updated successfully!')
+            return redirect('hostel_fee')
+        if 'change_status' in request.POST:
+            hostel_fee_id = request.POST.get('hostel_fee_id')
+            hostel_fee = Hostel_Fee_installment.objects.filter(id=hostel_fee_id).first()
+            if hostel_fee: 
+                if hostel_fee.status == 1:
+                    hostel_fee.status = 0
+                    messages.success(request, 'Hostel Fee deactivated successfully!')
+                else:
+                    hostel_fee.status = 1
+                    messages.success(request, 'Hostel Fee activated successfully!')
+                hostel_fee.save()
+            return redirect('hostel_fee')
+        context={
+            'clerk':clerk,
+            'hostel_fees':Hostel_Fee_installment.objects.filter(batch=clerk.batch),
+        }
+        return render(request, 'hostel_fee.html', context)
     else:
         return redirect('office_login')

@@ -16,9 +16,9 @@
         <div class="col-sm-2">
             <div style="display: flex;flex-direction: column;gap: 10px;">
                 <button class="btn btn-outline-primary" onclick="fetch_basic_details()">Basic Details</button>
-                <button class="btn btn-outline-primary">Parent Details</button>
-                <button class="btn btn-outline-primary">College Details</button>
-                <button class="btn btn-outline-primary">Fee Details</button>
+                <button class="btn btn-outline-primary" onclick="fetch_parent_details()">Parent Details</button>
+                <button class="btn btn-outline-primary" onclick="fetch_college_details()">College Details</button>
+                <button class="btn btn-outline-primary" onclick="fetch_fee_details()">Fee Details</button>
             </div>
         </div>
         <div class="col-sm-10">
@@ -32,9 +32,35 @@
 </div>
 
 <script>
+
     function fetch_basic_details(){
         document.getElementById('details_result').innerHTML = `{% include 'office/student_basic_detail_form.html' %}`
     }
+    function fetch_parent_details(){
+        document.getElementById('details_result').innerHTML = `{% include 'office/student_basic_parent_form.html' %}`
+    }
 </script>
 
+<script>
+        function fetch_college_details(){
+        document.getElementById('details_result').innerHTML = `{% include 'office/student_college_detail_form.html' %}`
+    }
+    function fetch_fee_details(){
+        document.getElementById('details_result').innerHTML = `{% include 'office/student_fee_detail_form.html' %}`
+    }
+</script>
+<script>
+function get_college_branch(id) {
+    $.ajax({
+        url: "{% url 'get_college_branch' %}",
+        method: "GET",
+        data:{
+            c_id:id,
+        },
+        success: function(res){
+            document.getElementById('branch').innerHTML = res.t
+        }
+        })    
+}
+</script>
 {% endblock content %}

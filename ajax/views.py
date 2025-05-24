@@ -25,6 +25,16 @@ def check_student_aadhaar(request):
 
     return JsonResponse({'student_id': student_id, 'return_status': return_status})
 
+def get_college_branch(request):
+    if request.method == 'GET':
+        c_id = request.GET['c_id']
+        branches = Branch.objects.filter(college__id=c_id, status=1)
+        context = {
+            'branches': branches
+        }
+        t = render_to_string('get_college_branch.html', context)
+    return JsonResponse({'t': t})
+
 def search_student_for_fees(request):
     if request.method == 'GET':
         words = request.GET['words']

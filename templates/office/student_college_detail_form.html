@@ -1,0 +1,91 @@
+{% load static %}
+<style>
+  form {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 32px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    transition: transform 0.3s ease-in-out;
+  }
+
+  form div {
+    margin-bottom: 20px;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 15px;
+    color: #444;
+  }
+
+  input[type="text"],
+  input[type="date"],
+  input[type="number"],
+  textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.5px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    background-color: #fafafa;
+  }
+
+  input:focus, textarea:focus {
+    border-color: #6c63ff;
+    box-shadow: 0 0 6px rgba(108, 99, 255, 0.2);
+    outline: none;
+    background-color: #fff;
+  }
+
+  .submit_btn{
+    width: 100%;
+    padding: 14px;
+    background-color: #444;
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+  }
+
+  button:hover {
+    background-color: #333;
+    transform: translateY(-1.5px);
+  }
+</style>
+
+<form method="POST" onsubmit="document.getElementById('loader').style.display = 'unset'; document.getElementById('submit_college_details').style.display = 'none'">
+    <div>
+        <select class="form-control" name="college_id" onchange="get_college_branch(this.value)" required>
+            <option value="">Select College</option>
+            {% for c in colleges %}
+                <option value="{{c.id}}" {% if c == student_college_details.college %} selected {% endif %}>{{c.name}}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div>
+        <select class="form-control" name="branch_id" id="branch" required>
+            <option value="">Select College Branch</option>
+            <option value="{{student_college_details.branch.id}}" selected>{{student_college_details.branch.name}}</option>
+        </select>
+    </div>
+    <div>
+        <select class="form-control" name="year_id" required>
+            <option value="">Select Year</option>
+            {% for c in years %}
+                <option value="{{c.id}}" {% if c == student_college_details.year %} selected {% endif %}>{{c.name}}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+  <img src='{% static "img/loader.gif" %}' id="loader" style="display: none; width: 50px; margin: 0 auto;">
+  <button type="submit"  class="submit_btn" id="submit_college_details"  name="submit_college_details">Submit</button>
+</form>
+

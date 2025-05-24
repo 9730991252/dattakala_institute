@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% block head %}
+{% endblock head %}
+
+{% block content %}
+{% load static %}
+{% include 'office/office_navbar.html' %}
+{% include 'alert.html' %}
+
+<style>
+  .modal { margin-top: 50px; }
+  .spinner-border { display: none; }
+  table {
+    width: 80%;
+    border-collapse: collapse;
+    margin: 40px auto;
+  }
+  tr:nth-of-type(odd) { background: #eee; }
+  th {
+    background: #2c3e50;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+  }
+  td, th {
+    padding: 10px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+  }
+</style>
+
+<div class="container">
+  <!-- Add Hostel Fee Button -->
+  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddFeeModal">
+    Add Hostel Fee
+  </button>
+
+  <!-- Add Modal -->
+  <div class="modal fade" id="AddFeeModal" tabindex="-1" aria-labelledby="AddFeeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form method="POST">
+          {% csrf_token %}
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="AddFeeModalLabel">Add Hostel Fee</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="amount">Amount</label>
+              <input type="number" name="amount" class="form-control" placeholder="Enter amount">
+            </div>
+            <div class="mb-3">
+              <label for="installment_name">Installment Name</label>
+              <input type="text" name="installment_name" class="form-control" placeholder="Installment name">
+            </div>
+            <div class="spinner-border" role="status" id="addSpinner"></div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" name="add_hostel_fee" class="btn btn-success" onclick="this.style.display='none'; document.getElementById('addSpinner').style.display='inline-block';">Add</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fee Table -->
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Installment</th>
+        <th>Amount</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for fee in hostel_fees %}
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ fee.installment_name }}</td>
+        <td>₹{{ fee.amount }}</td>
+        <td style="display: flex; gap: 5px;">
+          <!-- Edit Button -->
+          <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#EditFeeModal{{ fee.id }}">Edit</button>
+
+          <!-- Status Toggle Form -->
+          <form method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="hostel_fee_id" value="{{ fee.id }}">
+            {% if fee.status == 0 %}
+              <button class="btn btn-danger btn-sm" type="submit" name="change_status">Deactivate</button>
+            {% else %}
+              <button class="btn btn-success btn-sm" type="submit" name="change_status">Activate</button>
+            {% endif %}
+          </form>
+        </td>
+      </tr>
+
+      <!-- Edit Modal -->
+      <div class="modal fade" id="EditFeeModal{{ fee.id }}" tabindex="-1" aria-labelledby="EditFeeModalLabel{{ fee.id }}" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <form method="POST">
+              {% csrf_token %}
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="EditFeeModalLabel{{ fee.id }}">Edit Hostel Fee</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <input type="hidden" name="hostel_fee_id" value="{{ fee.id }}">
+                <div class="mb-3">
+                  <label>Amount</label>
+                  <input type="number" name="amount" class="form-control" value="{{ fee.amount }}">
+                </div>
+                <div class="mb-3">
+                  <label>Installment Name</label>
+                  <input type="text" name="installment_name" class="form-control" value="{{ fee.installment_name }}">
+                </div>
+                <div class="spinner-border" role="status" id="editSpinner{{ fee.id }}"></div>
+              </div>
+              <div class="modal-footer">
+                <button type="submit" name="edit_hostel_fee" class="btn btn-warning" onclick="this.style.display='none'; document.getElementById('editSpinner{{ fee.id }}').style.display='inline-block';">Save</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock content %}

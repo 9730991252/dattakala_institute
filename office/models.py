@@ -24,11 +24,24 @@ class Clerk(models.Model):
     secret_pin = models.IntegerField()
     status = models.IntegerField(default=1)
     
-class Department(models.Model):
-    batch = models.ForeignKey(Batch, on_delete=models.CASCADE, related_name='departments')
+class College(models.Model):
+    batch = models.ForeignKey(Batch, on_delete=models.CASCADE, related_name='colleges')
     name = models.CharField(max_length=100, unique=True)
     status = models.IntegerField(default=1)
-    added_by = models.ForeignKey(Clerk, on_delete=models.CASCADE, related_name='added_departments')
+    added_by = models.ForeignKey(Clerk, on_delete=models.CASCADE, related_name='added_colleges')
+    
+class Branch(models.Model):
+    batch = models.ForeignKey(Batch, on_delete=models.CASCADE, related_name='branches')
+    college = models.ForeignKey(College, on_delete=models.CASCADE, related_name='branches')
+    name = models.CharField(max_length=100)
+    status = models.IntegerField(default=1)
+    added_by = models.ForeignKey(Clerk, on_delete=models.CASCADE, related_name='added_branches')
+    
+class Year(models.Model):
+    batch = models.ForeignKey(Batch, on_delete=models.CASCADE, related_name='add_years')
+    name = models.CharField(max_length=100)
+    status = models.IntegerField(default=1)
+    added_by = models.ForeignKey(Clerk, on_delete=models.CASCADE, related_name='added_years')
     
 GENDER_CHOICES = (
     ('MALE', "MALE"),
@@ -48,7 +61,19 @@ class Student(models.Model):
     edit_status = models.IntegerField(default=1)
     tocken = models.CharField(max_length=1000, null=True, blank=True)
     date_of_birth = models.DateField(null=True)
-    
+    father_name = models.CharField(max_length=100, null=True)
+    mother_name = models.CharField(max_length=100, null=True)
+    parent_mobile = models.IntegerField(null=True)
+
+class Student_college_detail(models.Model):
+    batch = models.ForeignKey(Batch, on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    college = models.ForeignKey(College, on_delete=models.CASCADE)
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
+    year = models.ForeignKey(Year, on_delete=models.CASCADE)
+    added_by = models.ForeignKey(Clerk, on_delete=models.CASCADE, null=True)
+    added_date = models.DateTimeField(auto_now_add=True)
+
 class Bank_Account(models.Model):
     added_by = models.ForeignKey(Clerk, on_delete=models.CASCADE, null=True)
     account_number = models.CharField(max_length=100, null=True)
@@ -130,3 +155,17 @@ class Expenses(models.Model):
     updated_date = models.DateTimeField(null=True)
     admin_verify_status = models.IntegerField(default=0) # 0 = not verify, 1 = verify
     verify_date = models.DateTimeField(null=True, blank=True)
+    
+class Hostel_Fee_installment(models.Model):
+    batch = models.ForeignKey(Batch, on_delete=models.CASCADE)
+    amount = models.FloatField(default=0)
+    installment_name = models.CharField(max_length=100)
+    added_by = models.ForeignKey(Clerk, on_delete=models.CASCADE, null=True)
+    added_date = models.DateTimeField(auto_now_add=True)
+    status = models.IntegerField(default=1)
+    
+class Student_Hostel_Fee(models.Model):
+    batch = models.ForeignKey(Batch, on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    hostel_fee = models.ForeignKey(Hostel_Fee_installment, on_delete=models.CASCADE)
+    added_by = models.ForeignKey(Clerk, on_delete=models.CASCADE, null=True)

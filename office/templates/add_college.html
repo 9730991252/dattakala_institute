@@ -37,17 +37,17 @@
 </style>
 
 <div class="container">
-  <!-- Add Department Button -->
-  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Add_department">
-    Add Department & Branch
+  <!-- Add college Button -->
+  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Add_college">
+    Add college
   </button>
 
   <!-- Add Modal -->
-  <div class="modal fade" id="Add_department" tabindex="-1" aria-labelledby="AddModalLabel" aria-hidden="true">
+  <div class="modal fade" id="Add_college" tabindex="-1" aria-labelledby="AddModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="AddModalLabel">Add Department & Branch</h1>
+          <h1 class="modal-title fs-5" id="AddModalLabel">Add College</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <form method="POST">
@@ -55,12 +55,12 @@
           <div class="modal-body">
             <div class="mb-3">
               <label for="name">Name</label>
-              <input type="text" name="name" value="{{ return_name }}" id="name" class="form-control" placeholder="Enter Department Name with Branch">
+              <input type="text" name="name" value="{{ return_name }}" id="name" class="form-control" placeholder="Enter college Name">
             </div>
             <div class="spinner-border" role="status" id="addSpinner"></div>
           </div>
           <div class="modal-footer">
-              <button type="submit" name="add_department" class="btn btn-danger" onclick="this.style.display='none'; document.getElementById('addSpinner').style.display='inline-block';">
+              <button type="submit" name="add_college" class="btn btn-danger" onclick="this.style.display='none'; document.getElementById('addSpinner').style.display='inline-block';">
                   Add
                 </button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -70,30 +70,30 @@
     </div>
   </div>
 
-  <!-- Department Table -->
+  <!-- college Table -->
   <table>
     <thead>
       <tr>
         <th>ID</th>
-        <th>Department Name & Branch</th>
+        <th>College Name</th>
         <th>Actions</th>
       </tr>
     </thead>
     <tbody>
-      {% for t in departments %}
+      {% for t in colleges %}
       <tr>
         <td>{{ forloop.counter }}</td>
         <td>{{ t.name }}</td>
         <td style="display: flex; gap: 5px;">
           <!-- Edit Button -->
-          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Edit_department{{ t.id }}">
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Edit_college{{ t.id }}">
             Edit
           </button>
 
           <!-- Status Form -->
           <form method="POST">
             {% csrf_token %}
-            <input type="hidden" name="department_id" value="{{ t.id }}">
+            <input type="hidden" name="college_id" value="{{ t.id }}">
             {% if t.status == 1 %}
               <button class="btn btn-success" type="submit" name="change_status">Active</button>
             {% else %}
@@ -104,26 +104,26 @@
       </tr>
 
       <!-- Edit Modal -->
-      <div class="modal fade" id="Edit_department{{ t.id }}" tabindex="-1" aria-labelledby="EditModalLabel{{ t.id }}" aria-hidden="true">
+      <div class="modal fade" id="Edit_college{{ t.id }}" tabindex="-1" aria-labelledby="EditModalLabel{{ t.id }}" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <h1 class="modal-title fs-5" id="EditModalLabel{{ t.id }}">Edit Department</h1>
+              <h1 class="modal-title fs-5" id="EditModalLabel{{ t.id }}">Edit college</h1>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form method="POST">
               {% csrf_token %}
               <div class="modal-body">
-                <input type="hidden" name="department_id" value="{{ t.id }}">
+                <input type="hidden" name="college_id" value="{{ t.id }}">
                 <div class="mb-3">
                   <label for="name{{ t.id }}">Name</label>
-                  <input type="text" name="name" id="name{{ t.id }}" value="{{ t.name }}" class="form-control" placeholder="Enter Department Name">
+                  <input type="text" name="name" id="name{{ t.id }}" value="{{ t.name }}" class="form-control" placeholder="Enter college Name">
                 </div>
                 <div class="spinner-border" role="status" id="editSpinner{{ t.id }}"></div>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" name="edit_department" class="btn btn-danger" onclick="this.style.display='none'; document.getElementById('editSpinner{{ t.id }}').style.display='inline-block';">
+                <button type="submit" name="edit_college" class="btn btn-danger" onclick="this.style.display='none'; document.getElementById('editSpinner{{ t.id }}').style.display='inline-block';">
                   Save
                 </button>
               </div>

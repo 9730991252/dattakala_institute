@@ -1,7 +1,6 @@
 from dattakala_institute.includes import *
 # Create your views here.
 def sunil_login(request):
-
     if request.method == 'POST':
         a =int(request.POST["first_number"])
         b =int(request.POST["seconde_number"])

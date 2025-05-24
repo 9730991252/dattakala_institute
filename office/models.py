@@ -37,11 +37,11 @@ GENDER_CHOICES = (
 
 class Student(models.Model):
     name = models.CharField(max_length=100)
-    mobile = models.IntegerField()
-    aadhar_number = models.IntegerField(unique=True)
-    secret_pin = models.CharField(max_length=10)
+    mobile = models.IntegerField(null=True)
+    aadhaar_number = models.IntegerField(unique=True)
+    secret_pin = models.CharField(max_length=10, null=True)
     status = models.IntegerField(default=1)
-    gender = models.CharField(max_length=10)
+    gender = models.CharField(max_length=10, null=True)
     added_date = models.DateField(auto_now_add=True)
     address = models.CharField(max_length=255, null=True)
     added_by = models.ForeignKey(Clerk, on_delete=models.CASCADE, null=True, related_name='added_by')

@@ -13,6 +13,18 @@ def search_student_for_edit(request):
         t = render_to_string('search_student_for_edit.html', context)
     return JsonResponse({'t': t})
 
+def check_student_aadhaar(request):
+    if request.method == 'GET':
+        aadhaar = request.GET['aadhaar']
+        student = Student.objects.filter(aadhaar_number=aadhaar).first()
+        return_status = 0
+        student_id = None
+        if student:
+            student_id = student.id
+            return_status = 1
+
+    return JsonResponse({'student_id': student_id, 'return_status': return_status})
+
 def search_student_for_fees(request):
     if request.method == 'GET':
         words = request.GET['words']

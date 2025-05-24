@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block head %}
+
+{% endblock head %}
+{% block content %}
+{% load static %}
+{% include 'office/office_navbar.html' %}
+{% include 'alert.html' %}
+
+<br>
+
+
+
+<div class="container">
+    <div class="row"> 
+        <div class="col-sm-2">
+            <div style="display: flex;flex-direction: column;gap: 10px;">
+                <button class="btn btn-outline-primary" onclick="fetch_basic_details()">Basic Details</button>
+                <button class="btn btn-outline-primary">Parent Details</button>
+                <button class="btn btn-outline-primary">College Details</button>
+                <button class="btn btn-outline-primary">Fee Details</button>
+            </div>
+        </div>
+        <div class="col-sm-10">
+            <div class="text-center">Student Name <b> {{student.name}}</b></div>
+            <div class="container">
+                <div id="details_result"></div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    function fetch_basic_details(){
+        document.getElementById('details_result').innerHTML = `{% include 'office/student_basic_detail_form.html' %}`
+    }
+</script>
+
+{% endblock content %}

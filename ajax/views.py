@@ -42,13 +42,13 @@ def search_student_for_fees(request):
         if words:
             student = list(Student.objects.filter(name__icontains=words))
             student += Student.objects.filter(mobile__icontains=words)
-            student += Student.objects.filter(aadhar_number__icontains=words)
+            student += Student.objects.filter(aadhaar_number__icontains=words)
             for s in student:
                 st.append({
                     'id':s.id,
                     'name':s.name,
                     'mobile':s.mobile,
-                    'aadhar_number':s.aadhar_number,
+                    'aadhar_number':s.aadhaar_number,
                     'secret_pin':s.secret_pin,
                     'gender':s.gender,
                     # 'img':Student_Image.objects.filter(student=s).first(),
@@ -58,3 +58,33 @@ def search_student_for_fees(request):
         }
         t = render_to_string('search_student_for_fees.html', context)
     return JsonResponse({'t': t})
+
+def search_student_for_new_admission(request):
+    t = ''
+    status = 0
+    if request.method == 'GET':
+        words = request.GET.get('words', '')
+        st = []
+        if words:
+            status = 1
+            students = Student.objects.filter(
+                Q(name__icontains=words) |
+                Q(mobile__icontains=words) |
+                Q(aadhaar_number__icontains=words)
+            ).distinct()
+
+            for s in students:
+                st.append({
+                    'id': s.id,
+                    'name': s.name,
+                    'mobile': s.mobile,
+                    'aadhaar_number': s.aadhaar_number,
+                    'secret_pin': s.secret_pin,
+                    'gender': s.gender,
+                    # 'img': Student_Image.objects.filter(student=s).first(),
+                })
+
+        context = {'student': st}
+        t = render_to_string('search_student_for_new_admission.html', context)
+
+    return JsonResponse({'t': t, 'status': status})

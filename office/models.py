@@ -44,8 +44,8 @@ class Year(models.Model):
     added_by = models.ForeignKey(Clerk, on_delete=models.CASCADE, related_name='added_years')
     
 GENDER_CHOICES = (
-    ('MALE', "MALE"),
-    ('FEMALE', "FEMALE"),
+    ('Male', "Male"),
+    ('Female', "Female"),
 )
 
 class Student(models.Model):
@@ -169,3 +169,35 @@ class Student_Hostel_Fee(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     hostel_fee = models.ForeignKey(Hostel_Fee_installment, on_delete=models.CASCADE)
     added_by = models.ForeignKey(Clerk, on_delete=models.CASCADE, null=True)
+    
+class Student_Received_Fee_Cash_Hostel(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    hostel_fee_installment = models.ForeignKey(Hostel_Fee_installment, on_delete=models.CASCADE,null=True)
+    received_amount = models.FloatField(default=0)
+    paid_date = models.DateField(null=True)
+    added_by = models.ForeignKey(Clerk, on_delete=models.CASCADE, null=True, related_name='added_by_student_received_fee_hostel')
+    added_date = models.DateTimeField(auto_now_add=True, null=True)
+    updated_date = models.DateTimeField(auto_now=True, null=True)
+    updated_by = models.ForeignKey(Clerk, on_delete=models.CASCADE, null=True, related_name='updated_by_student_received_fee_hostel')
+    admin_verify_status = models.IntegerField(default=0) # 0 = not verify, 1 = verify
+    verify_date = models.DateTimeField(null=True, blank=True)
+    verify_by_admin = models.ForeignKey(Admin_detail, on_delete=models.CASCADE, null=True, related_name='verify_by_admin_hostel')
+    verify_by_clerk = models.ForeignKey(Clerk, on_delete=models.CASCADE, null=True, related_name='verify_by_clerk_hostel')
+    batch = models.ForeignKey(Batch, on_delete=models.CASCADE, null=True, related_name='batch_student_received_fee_hostel')
+    
+class Student_received_Fee_Bank_hostel(models.Model):
+    hostel_fee_installment = models.ForeignKey(Hostel_Fee_installment, on_delete=models.CASCADE, null=True)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    received_amount = models.FloatField(default=0)
+    paid_date = models.DateField(null=True)
+    added_by = models.ForeignKey(Clerk, on_delete=models.CASCADE, null=True, related_name='added_by_student_received_fee_bank_hostel')
+    added_date = models.DateTimeField(auto_now_add=True, null=True)
+    updated_date = models.DateTimeField(auto_now=True, null=True)
+    updated_by = models.ForeignKey(Clerk, on_delete=models.CASCADE, null=True, related_name='updated_by_student_received_fee_bank_hostel')
+    account = models.ForeignKey(Bank_Account, on_delete=models.CASCADE, null=True, blank=True)
+    admin_verify_status = models.IntegerField(default=0)  # 0 = not verify, 1 = verify
+    verify_date = models.DateTimeField(null=True, blank=True)
+    verify_by_admin = models.ForeignKey(Admin_detail, on_delete=models.CASCADE, null=True,related_name='verify_by_admin_bank_hostel')
+    verify_by_clerk = models.ForeignKey(Clerk, on_delete=models.CASCADE, null=True,related_name='verify_by_clerk_bank_hostel')
+    batch = models.ForeignKey(Batch, on_delete=models.CASCADE, null=True,related_name='batch_student_received_fee_bank_hostel')
+    utr_number = models.CharField(max_length=100, null=True, blank=True)

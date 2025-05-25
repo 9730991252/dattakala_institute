@@ -1,0 +1,66 @@
+<style>
+    .college_branch_name{
+        margin: 0 auto;
+        width: 95%;
+        background-color: #c8e4ff;
+        margin-top: 10px;
+        padding: 5px;
+        border-radius: 5px;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        .college{
+            font-weight: 700;
+        }
+    }
+    .years_main_box{
+        margin: 0 auto;
+        width: 95%;
+        background-color: #c8e4ff;
+        display: flex;
+        justify-content: space-evenly;
+        gap: 0px;
+        border-radius: 10px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        .year_box{
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 5px;
+            width: 300px;
+            background-color: white;
+            .year_box2{
+                display: flex;
+                justify-content: space-evenly;
+            }
+        }
+    }
+
+</style>
+{% for b in branches %}
+<div class="college_branch_name">
+    <div class="college">{{b.college.name}}</div>
+    <div class="branch">({{b.name}})</div>
+    <div>M {{b.male}} </div>
+    <div>F {{b.female}} </div>
+    <div><b>T{{b.total}}</b> </div>
+</div> 
+<div class="years_main_box">
+    {% for y in b.years %}
+        <div class="year_box">
+            <div class="year_box1">{{y.name}}</div>
+            <div class="year_box2">
+                <div>M  {{y.male}}</div>
+                <div>F  {{y.female}}</div>
+                <div>T  {{y.total}}</div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+<br>
+{% endfor %}

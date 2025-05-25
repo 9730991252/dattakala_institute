@@ -39,6 +39,9 @@ def student_detail(request, id):
 
             student_mobile = request.POST.get('mobile')
             student.mobile = student_mobile
+            
+            gender = request.POST.get('gender')
+            student.gender = gender
 
             address = request.POST.get('address')
             student.address = address

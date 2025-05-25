@@ -76,21 +76,21 @@ def office_login(request):
 
 
 def admin_login(request):
-    # if request.session.has_key('admin_mobile'):
-    #     return redirect('admin_home')
-    # if request.method == "POST":
-    #     batch_id=request.POST ['batch_id']
-    #     number=request.POST ['mobile']
-    #     pin=request.POST ['pin']
-    #     c= Admin_detail.objects.filter(batch_id=batch_id,mobile=number,pin=pin,status=1)
-    #     if c:
-    #         request.session['admin_mobile'] = request.POST["mobile"]
-    #         return redirect('admin_home')
-    #     else:
-    #         messages.error(request,f"Mobile Number or Secret Pin invalid.")
-    #         return redirect('/admin_login/')
+    if request.session.has_key('admin_mobile'):
+        return redirect('admin_home')
+    if request.method == "POST":
+        batch_id=request.POST ['batch_id']
+        number=request.POST ['mobile']
+        pin=request.POST ['pin']
+        c= Admin_detail.objects.filter(batch_id=batch_id,mobile=number,pin=pin,status=1)
+        if c:
+            request.session['admin_mobile'] = request.POST["mobile"]
+            return redirect('admin_home')
+        else:
+            messages.error(request,f"Mobile Number or Secret Pin invalid.")
+            return redirect('/admin_login/')
     context = {
-        # 'batch':Batch.objects.all(),
+        'batch':Batch.objects.all(),
     }
     return render(request, 'admin_login.html',context)
 

@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'sunil',
     'office',
     'ajax',
-    'account'
+    'account',
+    'dattakala_admin'
 ]
 
 MIDDLEWARE = [

@@ -70,6 +70,7 @@
 <br><br>
 <form method="POST" onsubmit="document.getElementById('loader').style.display = 'unset'; document.getElementById('submit_hostel_fee_details').style.display = 'none'">
     <div>
+      <label for="">Installment</label>
         <select class="form-control" name="hostel_fee_id" required>
             <option value="">Select Hostel Fee</option>
             {% for c in hostel_fee %}

@@ -7,6 +7,31 @@
 {% include 'office/office_navbar.html' %}
 {% include 'alert.html' %}
 
+<style>
+    #basic_details, #parent_details, #college_details, #fee_details{
+        padding: 5px;
+        border-radius: 5px;
+        border: 1px solid #93e6ff;
+        background-color: #93e6ff;
+        text-align: center;
+        font-weight: 700;
+    }
+    .basic_details_body, .parent_details_body, .college_details_body, .fee_details_body{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1px;
+    }
+    .basic_details_body_div, .parent_details_body_div, .college_details_body_div, .fee_details_body_div{
+        border-radius: 4px;
+        background-color: white;
+        padding: 5px;
+        display: flex;
+        justify-content: start;
+        align-items: center;
+        gap: 10px;
+    }
+</style>
+
 <br>
 
 
@@ -15,6 +40,7 @@
     <div class="row"> 
         <div class="col-sm-2">
             <div style="display: flex;flex-direction: column;gap: 10px;">
+                <button class="btn btn-outline-success" onclick="location.reload()">Form</button>
                 <button class="btn btn-outline-primary" onclick="fetch_basic_details()">Basic Details</button>
                 <button class="btn btn-outline-primary" onclick="fetch_parent_details()">Parent Details</button>
                 <button class="btn btn-outline-primary" onclick="fetch_college_details()">College Details</button>
@@ -24,7 +50,82 @@
         <div class="col-sm-10">
             <div class="text-center">Student Name <b> {{student.name}}</b></div>
             <div class="container">
-                <div id="details_result"></div>
+                <div id="details_result">
+                    <div id="basic_details">
+                        Basic Details
+                    </div>
+                    <div class="basic_details_body">
+                        <div class="basic_details_body_div">
+                            <div class="basic_details_body1"> Student Name :</div>
+                            <div class="basic_details_body2">{{student.name}}</div>
+                        </div>
+                        <div class="basic_details_body_div">
+                            <div class="basic_details_body1">Aadhaar :</div>
+                            <div class="basic_details_body2">{{student.aadhaar_number}}</div>
+                        </div>
+                        <div class="basic_details_body_div">
+                            <div class="basic_details_body1">Gender :</div>
+                            <div class="basic_details_body2">{{student.gender}}</div>
+                        </div>
+                        <div class="basic_details_body_div">
+                            <div class="basic_details_body1">Date of Birth :</div>
+                            <div class="basic_details_body2">{{student.date_of_birth|date:"F-Y"}}</div>
+                        </div>
+                        <div class="basic_details_body_div">
+                            <div class="basic_details_body1">Mobile :</div>
+                            <div class="basic_details_body2">{{student.mobile}}</div>
+                        </div>
+                        <div class="basic_details_body_div" style="grid-column-start: 1;grid-column-end: 3;">
+                            <div class="basic_details_body1">Address :</div>
+                            <div class="basic_details_body2">{{student.address}}</div>
+                        </div>
+                    </div>
+                    <br>
+                    <div id="parent_details">
+                        Parent Details
+                    </div>
+                    <div class="parent_details_body">
+                        <div class="parent_details_body_div">
+                            <div class="parent_details_body1">Father Name :</div>
+                            <div class="parent_details_body2">{{student.father_name}}</div>
+                        </div>
+                        <div class="parent_details_body_div">
+                            <div class="parent_details_body1">Mother Name :</div>
+                            <div class="parent_details_body2">{{student.mother_name}}</div>
+                        </div>
+                        <div class="parent_details_body_div">
+                            <div class="parent_details_body1">Parent Mobile :</div>
+                            <div class="parent_details_body2">{{student.parent_mobile}}</div>
+                        </div>
+                    </div>
+                    <div id="college_details">
+                        College Details
+                    </div>
+                    <div class="college_details_body">
+                        <div class="college_details_body_div">
+                            <div class="college_details_body1">College :</div>
+                            <div class="college_details_body2">{{student_college_details.college.name|slice:'35'}}</div>
+                        </div>
+                        <div class="college_details_body_div">
+                            <div class="college_details_body1">Branch :</div>
+                            <div class="college_details_body2">{{student_college_details.branch.name}}</div>
+                        </div>
+                        <div class="college_details_body_div">
+                            <div class="college_details_body1">Year :</div>
+                            <div class="college_details_body2">{{student_college_details.year.name}}</div>
+                        </div>
+                    </div>
+                    <div id="fee_details">
+                        Fee Details
+                    </div>
+                    <div class="fee_details_body">
+                        <div class="fee_details_body_div">
+                            <div class="fee_details_body1">Hostel Fee :</div>
+                            <div class="fee_details_body2">{{student_hostel_fee.hostel_fee.installment_name}}, ₹{{student_hostel_fee.hostel_fee.amount}}</div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
 
         </div>

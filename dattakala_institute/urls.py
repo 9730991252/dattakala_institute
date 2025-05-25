@@ -9,5 +9,5 @@ urlpatterns = [
     path('ajax/', include('ajax.urls')),
     path('account/', include('account.urls')),
     # path('teacher/', include('teacher.urls')),
-    # path('school_admin/', include('school_admin.urls')),
+    path('dattakala_admin/', include('dattakala_admin.urls')),
 ]+ static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

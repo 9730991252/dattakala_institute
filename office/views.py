@@ -7,6 +7,7 @@ def office_home(request):
         clerk = Clerk.objects.filter(mobile=mobile).first()
         if not clerk:
             return redirect('office_login')
+        
         messages.success(request, 'Welcome to Dattakala Shikshan Sanstha School!')
         context={
             'clerk':clerk

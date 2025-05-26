@@ -50,17 +50,17 @@
           <h1 class="modal-title fs-5" id="AddModalLabel">Add College</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <form method="POST">
+        <form method="POST" onsubmit="document.getElementById('add_btn').style.display='none'; document.getElementById('addSpinner').style.display='inline-block';">
           {% csrf_token %}
           <div class="modal-body">
             <div class="mb-3">
               <label for="name">Name</label>
-              <input type="text" name="name" value="{{ return_name }}" id="name" class="form-control" placeholder="Enter college Name">
+              <input type="text" name="name" value="{{ return_name }}" id="name" class="form-control" placeholder="Enter college Name" required>
             </div>
             <div class="spinner-border" role="status" id="addSpinner"></div>
           </div>
           <div class="modal-footer">
-              <button type="submit" name="add_college" class="btn btn-danger" onclick="this.style.display='none'; document.getElementById('addSpinner').style.display='inline-block';">
+              <button type="submit" name="add_college" id="add_btn" class="btn btn-danger" >
                   Add
                 </button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -111,19 +111,19 @@
               <h1 class="modal-title fs-5" id="EditModalLabel{{ t.id }}">Edit college</h1>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form method="POST">
+            <form method="POST" onsubmit="document.getElementById('edit_btn{{t.id}}').style.display='none'; document.getElementById('editSpinner{{ t.id }}').style.display='inline-block';">
               {% csrf_token %}
               <div class="modal-body">
                 <input type="hidden" name="college_id" value="{{ t.id }}">
                 <div class="mb-3">
                   <label for="name{{ t.id }}">Name</label>
-                  <input type="text" name="name" id="name{{ t.id }}" value="{{ t.name }}" class="form-control" placeholder="Enter college Name">
+                  <input type="text" name="name" id="name{{ t.id }}" value="{{ t.name }}" class="form-control" placeholder="Enter college Name" required>
                 </div>
                 <div class="spinner-border" role="status" id="editSpinner{{ t.id }}"></div>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" name="edit_college" class="btn btn-danger" onclick="this.style.display='none'; document.getElementById('editSpinner{{ t.id }}').style.display='inline-block';">
+                <button type="submit" name="edit_college" class="btn btn-danger" id="edit_btn{{t.id}}">
                   Save
                 </button>
               </div>

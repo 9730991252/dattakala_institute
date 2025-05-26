@@ -31,6 +31,9 @@ def student_detail(request, id):
             if Student.objects.filter(aadhaar_number=aadhaar_number).exclude(id=student.id).exists():
                 messages.error(request, 'Aadhaar Number already exists So Skipped!')
                 return redirect('student_detail', id=student.id)
+            elif int(len(aadhaar_number)) < 12:
+                messages.error(request, 'Please Inter Valid Aadhaar Number!')
+                return redirect('student_detail', id=student.id)
             else:
                 student.aadhaar_number = aadhaar_number
 
@@ -38,6 +41,9 @@ def student_detail(request, id):
             student.date_of_birth = dob
 
             student_mobile = request.POST.get('mobile')
+            if int(len(student_mobile)) < 10:
+                messages.error(request, 'Please Inter Valid Mobile Number!')
+                return redirect('student_detail', id=student.id)
             student.mobile = student_mobile
             
             gender = request.POST.get('gender')

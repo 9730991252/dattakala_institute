@@ -50,17 +50,17 @@
           <h1 class="modal-title fs-5" id="AddYearModalLabel">Add Year</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <form method="POST">
+        <form method="POST" onsubmit="document.getElementById('save_btn').style.display='none'; document.getElementById('addSpinner').style.display='inline-block';">
           {% csrf_token %}
           <div class="modal-body">
             <div class="mb-3">
               <label for="name">Name</label>
-              <input type="text" name="name" value="{{ return_name }}" id="name" class="form-control" placeholder="Enter Year Name">
+              <input type="text" name="name" value="{{ return_name }}" id="name" class="form-control" placeholder="Enter Year Name" required>
             </div>
             <div class="spinner-border" role="status" id="addSpinner"></div>
           </div>
           <div class="modal-footer">
-              <button type="submit" name="add_year" class="btn btn-danger" onclick="this.style.display='none'; document.getElementById('addSpinner').style.display='inline-block';">
+              <button type="submit" name="add_year" id="save_btn" class="btn btn-danger" >
                   Add
               </button>
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -111,19 +111,19 @@
               <h1 class="modal-title fs-5" id="EditYearModalLabel{{ t.id }}">Edit Year</h1>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form method="POST">
+            <form method="POST" onsubmit="document.getElementById('edit_btn').style.display='none'; document.getElementById('editSpinner{{t.id}}').style.display='inline-block';">
               {% csrf_token %}
               <div class="modal-body">
                 <input type="hidden" name="year_id" value="{{ t.id }}">
                 <div class="mb-3">
                   <label for="name{{ t.id }}">Name</label>
-                  <input type="text" name="name" id="name{{ t.id }}" value="{{ t.name }}" class="form-control" placeholder="Enter Year Name">
+                  <input type="text" name="name" id="name{{ t.id }}" value="{{ t.name }}" class="form-control" placeholder="Enter Year Name" required>
                 </div>
                 <div class="spinner-border" role="status" id="editSpinner{{ t.id }}"></div>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" name="edit_year" class="btn btn-danger" onclick="this.style.display='none'; document.getElementById('editSpinner{{ t.id }}').style.display='inline-block';">
+                <button type="submit" name="edit_year" id="edit_btn" class="btn btn-danger" >
                   Save
                 </button>
               </div>

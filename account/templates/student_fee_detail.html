@@ -600,6 +600,7 @@
                     <th>UTR / Challan </th>
                     <th>Bank</th>
                     <th>Received By</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -621,15 +622,64 @@
                     <td>₹.{{ t.received_amount }}</td>
                     <td>{{ t.utr_number }}</td>
                     <td>{{ t.account.bank_name }}, {{ t.account.account_number }}</td>
-                    <td style="position: relative;">
-                        {{t.added_by.name}}
+                    <td>
+                        {{t.added_by.name}}  {% if t.updated_by %} <h style="font-size: 12px;">(edited - {{t.updated_by.name}})</h> {% endif %}
                         <button style="position: absolute; top: 0; right: 0;" class="btn btn-outline-dark btn-sm"><i class="fa-solid fa-print"></i></button>
+                    </td>
+                    <td >
+                        <button class="btn btn-outline-dark btn-sm" data-bs-toggle="modal" data-bs-target="#edit_bank_t{{t.id}}"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+                        <button class="btn btn-outline-dark btn-sm"><i class="fa-solid fa-print"></i></button>
                     </td>
 
                 </tr>
+
+                <!-- Modal -->
+                <div class="modal fade" style="margin-top: 50px;" id="edit_bank_t{{t.id}}"  tabindex="-1" aria-labelledby="edit_bank_t{{t.id}}Label" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Bank Transaction</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="POST">
+                            <input type="text" name="transaction_id" value="{{t.id}}" hidden>
+                            {% csrf_token %}
+                                <div class="form-group mb-3">
+                                    <label>Bank</label>
+                                    <select name="bank_id" class="form-select" required>
+                                        <option value="" selected>Select Bank</option>
+                                        {% for bank in accounts %}
+                                            <option value="{{ bank.id }}" {% if t.account == bank %} selected {% endif %}>{{ bank.bank_name }} - {{ bank.account_number }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label>Amount</label>
+                                    <input type="number" class="form-control" value="{{t.received_amount}}" required name="received_amount" step="any">
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label>Date</label>
+                                    <input type="date" class="form-control" value="{{t.paid_date|date:'Y-m-d'}}" max="{{ today_date|date:'Y-m-d' }}" min="{{ clerk.batch.start_date|date:'Y-m-d' }}" required name="date">
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label>UTR Number</label>
+                                    <input type="text" class="form-control" value="{{t.utr_number}}" required name="utr_number">
+                                </div>
+                                <button type="submit" class="btn btn-primary" name="edit_bank_transaction">Edit</button>                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                    </div>
+                </div>
+                </div>
+
+
+
                 {% endfor %}
                 <tr>
-                    <td colspan="5" style="text-align: start; font-weight: bold;">Total Received Fee: ₹.{{ paid_fee }}</td>
+                    <td colspan="6" style="text-align: start; font-weight: bold;">Total Received Fee: ₹.{{ paid_fee }}</td>
                 </tr>
             </tbody>
         </table>

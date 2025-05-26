@@ -8,7 +8,7 @@ def office_home(request):
         if not clerk:
             return redirect('office_login')
         
-        messages.success(request, 'Welcome to Dattakala Shikshan Sanstha School!')
+        messages.success(request, f'Welcome {clerk.name}!')
         context={
             'clerk':clerk
         }

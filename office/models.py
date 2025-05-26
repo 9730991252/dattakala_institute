@@ -211,5 +211,7 @@ class Student_received_Fee_Bank_hostel(models.Model):
     verify_date = models.DateTimeField(null=True, blank=True)
     verify_by_admin = models.ForeignKey(Admin_detail, on_delete=models.CASCADE, null=True,related_name='verify_by_admin_bank_hostel')
     verify_by_clerk = models.ForeignKey(Clerk, on_delete=models.CASCADE, null=True,related_name='verify_by_clerk_bank_hostel')
+    verify_date_clerk = models.DateTimeField(null=True, blank=True)
     batch = models.ForeignKey(Batch, on_delete=models.CASCADE, null=True,related_name='batch_student_received_fee_bank_hostel')
     utr_number = models.CharField(max_length=100, null=True, blank=True)
+    

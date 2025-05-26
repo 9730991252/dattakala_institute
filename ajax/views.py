@@ -81,7 +81,8 @@ def search_student_for_new_admission(request):
                     'aadhaar_number': s.aadhaar_number,
                     'secret_pin': s.secret_pin,
                     'gender': s.gender,
-                    'added_by':s.added_by
+                    'added_by':s.added_by,
+                    'updated_by':s.updated_by
                     # 'img': Student_Image.objects.filter(student=s).first(),
                 })
 

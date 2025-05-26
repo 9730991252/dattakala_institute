@@ -146,26 +146,23 @@ def student_fee_detail(request, id):
         if 'save_cash_hostel_fee'in request.POST:
             received_amount = request.POST.get('received_amount')
             r_date = request.POST.get('date')
-            installment = request.POST.get('installment')
+            challan_number = request.POST.get('challan_number')
             Student_Received_Fee_Cash_Hostel.objects.create(
                 student=student,
-                hostel_fee_installment_id=installment,
                 received_amount=received_amount,
                 paid_date=r_date,
                 added_by=clerk,
                 batch=clerk.batch,
+                challan_number=challan_number
             )
             messages.success(request, 'Cash Hostel Fee Received Successfully!')
             return redirect('student_fee_detail', id=id)
         if 'save_bank_fee_hostel'in request.POST:
             bank_id = request.POST.get('bank_id')
-            installment_id = request.POST.get('installment_id')
             received_amount = request.POST.get('received_amount')
             r_date = request.POST.get('date')
-            installment = request.POST.get('installment')
             utr_number = request.POST.get('utr_number')
             Student_received_Fee_Bank_hostel.objects.create(
-                hostel_fee_installment_id=installment_id,
                 student=student,
                 received_amount=received_amount,
                 paid_date=r_date,
@@ -178,7 +175,8 @@ def student_fee_detail(request, id):
             return redirect('student_fee_detail', id=id)
        
         total_fee = student_fee.objects.filter(student=student, batch=clerk.batch).aggregate(Sum('amount'))['amount__sum'] or 0
-        total_fee += int(student_hostel_fee.hostel_fee.amount)
+        if student_hostel_fee:
+            total_fee += int(student_hostel_fee.hostel_fee.amount)
         print('total_fee', total_fee)
         student_fee_detail = []
         for cdt in Credit_Debit_category.objects.filter(status=1):

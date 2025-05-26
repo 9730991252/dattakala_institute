@@ -135,3 +135,8 @@ def teacher_login(request):
         
     }
     return render(request, 'teacher_login.html',context)
+
+def office_logout(request):
+    if request.session.has_key('office_mobile'):
+        del request.session['office_mobile']
+    return redirect('/')

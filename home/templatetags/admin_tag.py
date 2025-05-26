@@ -45,7 +45,7 @@ register = template.Library()
 @register.inclusion_tag('inclusion_tag/college_branches_student_details_admin.html')
 def college_branches_student_details_admin(batch_id):
     branches = []
-    for b in Branch.objects.filter(batch_id=batch_id):
+    for b in Branch.objects.filter(batch_id=batch_id).order_by('college'):
         year = []
         for y in Year.objects.filter(added_by__batch_id=batch_id):
             male = Student_college_detail.objects.filter(branch=b, year=y, student__gender='Male').count()

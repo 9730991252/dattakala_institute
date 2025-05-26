@@ -47,7 +47,8 @@ def student_detail(request, id):
         if 'submit_basic_details' in request.POST:
             name = request.POST.get('name')
             student.name = name
-
+            student.updated_date = datetime.now()
+            student.updated_by = clerk
             aadhaar_number = request.POST.get('aadhaar')
             if Student.objects.filter(aadhaar_number=aadhaar_number).exclude(id=student.id).exists():
                 messages.error(request, 'Aadhaar Number already exists So Skipped!')
@@ -79,7 +80,8 @@ def student_detail(request, id):
         if 'submit_parent_details'in request.POST:
             father_name = request.POST.get('father_name')
             student.father_name = father_name
-
+            student.updated_date = datetime.now()
+            student.updated_by = clerk
             mother_name = request.POST.get('mother_name')
             student.mother_name = mother_name
 
@@ -101,6 +103,8 @@ def student_detail(request, id):
                 sc.college_id = college_id
                 sc.branch_id = branch_id
                 sc.year_id = year_id
+                sc.updated_date = datetime.now()
+                sc.updated_by = clerk 
                 sc.save()
                 messages.success(request, 'College details updated successfully!')
                 return redirect('student_detail', id=student.id)
@@ -120,6 +124,8 @@ def student_detail(request, id):
             if Student_Hostel_Fee.objects.filter(batch=clerk.batch, student=student).exists():
                 sh = Student_Hostel_Fee.objects.filter(batch=clerk.batch, student=student).first()
                 sh.hostel_fee_id = hostel_fee_id
+                sh.updated_date = datetime.now()
+                sh.updated_by = clerk  
                 sh.save()
                 messages.success(request, 'Hostel fee updated successfully!')
                 return redirect('student_detail', id=student.id)
@@ -190,6 +196,8 @@ def add_college(request):
             college_id = request.POST.get('college_id')
             college = College.objects.filter(id=college_id).first()
             college.name = name
+            college.updated_date = datetime.now()
+            college.updated_by = clerk
             college.save()
             messages.success(request, 'College updated successfully!')
             return redirect('add_college')
@@ -236,6 +244,8 @@ def add_branch(request):
             branch = Branch.objects.filter(id=id).first()
             branch.name = name
             branch.college_id = college_id
+            branch.updated_date = datetime.now()
+            branch.updated_by = clerk
             branch.save()
             messages.success(request, 'Branch updated successfully!')
             return redirect('add_branch')
@@ -279,6 +289,8 @@ def add_year(request):
             name = request.POST.get('name')
             year = Year.objects.filter(id=id).first()
             year.name = name
+            year.updated_date = datetime.now()
+            year.updated_by = clerk
             year.save()
             messages.success(request, 'Year updated successfully!')
             return redirect('add_year')

@@ -71,3 +71,35 @@ def college_branches_student_details_admin(batch_id):
     return {
         'branches':branches
     }
+    
+@register.inclusion_tag('inclusion_tag/hostel_summary_admin.html')
+def hostel_summary_admin(batch_id):
+    installment = []
+    for i in Hostel_Fee_installment.objects.filter(batch_id=batch_id):
+        total = Student_Hostel_Fee.objects.filter(hostel_fee=i).aggregate(Sum('hostel_fee__amount'))['hostel_fee__amount__sum'] or 0
+        received = Student_received_Fee_Bank_hostel.objects.filter(hostel_fee_installment=i).aggregate(Sum('received_amount'))['received_amount__sum'] or 0
+        received += Student_Received_Fee_Cash_Hostel.objects.filter(hostel_fee_installment=i).aggregate(Sum('received_amount'))['received_amount__sum'] or 0
+        
+        installment.append({
+            'id': i.id,
+            'name': i.installment_name,
+            'amount': i.amount,
+            'total_amount':total,
+            'received':received,
+            'pending':total-received,
+            'male_student':Student_Hostel_Fee.objects.filter(hostel_fee=i, student__gender='Male').count(),
+            'female_student':Student_Hostel_Fee.objects.filter(hostel_fee=i, student__gender='Female').count(),
+            'total_student':Student_Hostel_Fee.objects.filter(hostel_fee=i).count(),
+        })
+    all_total_amount = Student_Hostel_Fee.objects.filter(batch_id=batch_id).aggregate(Sum('hostel_fee__amount'))['hostel_fee__amount__sum'] or 0
+    all_received = Student_received_Fee_Bank_hostel.objects.filter(batch_id=batch_id).aggregate(Sum('received_amount'))['received_amount__sum'] or 0
+    all_received += Student_Received_Fee_Cash_Hostel.objects.filter(batch_id=batch_id).aggregate(Sum('received_amount'))['received_amount__sum'] or 0
+    return {
+        'installment':installment,
+        'all_total_amount':all_total_amount,
+        'all_received':all_received,
+        'all_pending':all_total_amount-all_received,
+        'total_student':Student_Hostel_Fee.objects.filter(batch_id=batch_id).count(),
+        'male_student':Student_Hostel_Fee.objects.filter(batch_id=batch_id, student__gender='Male').count(),
+        'female_student':Student_Hostel_Fee.objects.filter(batch_id=batch_id, student__gender='Female').count(),
+    }

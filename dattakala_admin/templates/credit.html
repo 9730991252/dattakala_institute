@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block head %}
+
+{% endblock head %}
+{% block content %}
+{% load static %}
+{% include 'admin_navbar.html' %}
+{% include 'alert.html' %}
+{% load admin_tag %}
+{% include 'admin_account_menu.html' %}
+<div style="display: flex;gap: 10px;margin-left: 10px;">
+    {% for a in accounts %}
+    <form method="POST">
+        <input type="text" name="id" value="{{ a.id }}" hidden>
+        <button type="submit" class="btn btn-primary" name="get_bank_statement" >{{a.bank_name}}, {{a.account_number}}</button>
+    </form>
+    {% endfor %}
+    <form method="POST">
+        <button type="submit" class="btn btn-primary" name="get_cash_statement" >Cash</button>
+    </form>
+</div>
+
+
+
+{% endblock content %}

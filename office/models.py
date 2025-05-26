@@ -170,6 +170,7 @@ class Student_Hostel_Fee(models.Model):
     hostel_fee = models.ForeignKey(Hostel_Fee_installment, on_delete=models.CASCADE)
     added_by = models.ForeignKey(Clerk, on_delete=models.CASCADE, null=True)
     
+    
 class Student_Received_Fee_Cash_Hostel(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     hostel_fee_installment = models.ForeignKey(Hostel_Fee_installment, on_delete=models.CASCADE,null=True)

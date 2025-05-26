@@ -165,7 +165,7 @@ def student_fee_detail(request, id):
             installment = request.POST.get('installment')
             utr_number = request.POST.get('utr_number')
             Student_received_Fee_Bank_hostel.objects.create(
-                hostel_fee_installment_id=installment,
+                hostel_fee_installment_id=installment_id,
                 student=student,
                 received_amount=received_amount,
                 paid_date=r_date,

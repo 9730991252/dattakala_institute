@@ -6,10 +6,8 @@
 {% load static %}
 {% include 'admin_navbar.html' %}
 {% include 'alert.html' %}
-
 {% load admin_tag %}
 
-{% college_branches_student_details_admin a.batch_id %}
-{% hostel_summary_admin a.batch_id %}
+
 
 {% endblock content %}

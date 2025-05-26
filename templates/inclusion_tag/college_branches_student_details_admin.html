@@ -1,7 +1,9 @@
-<style>
-    .college_branch_name{
-        margin: 0 auto;
-        width: 95%;
+<div style="height: 80vh;overflow-y: scroll;margin-bottom: -30px;">
+
+    <style>
+        .college_branch_name{
+            margin: 0 auto;
+            width: 95%;
         background-color: #c8e4ff;
         margin-top: 10px;
         padding: 5px;
@@ -40,7 +42,7 @@
             }
         }
     }
-
+    
 </style>
 {% for b in branches %}
 <div class="college_branch_name">
@@ -52,15 +54,16 @@
 </div> 
 <div class="years_main_box">
     {% for y in b.years %}
-        <div class="year_box">
-            <div class="year_box1">{{y.name}}</div>
-            <div class="year_box2">
-                <div>M  {{y.male}}</div>
-                <div>F  {{y.female}}</div>
-                <div>T  {{y.total}}</div>
-            </div>
+    <div class="year_box">
+        <div class="year_box1">{{y.name}}</div>
+        <div class="year_box2">
+            <div>M  {{y.male}}</div>
+            <div>F  {{y.female}}</div>
+            <div>T  {{y.total}}</div>
         </div>
+    </div>
     {% endfor %}
 </div>
 <br>
 {% endfor %}
+</div>

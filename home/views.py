@@ -38,11 +38,6 @@ from django.db.models import F
 
 
 def index(request):
-    Student_Received_Fee_Cash_Hostel.objects.all().delete()
-    Student_received_Fee_Bank_hostel.objects.all().delete()
-    Student_Hostel_Fee.objects.all().delete()
-    Student_college_detail.objects.all().delete()
-    Student.objects.all().delete()
     context = {
     }
     return render(request, 'index.html', context)

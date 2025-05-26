@@ -65,6 +65,7 @@
         <th>ID</th>
         <th>College Name</th>
         <th>Branch Name</th>
+        <th>Added By</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -74,6 +75,7 @@
         <td>{{ forloop.counter }}</td>
         <td>{{ t.college.name }}</td>
         <td>{{ t.name }}</td>
+        <td>{{ t.added_by.name }}</td>
         <td style="display: flex; gap: 5px;">
           <!-- Edit Button -->
           <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Edit_branch{{ t.id }}">Edit</button>

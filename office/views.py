@@ -15,6 +15,27 @@ def office_home(request):
     else:
         return redirect('office_login')
     
+def profile(request):
+    if request.session.has_key('office_mobile'):
+        mobile = request.session['office_mobile']
+        clerk = Clerk.objects.filter(mobile=mobile).first()
+        if not clerk:
+            return redirect('office_login')
+        if 'change_profile'in request.POST:
+            name = request.POST.get('name')
+            secret_pin = request.POST.get('secret_pin')
+            clerk.name = name
+            clerk.secret_pin = secret_pin
+            clerk.save()
+            messages.success(request, 'Profile Updated Successfully!')
+            return redirect('profile')
+        context={
+            'clerk':clerk
+        }
+        return render(request, 'profile.html', context)
+    else:
+        return redirect('office_login')
+    
 @csrf_exempt
 def student_detail(request, id):
     if request.session.has_key('office_mobile'):
@@ -138,7 +159,7 @@ def add_student(request):
             if Student.objects.filter(aadhaar_number=aadhaar_number).exists():
                 pass
             else:
-                Student.objects.create(name=name, aadhaar_number=aadhaar_number)
+                Student.objects.create(name=name, aadhaar_number=aadhaar_number, added_by=clerk)
             student = Student.objects.filter(aadhaar_number=aadhaar_number).first()
             return redirect('student_detail', id=student.id)
         context={

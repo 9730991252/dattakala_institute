@@ -76,6 +76,7 @@
       <tr>
         <th>ID</th>
         <th>Year Name</th>
+        <th>Added By</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -84,6 +85,7 @@
       <tr>
         <td>{{ forloop.counter }}</td>
         <td>{{ t.name }}</td>
+        <td>{{ t.added_by.name }}</td>
         <td style="display: flex; gap: 5px;">
           <!-- Edit Button -->
           <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#EditYearModal{{ t.id }}">

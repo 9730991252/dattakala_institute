@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% block head %}
+
+{% endblock head %}
+{% block content %}
+{% load static %}
+{% include 'office/office_navbar.html' %}
+{% include 'alert.html' %}
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: linear-gradient(135deg, #1f1c2c, #928dab);
+      height: 100vh;
+    }
+
+    .form-container {
+      background: #ffffff10;
+      border: 1px solid #ffffff20;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      border-radius: 16px;
+      padding: 40px;
+      width: 90%;
+      max-width: 500px;
+      color: #fff;
+      margin: auto;
+      margin-top: 50px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-weight: 600;
+      font-size: 1.8rem;
+      letter-spacing: 1px;
+    }
+
+    .form-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .input-box {
+      position: relative;
+    }
+
+    .input-box input {
+      width: 100%;
+      padding: 12px 10px;
+      background: #ffffff15;
+      border: 1px solid #ffffff30;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 1rem;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    .input-box label {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      color: #ccc;
+      font-size: 0.9rem;
+      pointer-events: none;
+      transition: 0.3s;
+    }
+
+    .input-box input:focus + label,
+    .input-box input:not(:placeholder-shown) + label {
+      top: -10px;
+      left: 10px;
+      font-size: 0.75rem;
+      background: #696969;
+      border-radius: 5px;
+      padding: 0 5px;
+      color: #fff;
+    }
+
+    .edit_button {
+      width: 100%;
+      padding: 12px;
+      background: #6a11cb;
+      background: linear-gradient(to right, #6a11cb, #2575fc);
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .edit_button:hover {
+      background: linear-gradient(to right, #2575fc, #6a11cb);
+    }
+
+    @media (max-width: 480px) {
+      .form-group {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+
+    <form method="POST" class="form-container">
+      {% csrf_token %}
+    <h2>Profile Form</h2>
+    <div class="form-group">
+      <div class="input-box">
+        <input type="text" id="name" name="name" required placeholder=" " value="{{clerk.name}}" />
+        <label for="name">Name</label>
+      </div>
+      <div class="input-box">
+        <input type="password" id="pin" name="secret_pin" required placeholder=" " maxlength="4" value="{{clerk.secret_pin}}" />
+        <label for="pin">Secret PIN</label>
+      </div>
+    </div>
+    <button type="submit" name="change_profile" class="edit_button">Edit</button>
+  </form>
+
+
+{% endblock content %}

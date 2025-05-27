@@ -8,6 +8,6 @@ urlpatterns = [
     path('office/', include('office.urls')),
     path('ajax/', include('ajax.urls')),
     path('account/', include('account.urls')),
-    # path('teacher/', include('teacher.urls')),
     path('dattakala_admin/', include('dattakala_admin.urls')),
+    path('report/', include('report.urls')),
 ]+ static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

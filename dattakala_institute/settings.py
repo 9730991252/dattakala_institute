@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'office',
     'ajax',
     'account',
-    'dattakala_admin'
+    'dattakala_admin',
+    'report',
 ]
 
 MIDDLEWARE = [

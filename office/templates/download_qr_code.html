@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block head %}
+
+{% endblock head %}
+{% block content %}
+{% load static %}
+{% include 'office/office_navbar.html' %}
+{% include 'alert.html' %}
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Boldonse&display=swap');
+</style>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech&display=swap');
+</style>
+<style>
+    .qr_container{
+        width: 4in;
+        height: 6in;
+        border-radius: 3px;
+        margin: 0 auto;
+        margin-top: 10px;
+        border: 1px solid black;
+        overflow: hidden;
+    }
+    .header{
+        height: 110px;
+        width: 100%;
+        border-bottom: 1px solid black;
+        overflow: hidden;
+        display: flex;
+        gap: 10px;
+        background-image: url('{% static "img/background.jpg" %}');
+        background-size: 10in 6in;
+        background-position: top;
+        background-repeat: no-repeat;
+    }
+    .logo{
+        margin-top: 8px;
+        margin-left: 10px;
+        height: 100px;
+        width: 120px;
+        overflow: hidden;
+        border-radius: 50px;
+        img{
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+    .head_heading{
+        margin-left: 5px;
+        font-size:14px ;
+        color: rgb(7, 156, 156);
+        font-family: "Libre Baskerville", serif;
+        margin-top: 10px;
+    }
+    .college_name, .college_name2{
+        margin-left: 5px;
+        font-size:25px ;
+        color: rgb(156, 7, 7);
+font-family: "Share Tech", sans-serif;
+        font-weight: 700;
+    }
+
+</style>
+
+<div class="qr_container">
+    <div class="header">
+        <div class="logo"><img src="{% static 'img/logo.jpg' %}"  alt=""></div>
+        <div class="header_section_2">
+            <div class="head_heading" >Dattakala Shikshan Sanstha's</div>
+            <div class="college_name" >Dattakala Group Of</div>
+            <div class="college_name2" >Institutions</div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}

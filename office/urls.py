@@ -9,4 +9,5 @@ urlpatterns = [
     path('add_year/', views.add_year, name='add_year'),
     path('profile/', views.profile, name='profile'),
     path('student_detail/<id>', views.student_detail, name='student_detail'),
+    path('download_qr_code/', views.download_qr_code, name='download_qr_code'),
 ]

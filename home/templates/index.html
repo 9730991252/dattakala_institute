@@ -13,41 +13,48 @@
 
 <!-- header start -->
 <link rel="stylesheet" href="{% static 'css/index_header.css' %}">
-<header>
-<div class="head">
-  <div class="head_div1">
-    <a href="">Events</a>
-    <a href="">Features</a>
-    <a href="/#about_teachers">About Teachers</a>
-  </div>
-  <div class="head_div2">
-    <i class="fa-brands fa-youtube"></i>
-    <i class="fa-brands fa-whatsapp"></i>
-    <i class="fa-brands fa-facebook"></i>
-    <i class="fa-brands fa-instagram"></i>
-  </div>
-</div> 
-<div class="foot">
-  <div class="foot_detail_box">
-    <div class="foot_detail_box1">Dattakala Shikshan Sanstha</div>
-    <div class="foot_detail_box2">NAAC Accredited</div>
-  </div>
-  <div class="foot1">
-    <i class="fa-solid fa-phone-volume"></i>
-    <div>
-      <p class="head_foot_top">Phone Number</p>
-      <p >+91 9673002929</p>
+
+
+<header class="dk-header">
+  <div class="dk-header-top">
+    <nav class="dk-nav">
+      <a href="#">Events</a>
+      <a href="#">Features</a>
+    </nav>
+    <div class="dk-social">
+      <a href="#"><i class="fa-brands fa-youtube"></i></a>
+      <a href="#"><i class="fa-brands fa-whatsapp"></i></a>
+      <a href="#"><i class="fa-brands fa-facebook"></i></a>
+      <a href="#"><i class="fa-brands fa-instagram"></i></a>
     </div>
   </div>
-  <div class="foot2">
-    <i class="fa-solid fa-envelope"></i>
-    <div>
-      <p class="head_foot_top">E-Mail</p>
-      <p>dattakala@dattakala.edu.in</p>
+
+  <div class="dk-header-bottom">
+    <div class="dk-brand">
+      <h1>Dattakala Shikshan Sanstha</h1>
+      <p class="dk-subtitle">NAAC Accredited</p>
+    </div>
+    <div class="dk-contact">
+      <div class="dk-contact-item">
+        <i class="fa-solid fa-phone-volume"></i>
+        <div>
+          <p class="dk-label">Phone</p>
+          <p>+91 9673002929</p>
+        </div>
+      </div>
+      <div class="dk-contact-item">
+        <i class="fa-solid fa-envelope"></i>
+        <div>
+          <p class="dk-label">Email</p>
+          <p>dattakala@dattakala.edu.in</p>
+        </div>
+      </div>
     </div>
   </div>
-</div>
 </header>
+
+
+
 <!-- header end -->
 
 <!-- navBar start -->
@@ -56,60 +63,62 @@
 
 <!-- home start -->
 <section class="home" id="home">
-      <!--image slider start-->
-      <div class="slider">
-        <div class="slides">
-          <!--radio buttons start-->
-          <input type="radio" name="radio-btn" id="radio1">
-          <input type="radio" name="radio-btn" id="radio2">
-          <input type="radio" name="radio-btn" id="radio3">
-          <input type="radio" name="radio-btn" id="radio4">
-          <!--radio buttons end-->
-          <!--slide images start-->
-          <div class="slide first">
-            <img src="{% static 'img/3.jpg' %}" alt="">
-          </div>
-          <div class="slide">
-            <img src="{% static 'img/2.jpg' %}" alt="">
-          </div>
-          <div class="slide">
-            <img src="{% static 'img/1.jpg' %}" alt="">
-          </div>
-          <div class="slide">
-            <img src="{% static 'img/4.jpg' %}" alt="">
-          </div>
-          <!--slide images end-->
-          <!--automatic navigation start-->
-          <div class="navigation-auto">
-            <div class="auto-btn1"></div>
-            <div class="auto-btn2"></div>
-            <div class="auto-btn3"></div>
-            <div class="auto-btn4"></div>
-          </div>
-          <!--automatic navigation end-->
-        </div>
-        <!--manual navigation start-->
-        <div class="navigation-manual">
-          <label for="radio1" class="manual-btn"></label>
-          <label for="radio2" class="manual-btn"></label>
-          <label for="radio3" class="manual-btn"></label>
-          <label for="radio4" class="manual-btn"></label>
-        </div>
-        <!--manual navigation end-->
+  <div class="slider-container">
+    <div class="slider-track" id="sliderTrack">
+      <div class="slide active">
+        <img src="{% static 'img/3.jpg' %}" alt="Slide 1">
       </div>
-      <!--image slider end-->
-  
-      <script type="text/javascript">
-      var counter = 1;
-      setInterval(function(){
-        document.getElementById('radio' + counter).checked = true;
-        counter++;
-        if(counter > 4){
-          counter = 1;
-        }
-      }, 10000);
-      </script>
+      <div class="slide">
+        <img src="{% static 'img/2.jpg' %}" alt="Slide 2">
+      </div>
+      <div class="slide">
+        <img src="{% static 'img/1.jpg' %}" alt="Slide 3">
+      </div>
+      <div class="slide">
+        <img src="{% static 'img/4.jpg' %}" alt="Slide 4">
+      </div>
+    </div>
+
+    <!-- Navigation Dots -->
+    <div class="slider-nav">
+      <span class="nav-dot active" data-slide="0"></span>
+      <span class="nav-dot" data-slide="1"></span>
+      <span class="nav-dot" data-slide="2"></span>
+      <span class="nav-dot" data-slide="3"></span>
+    </div>
+  </div>
 </section>
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const dots = document.querySelectorAll('.nav-dot');
+  let currentSlide = 0;
+
+  function showSlide(index) {
+    const track = document.getElementById('sliderTrack');
+    track.style.transform = `translateX(-${index * 100}%)`;
+    
+    slides.forEach(slide => slide.classList.remove('active'));
+    dots.forEach(dot => dot.classList.remove('active'));
+    
+    slides[index].classList.add('active');
+    dots[index].classList.add('active');
+    
+    currentSlide = index;
+  }
+
+  dots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      const slideIndex = parseInt(dot.getAttribute('data-slide'));
+      showSlide(slideIndex);
+    });
+  });
+
+  setInterval(() => {
+    currentSlide = (currentSlide + 1) % slides.length;
+    showSlide(currentSlide);
+  }, 8000); // 8 seconds interval
+</script>
+
 <!-- home end -->
 
 <!-- video_gallery start -->

@@ -1,77 +1,128 @@
-<div style="height: 80vh;overflow-y: scroll; border-radius: 10px; position: relative; border: 1px solid black; width: 98%;margin: 0 auto;">
-<div style="position: sticky;top: 0;left: 0;right: 0;background-color: white;padding: 10px; text-align: center;">Hostel Student Details &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; M {{male_student}} &nbsp; F {{female_student}} &nbsp; T {{total_student}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; T ₹.{{all_total_amount}} &nbsp; <h class="text-danger">P ₹.{{all_pending}}</h> &nbsp; <h class="text-success">R ₹.{{all_received}}</h></div>
-    <style>
-        .college_branch_name_for_hostel{
-            margin: 0 auto;
-            width: 95%;
-        background-color: #c8cdff;
-        margin-top: 10px;
-        padding: 5px;
-        border-radius: 5px;
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0;
-        .college{
-            font-weight: 700;
-        }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scrolling Cards</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #121212;
+      color: #fff;
+      overflow-x: hidden;
     }
-    .years_main_box_for_hostel{
-        margin: 0 auto;
-        width: 95%;
-        background-color: #c8cdff;
-        display: flex;
-        justify-content: space-evenly;
-        gap: 0px;
-        border-radius: 10px;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        border-top-left-radius: 0;
-        border-top-right-radius: 0;
-        .year_box{
-            text-align: center;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            padding: 5px;
-            width: 300px;
-            background-color: white;
-            .year_box2{
-                display: flex;
-                justify-content: space-evenly;
-            }
-        }
+
+    .section {
+      padding: 40px 20px;
     }
-    
-</style>
-{% for b in branches %}
-<div class="college_branch_name_for_hostel">
-    <div class="college">{{b.college.name}}</div>
-    <div class="branch">({{b.name}})</div>
-    <div>M {{b.male}} </div>
-    <div>F {{b.female}} </div>
-    <div><b>T{{b.total}}</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </div>
-    <div>T ₹.{{b.branch_total_amount}} </div>
-    <div class="text-danger">P ₹.{{b.pending_amount}} </div>
-    <div class="text-success">R ₹.{{b.branch_received}} </div>
-</div> 
-<div class="years_main_box_for_hostel">
-    {% for y in b.years %}
-    <div class="year_box">
-        <div class="year_box1">{{y.name}}</div>
-        <div class="year_box2">
-            <div>M  {{y.male}}</div>
-            <div>F  {{y.female}}</div>
-            <div>T  {{y.total}}</div>
-        </div>
-        <div class="year_box2">
-            <div>T  ₹.{{y.year_total_amount}}</div>
-            <div class="text-danger">P  {{y.year_pending_amount}}</div>
-            <div class="text-success">R  {{y.year_received}}</div>
-        </div>
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .scroll-container {
+      display: flex;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      gap: 20px;
+      padding: 10px;
+    }
+
+    .scroll-container::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    .scroll-container::-webkit-scrollbar-thumb {
+      background: #444;
+      border-radius: 10px;
+    }
+
+    .card {
+      min-width: 250px;
+      height: 300px;
+      background: linear-gradient(135deg, #1e1e1e, #2c2c2c);
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      flex-shrink: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+    }
+
+    .buttons {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    button {
+      background: #ff4081;
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      margin: 0 10px;
+      font-size: 16px;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #e91e63;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="section">
+    <h2>Scroll Through Cards</h2>
+    <div class="buttons">
+      <button onclick="scrollLeft()">← Prev</button>
+      <button onclick="scrollRight()">Next →</button>
     </div>
-    {% endfor %}
-</div>
-<br>
-{% endfor %}
-</div>
+    <div class="scroll-container" id="cardContainer">
+      <div class="card">
+        <h3>Card 1</h3>
+        <p>Short description or feature.</p>
+      </div>
+      <div class="card">
+        <h3>Card 2</h3>
+        <p>Short description or feature.</p>
+      </div>
+      <div class="card">
+        <h3>Card 3</h3>
+        <p>Short description or feature.</p>
+      </div>
+      <div class="card">
+        <h3>Card 4</h3>
+        <p>Short description or feature.</p>
+      </div>
+      <div class="card">
+        <h3>Card 5</h3>
+        <p>Short description or feature.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const container = document.getElementById('cardContainer');
+
+    function scrollLeft() {
+      container.scrollBy({ left: -300, behavior: 'smooth' });
+    }
+
+    function scrollRight() {
+      container.scrollBy({ left: 300, behavior: 'smooth' });
+    }
+  </script>
+
+</body>
+</html>

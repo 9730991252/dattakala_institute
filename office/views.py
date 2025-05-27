@@ -16,6 +16,20 @@ def office_home(request):
     else:
         return redirect('office_login')
     
+def download_qr_code(request):
+    if request.session.has_key('office_mobile'):
+        mobile = request.session['office_mobile']
+        clerk = Clerk.objects.filter(mobile=mobile).first()
+        if not clerk:
+            return redirect('office_login')
+        
+        context={
+            'clerk':clerk
+        }
+        return render(request, 'download_qr_code.html', context)
+    else:
+        return redirect('office_login')
+    
 def profile(request):
     if request.session.has_key('office_mobile'):
         mobile = request.session['office_mobile']

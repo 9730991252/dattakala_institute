@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block head %}
+
+{% endblock head %}
+{% block content %}
+{% load static %}
+{% include 'office/office_navbar.html' %}
+{% include 'alert.html' %}
+<br>
+<div class="text-center"><b>Hostel Report</b></div>
+<br>
+<div class="container">
+    <Form method="POST">
+        {% csrf_token %}
+        <button class="btn btn-success" type="submit" name="download_excel"><i class="fa fa-download" aria-hidden="true"></i> Pending </button>
+    </Form>
+</div>
+
+<h1>{{test}}</h1>
+
+{% endblock content %}

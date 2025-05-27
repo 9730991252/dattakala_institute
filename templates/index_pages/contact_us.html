@@ -1,89 +1,103 @@
 <style>
-    .contact-section {
-        width: 100%;
-        height: 20vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 50px 20px;
-    }
-    
+  .contact-section {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: -70px;
+  }
+
+  .contact-container {
+    width: 480px;
+    background: #fff;
+    padding: 35px 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  .contact-container:hover {
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    transform: translateY(-5px);
+  }
+
+  .contact-container h2 {
+    color: #1e2a78;
+    font-weight: 700;
+    font-size: 28px;
+    margin-bottom: 15px;
+    letter-spacing: 1.1px;
+    text-transform: uppercase;
+    user-select: none;
+  }
+
+  .contact-container p {
+    color: #555;
+    font-size: 17px;
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+
+  .contact-info p {
+    font-size: 16px;
+    margin: 12px 0;
+    color: #444;
+    line-height: 1.4;
+  }
+
+  .contact-info a {
+    color: #2962ff;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.25s ease;
+  }
+
+  .contact-info a:hover {
+    color: #0039cb;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
     .contact-container {
-        width: 50%;
-        padding: 30px;
-        border: 2px solid #888;
-        border-radius: 10px;
-        box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.1);
-        text-align: center;
-        transition: all 0.3s ease-in-out;
+      width: 90%;
+      padding: 30px 20px;
     }
-    
-    .contact-container:hover {
-        box-shadow: 10px 10px 25px rgba(0, 0, 0, 0.2);
-        transform: scale(1.02);
+    .contact-container h2 {
+      font-size: 24px;
     }
-    
+    .contact-container p,
     .contact-info p {
-        font-size: 18px;
-        margin: 10px 0;
+      font-size: 15px;
     }
-    
-    .contact-info a {
-        text-decoration: none;
-        color: #007BFF;
-        font-weight: bold;
-        transition: color 0.3s ease;
-    }
-    
-    .contact-info a:hover {
-        color: #0056b3;
-    }
-    /* Responsive Design */
-@media (max-width: 768px) {
+  }
+
+  @media (max-width: 480px) {
     .contact-container {
-        width: 90%;
-        padding: 20px;
+      width: 95%;
+      padding: 25px 15px;
     }
-
-    .contact-container h2,
-    .contact-container h3 {
-        font-size: 1.5em;
+    .contact-container h2 {
+      font-size: 20px;
     }
-
+    .contact-container p,
     .contact-info p {
-        font-size: 16px;
+      font-size: 14px;
     }
-}
+  }
+</style>
 
-@media (max-width: 480px) {
-    .contact-container {
-        width: 95%;
-        padding: 15px;
-    }
-
-    .contact-container h2,
-    .contact-container h3 {
-        font-size: 1.3em;
-    }
-
-    .contact-info p {
-        font-size: 14px;
-    }
-}
-
-        </style>
-    
-        <section class="contact-section">
-            <div class="contact-container">
-                <h2 style="color: #333;">Contact Us</h2>
-                <p>Feel free to reach out to us for any inquiries or assistance.</p>
-                <div class="contact-info">
-                    <p>Email: <a href="mailto:dattakala@dattakala.edu.in">dattakala@dattakala.edu.in</a></p>
-                    <p>Mobile: <a href="tel:+9673002929">+91 9673002929</a></p>
-                    <p>Address: At Gat No:541/2,527 Off Pune-Solapur Highway,
-Swami-Chincholi (Bhigwan),
-Tal-Daund, Dist-Pune- 413130</p>
-                </div>
-            </div>
-        </section>
-    
+<section class="contact-section">
+  <div class="contact-container">
+    <h2>Contact Us</h2>
+    <p>Feel free to reach out to us for any inquiries or assistance.</p>
+    <div class="contact-info">
+      <p>Email: <a href="mailto:dattakala@dattakala.edu.in">dattakala@dattakala.edu.in</a></p>
+      <p>Mobile: <a href="tel:+9673002929">+91 9673002929</a></p>
+      <p>Address: At Gat No:541/2, 527 Off Pune-Solapur Highway,<br>
+      Swami-Chincholi (Bhigwan),<br>
+      Tal-Daund, Dist-Pune- 413130</p>
+    </div>
+  </div>
+</section>

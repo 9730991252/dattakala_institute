@@ -1,12 +1,77 @@
-<input type="text" id="dateInput" name="dateInput" pattern="\d{2}-\d{2}-\d{4}" placeholder="MM-DD-YYYY" required>
-<script>
-  const dateInput = document.getElementById('dateInput');
-  dateInput.addEventListener('input', function() {
-    const value = dateInput.value;
-    if (value && !value.match(/^\d{2}-\d{2}-\d{4}$/)) {
-      dateInput.setCustomValidity('Please enter date in MM-DD-YYYY format (e.g., 04-01-1986)');
-    } else {
-      dateInput.setCustomValidity('');
+<div style="height: 80vh;overflow-y: scroll; border-radius: 10px; position: relative; border: 1px solid black; width: 98%;margin: 0 auto;">
+<div style="position: sticky;top: 0;left: 0;right: 0;background-color: white;padding: 10px; text-align: center;">Hostel Student Details &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; M {{male_student}} &nbsp; F {{female_student}} &nbsp; T {{total_student}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; T ₹.{{all_total_amount}} &nbsp; <h class="text-danger">P ₹.{{all_pending}}</h> &nbsp; <h class="text-success">R ₹.{{all_received}}</h></div>
+    <style>
+        .college_branch_name_for_hostel{
+            margin: 0 auto;
+            width: 95%;
+        background-color: #c8cdff;
+        margin-top: 10px;
+        padding: 5px;
+        border-radius: 5px;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        .college{
+            font-weight: 700;
+        }
     }
-  });
-</script>
+    .years_main_box_for_hostel{
+        margin: 0 auto;
+        width: 95%;
+        background-color: #c8cdff;
+        display: flex;
+        justify-content: space-evenly;
+        gap: 0px;
+        border-radius: 10px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        .year_box{
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 5px;
+            width: 300px;
+            background-color: white;
+            .year_box2{
+                display: flex;
+                justify-content: space-evenly;
+            }
+        }
+    }
+    
+</style>
+{% for b in branches %}
+<div class="college_branch_name_for_hostel">
+    <div class="college">{{b.college.name}}</div>
+    <div class="branch">({{b.name}})</div>
+    <div>M {{b.male}} </div>
+    <div>F {{b.female}} </div>
+    <div><b>T{{b.total}}</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </div>
+    <div>T ₹.{{b.branch_total_amount}} </div>
+    <div class="text-danger">P ₹.{{b.pending_amount}} </div>
+    <div class="text-success">R ₹.{{b.branch_received}} </div>
+</div> 
+<div class="years_main_box_for_hostel">
+    {% for y in b.years %}
+    <div class="year_box">
+        <div class="year_box1">{{y.name}}</div>
+        <div class="year_box2">
+            <div>M  {{y.male}}</div>
+            <div>F  {{y.female}}</div>
+            <div>T  {{y.total}}</div>
+        </div>
+        <div class="year_box2">
+            <div>T  ₹.{{y.year_total_amount}}</div>
+            <div class="text-danger">P  {{y.year_pending_amount}}</div>
+            <div class="text-success">R  {{y.year_received}}</div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+<br>
+{% endfor %}
+</div>

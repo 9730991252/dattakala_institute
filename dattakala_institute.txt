@@ -45,6 +45,7 @@ source venv/bin/activate
 pip install django
 pip install pillow
 pip install gunicorn
+pip install num2words
 
 ⁡⁣⁢⁢#pip install opencv-python
 #pip install cmake

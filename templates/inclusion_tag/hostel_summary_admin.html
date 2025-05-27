@@ -1,66 +1,95 @@
+<br>
 <style>
-    .hostel_summary_box{
-        width: 50%;
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f8f9fa;
     }
-    .hostel_summary_title{
-        width: 100%;
-        background-color: rgb(255, 187, 155);
-        border-radius: 5px;
-        padding: 5px;
-        text-align: center;
+
+    .hostel_summary_box {
+        width: 96%;
+        max-width: 900px;
+        margin: auto;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        background-color: #ffffff;
+    }
+
+    .hostel_summary_title {
+        background: linear-gradient(90deg, #ff9966, #ff5e62);
+        color: #fff;
+        padding: 12px 20px;
+        font-size: 1.4rem;
         font-weight: 700;
-                border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0;
+        text-align: center;
+        border-bottom: 2px solid #ffffff;
     }
-    .hostel_summary_head{
+
+    .hostel_summary_title d {
+        font-weight: 400;
+        font-size: 0.95rem;
+        margin-left: 15px;
+    }
+
+    .hostel_summary_body {
         display: grid;
-        grid-template-columns: 2fr 1fr 1fr 1fr;
-        background-color: rgb(255, 187, 155);
+        grid-template-columns: 1.2fr 1fr 1fr 1fr;
         padding: 1px;
         gap: 1px;
-        font-weight: 700;
+        background-color: #eeeeee;
     }
-    .hostel_summary_head div {
-        background-color: white;
-        text-align: center;
-    }
-    .hostel_summary_body{
-        display: grid;
-        grid-template-columns: 2fr 1fr 1fr 1fr;
-        background-color: rgb(255, 187, 155);
-        padding: 1px;
-        gap: 1px;
-    }
+
     .hostel_summary_body div {
+        background-color: #ffffff;
+        padding: 14px 10px;
+        font-size: 1rem;
+        font-weight: 500;
         text-align: center;
-        background-color: white;
+        transition: background-color 0.3s ease;
+    }
+
+    .hostel_summary_body div:hover {
+        background-color: #f1f1f1;
+    }
+
+    .text-danger div:first-child {
+        background-color: #ffe5e5;
+        color: #d9534f;
+        font-weight: 700;
+    }
+
+    .text-success div:first-child {
+        background-color: #e5ffed;
+        color: #28a745;
+        font-weight: 700;
+    }
+
+    .text-danger,
+    .text-success {
+        font-weight: 600;
     }
 </style>
+
 <div class="container">
     <div class="hostel_summary_box">
-        <div class="hostel_summary_title"> Hostel Summary <d style="font-weight: 400;margin-left: 10px;">M {{male_student}} &nbsp;&nbsp;&nbsp; F {{female_student}} &nbsp;&nbsp;&nbsp; T {{total_student}}</d>  </div>
-        <div class="hostel_summary_head">
-            <div>Installment</div>
-            <div>Total</div>
-            <div class="text-danger">Pending</div>
-            <div class="text-success">Received</div>
+        <div class="hostel_summary_title">
+            Hostel Summary 
+            <d>M {{male_student}} &nbsp;&nbsp;&nbsp; F {{female_student}} &nbsp;&nbsp;&nbsp; T {{total_student}}</d>
         </div>
-        {% for i in installment %}
+
         <div class="hostel_summary_body">
-            <div style="position: relative;padding-bottom: 20px;">
-                {{i.name}} ₹{{i.amount}}
-            <div style="position: absolute;right: 10px;bottom: 0;">M {{i.male_student}} &nbsp;&nbsp;&nbsp; F {{i.female_student}} &nbsp;&nbsp;&nbsp; T {{i.total_student}}</div>
-            </div>
-            <div>{{i.total_amount}}</div>
-            <div class="text-danger">{{i.pending}}</div>
-            <div class="text-success">{{i.received}}</div>
+            <div>Total {{all_total_amount}}</div>
+            <div style="grid-column: span 3;">{{word_total_amount}}</div>
         </div>
-        {% endfor  %}
-        <div class="hostel_summary_body">
-            <div style="font-weight: 700;">Total</div>
-            <div style="font-weight: 700;">{{all_total_amount}}</div>
-            <div style="font-weight: 700;" class="text-danger">{{all_pending}}</div>
-            <div style="font-weight: 700;" class="text-success">{{all_received}}</div>
+
+        <div class="hostel_summary_body text-danger">
+            <div>Pending {{all_pending}}</div>
+            <div style="grid-column: span 3;">{{word_all_pending}}</div>
+        </div>
+
+        <div class="hostel_summary_body text-success">
+            <div>Received {{all_received}}</div>
+            <div style="grid-column: span 3;">{{word_all_received}}</div>
         </div>
     </div>
 </div>

@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+{% block head %}
+{% load static %}
+    <link rel="shortcut icon" type="jpg" href="{% static 'img/logo.jpg' %}" class="profile-image" >
+
+    <meta property="og:type" content="website" />
+    <meta property=og:url content= "https://dattakala.com" />  <!-- your  url -->
+    <meta property="og:image:width" content="50"/>
+    <meta property="og:image:height" content="50"/>
+{% endblock head %}
+{% block content %}
+<!-- header start -->
+<link rel="stylesheet" href="{% static 'css/index_header.css' %}">
+<header class="dk-header">
+  <div class="dk-header-top">
+    <nav class="dk-nav">
+      <a href="#">Events</a>
+      <a href="#">Features</a>
+    </nav>
+    <div class="dk-social">
+      <a href="#"><i class="fa-brands fa-youtube"></i></a>
+      <a href="#"><i class="fa-brands fa-whatsapp"></i></a>
+      <a href="#"><i class="fa-brands fa-facebook"></i></a>
+      <a href="#"><i class="fa-brands fa-instagram"></i></a>
+    </div>
+  </div>
+
+  <div class="dk-header-bottom">
+    <div class="dk-brand">
+      <h1>Dattakala Shikshan Sanstha</h1>
+      <p class="dk-subtitle">NAAC Accredited</p>
+    </div>
+    <div class="dk-contact">
+      <div class="dk-contact-item">
+        <i class="fa-solid fa-phone-volume"></i>
+        <div>
+          <p class="dk-label">Phone</p>
+          <p>+91 9673002929</p>
+        </div>
+      </div>
+      <div class="dk-contact-item">
+        <i class="fa-solid fa-envelope"></i>
+        <div>
+          <p class="dk-label">Email</p>
+          <p>dattakala@dattakala.edu.in</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+<!-- header end -->
+<br>
+<section id="home">
+
+  <style>
+      .home_head{
+          text-align: center;
+          font-size: 20px;
+      }
+  </style>
+    <!-- navBar start -->
+    {% include 'home/index_navbar.html' %}
+    {% include 'alert.html' %}
+    <!-- navBar end -->
+    
+    <br>
+    <div class="home_head">
+        <h>Student Self Registration Form</h>
+    </div>
+
+    <!-- Student First Form -->
+        <style>
+      /* Custom styles to complement Tailwind */
+      .form-container {
+        width: 400px;
+        background: linear-gradient(145deg, #ffffff, #f0f4f8);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        border-radius: 12px;
+        padding: 2rem;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        margin: 0 auto;
+      }
+      .form-container:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+      }
+      .form-control {
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        padding: 0.75rem;
+        width: 100%;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      }
+      .form-control:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+      }
+      .btn-primary {
+        background-color: #3b82f6;
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+      }
+      .btn-primary:hover {
+        background-color: #2563eb;
+        transform: translateY(-2px);
+      }
+      /* Ensure page background and centering */
+      .page-container {
+        background-color: #e2e8f0; /* Soft blue-gray background */
+        min-height: 100vh;
+        padding-top: 50px;
+      }
+        </style>
+
+    <div class="page-container">
+      <div class="form-container">
+        <h5 class="text-2xl font-bold text-center text-gray-800 mb-6">Add Student</h5>
+        <form method="POST" class="space-y-6">
+          {% csrf_token %}
+          <div class="mb-4">
+            <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Name</label>
+            <input type="text" oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')" name="name" id="name" class="form-control" placeholder="Enter student name" required>
+          </div>
+          <div class="mb-4">
+            <label for="aadhaar" class="block text-sm font-medium text-gray-700 mb-2">Aadhaar Number</label>
+            <input type="text"   oninput="this.value = this.value.replace(/[^0-9]/g, '')"  maxlength="12" name="aadhaar_number"  id="aadhaar" class="form-control" placeholder="Enter Aadhaar number" required>
+          </div>
+          <div class="text-center" id="add_student">
+            <img src='{% static "img/loader.gif" %}' id="loader" style="display: none; width: 50px; margin: 0 auto;">
+            <button type="submit" class="btn-primary" name="submit_student_detail">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+</section>
+<br><br><br><br>
+<br><br><br><br>
+{% include 'home/index_footer.html' %}
+{% endblock content %}

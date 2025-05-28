@@ -64,13 +64,18 @@ class Student(models.Model):
     added_date = models.DateField(auto_now_add=True)
     address = models.CharField(max_length=255, null=True)
     added_by = models.ForeignKey(Clerk, on_delete=models.CASCADE, null=True, related_name='added_by')
-    tocken = models.CharField(max_length=1000, null=True, blank=True)
     date_of_birth = models.DateField(null=True)
     father_name = models.CharField(max_length=100, null=True)
     mother_name = models.CharField(max_length=100, null=True)
     parent_mobile = models.IntegerField(null=True)
     updated_date = models.DateTimeField(auto_now=True, null=True)
     updated_by = models.ForeignKey(Clerk, on_delete=models.CASCADE, null=True, related_name='updated_by_student')
+    approval_status = models.IntegerField(default=0)  # 0 = pending, 1 = approved, 2 = rejected
+    approved_by = models.ForeignKey(Clerk, on_delete=models.CASCADE, null=True, related_name='approved_by_clerk')
+    approved_date = models.DateTimeField(null=True)
+    blood_group = models.CharField(max_length=100, null=True)
+    email = models.EmailField(null=True)
+    current_address = models.CharField(max_length=500, null=True)
 
 class Student_college_detail(models.Model):
     batch = models.ForeignKey(Batch, on_delete=models.CASCADE)

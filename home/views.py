@@ -42,6 +42,32 @@ def index(request):
     }
     return render(request, 'index.html', context)
 
+def self_registration_student(request):
+    if 'submit_student_detail'in request.POST:
+        name = request.POST.get('name')
+        aadhaar_number = request.POST.get('aadhaar_number')
+        if len(aadhaar_number) < 12:
+            messages.error(request, 'Aadhaar Number should be 12 digits')
+            return redirect('/self_registration_student/#home')
+        else:
+            student = Student.objects.filter(aadhaar_number=aadhaar_number).first()
+            if student:
+                if student.approval_status == 0:
+                    pass
+                else:
+                    messages.error(request, 'Please Visit to Office!')
+                
+            else:
+                pass
+                # student = Student.objects.create(
+                #     name=name,
+                #     aadhaar_number=aadhaar_number,
+                # )
+    context = {
+        'student'
+    }
+    return render(request, 'self_registration_student.html', context)
+
 def logout(request):
     if request.session.has_key('admin_mobile'):
         del request.session['admin_mobile']

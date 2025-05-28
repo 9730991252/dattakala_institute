@@ -16,6 +16,125 @@ def office_home(request):
     else:
         return redirect('office_login')
     
+def cast_category(request):
+    if request.session.has_key('office_mobile'):
+        mobile = request.session['office_mobile']
+        clerk = Clerk.objects.filter(mobile=mobile).first()
+        if not clerk:
+            return redirect('office_login')
+        if 'add_cast_category'in request.POST:
+            name = request.POST.get('name').upper()
+            if Cast_category.objects.filter(name=name).exists():
+                messages.error(request, 'Cast Category already exists!')
+            else:
+                Cast_category.objects.create(
+                    name=name,
+                    created_by=clerk,
+                    )
+                messages.success(request, 'Cast Category added successfully!')
+            return redirect('cast_category')
+        if 'edit_cast_category'in request.POST:
+            cast_category_id = request.POST.get('cast_category_id')
+            name = request.POST.get('name').upper()
+            if Cast_category.objects.filter(name=name).exclude(id=cast_category_id).exists():
+                messages.error(request, 'Cast Category already exists!')
+            else:
+                Cast_category.objects.filter(id=cast_category_id).update(
+                    name=name,
+                ) 
+                messages.success(request, 'Cast Category updated successfully!')
+            return redirect('cast_category')
+        if 'change_cast_category'in request.POST:
+            cast_category_id = request.POST.get('cast_category_id')
+            cast_category = Cast_category.objects.get(id=cast_category_id)
+            cast_category.status = 1 if cast_category.status == 0 else 0
+            cast_category.save()
+            messages.success(request, 'Cast Category status updated successfully!')
+            return redirect('cast_category')
+        context={
+            'clerk':clerk,
+            'cast_category':Cast_category.objects.all(),
+        }
+        return render(request, 'cast_category.html', context)
+    else:
+        return redirect('office_login')
+    
+def address(request):
+    if request.session.has_key('office_mobile'):
+        mobile = request.session['office_mobile']
+        clerk = Clerk.objects.filter(mobile=mobile).first()
+        if not clerk:
+            return redirect('office_login')
+        if 'add_district'in request.POST:
+            name = request.POST.get('name').upper()
+            if District.objects.filter(name=name).exists():
+                messages.error(request, 'District already exists!')
+            else:
+                District.objects.create(
+                    name=name,
+                    created_by=clerk,
+                    )
+                messages.success(request, 'District added successfully!')
+            return redirect('address')
+        if 'add_taluka'in request.POST:
+            name = request.POST.get('name').upper()
+            district = request.POST.get('district')
+            if Taluka.objects.filter(name=name).exists():
+                messages.error(request, 'Taluka already exists!')
+            else:
+                Taluka.objects.create(
+                    name=name,
+                    district_id=district,
+                    created_by=clerk,
+                    )
+                messages.success(request, 'Taluka added successfully!')
+        if 'edit_district'in request.POST:
+            district_id = request.POST.get('district_id')
+            name = request.POST.get('name').upper()
+            if District.objects.filter(name=name).exclude(id=district_id).exists():
+                messages.error(request, 'District already exists!')
+            else:
+                District.objects.filter(id=district_id).update(
+                    name=name,
+                )
+                messages.success(request, 'District updated successfully!')
+            return redirect('address')
+        if 'edit_taluka'in request.POST:
+            taluka_id = request.POST.get('taluka_id')
+            name = request.POST.get('name').upper()
+            district = request.POST.get('district')
+            if Taluka.objects.filter(name=name).exclude(id=taluka_id).exists():
+                messages.error(request, 'Taluka already exists!')
+            else:
+                Taluka.objects.filter(id=taluka_id).update(
+                    name=name,
+                    district_id=district,
+                )
+                messages.success(request, 'Taluka updated successfully!')
+            return redirect('address')
+        if 'change_district_status'in request.POST:
+            district_id = request.POST.get('district_id')
+            district = District.objects.get(id=district_id)
+            district.status = 1 if district.status == 0 else 0
+            district.save()
+            messages.success(request, 'District status updated successfully!')
+            return redirect('address')
+        if 'change_taluka_status'in request.POST:
+            taluka_id = request.POST.get('taluka_id')
+            taluka = Taluka.objects.get(id=taluka_id)
+            taluka.status = 1 if taluka.status == 0 else 0
+            taluka.save()
+            messages.success(request, 'Taluka status updated successfully!')
+            return redirect('address')
+        context={
+            'clerk':clerk,
+            'districts':District.objects.all().order_by('name'),
+            'taluka':Taluka.objects.all().order_by('name').order_by('district'),
+        }
+        return render(request, 'address.html', context)
+    else:
+        return redirect('office_login')
+    
 def download_qr_code(request):
     if request.session.has_key('office_mobile'):
         mobile = request.session['office_mobile']

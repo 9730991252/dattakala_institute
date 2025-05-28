@@ -1,0 +1,283 @@
+{% extends 'base.html' %}
+{% block head %}
+<style>
+  .modal {
+    margin-top: 50px;
+  }
+  .spinner-border {
+    display: none;
+  }
+  .container {
+    max-width: 1200px; /* Adjust as needed */
+    margin: 0 auto;
+    padding: 20px;
+  }
+  .table-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    margin: 50px auto;
+  }
+  .table-section {
+    flex: 1; /* Each section takes equal width */
+    max-width: 48%; /* Approximately 50% width with some margin */
+  }
+  table {
+    width: 100%; /* Full width within its container */
+    border-collapse: collapse;
+  }
+  tr:nth-of-type(odd) {
+    background: #eee;
+  }
+  th {
+    background: #3498db;
+    color: white;
+    font-weight: bold;
+  }
+  td, th {
+    padding: 10px;
+    border: 1px solid #ccc;
+    text-align: left;
+    font-size: 18px;
+  }
+  .btn-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+</style>
+{% endblock head %}
+
+{% block content %}
+{% load static %}
+{% include 'office/office_navbar.html' %}
+{% include 'alert.html' %}
+
+<div class="container">
+  <!-- Buttons Container -->
+  <div class="btn-container">
+    <!-- Add District Button -->
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Add_district">
+      Add District
+    </button>
+
+    <!-- Add Taluka Button -->
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Add_taluka">
+      Add Taluka
+    </button>
+  </div>
+
+  <!-- Add District Modal -->
+  <div class="modal fade" id="Add_district" tabindex="-1" aria-labelledby="AddDistrictModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="AddDistrictModalLabel">Add District</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form method="POST" onsubmit="document.getElementById('add_district_btn').style.display='none'; document.getElementById('addDistrictSpinner').style.display='inline-block';">
+          {% csrf_token %}
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="district_name">Name</label>
+              <input type="text" name="name" oninput="this.value = this.value.replace(/[^a-z]/g, '')" id="district_name" class="form-control" placeholder="Enter District Name" required>
+            </div>
+            <div class="spinner-border" role="status" id="addDistrictSpinner"></div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" name="add_district" id="add_district_btn" class="btn btn-danger">Add</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Taluka Modal -->
+  <div class="modal fade" id="Add_taluka" tabindex="-1" aria-labelledby="AddTalukaModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="AddTalukaModalLabel">Add Taluka</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form method="POST" onsubmit="document.getElementById('add_taluka_btn').style.display='none'; document.getElementById('addTalukaSpinner').style.display='inline-block';">
+          {% csrf_token %}
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="district_select">District</label>
+              <select class="form-control" name="district" id="district_select" required>
+                <option value="" disabled selected>Select District</option>
+                {% for district in districts %}
+                  <option value="{{ district.id }}">{{ district.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="taluka_name">Name</label>
+              <input type="text" name="name" oninput="this.value = this.value.replace(/[^a-z]/g, '')" id="taluka_name" class="form-control" placeholder="Enter Taluka Name" required>
+            </div>
+            <div class="spinner-border" role="status" id="addTalukaSpinner"></div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" name="add_taluka" id="add_taluka_btn" class="btn btn-danger">Add</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tables Container -->
+  <div class="table-container">
+    <!-- District Table Section -->
+    <div class="table-section">
+      <h2>Districts</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>District Name</th>
+            <th>Added By</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for district in districts %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ district.name }}</td>
+            <td>{{ district.created_by.name }}</td>
+            <td style="display: flex; gap: 5px;">
+              <!-- Edit District Button -->
+              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Edit_district{{ district.id }}">
+                Edit
+              </button>
+              <!-- Status Form -->
+              <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="district_id" value="{{ district.id }}">
+                {% if district.status == 1 %}
+                  <button class="btn btn-success" type="submit" name="change_district_status">Active</button>
+                {% else %}
+                  <button class="btn btn-danger" type="submit" name="change_district_status">Deactive</button>
+                {% endif %}
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Taluka Table Section -->
+    <div class="table-section">
+      <h2>Taluka</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Taluka Name</th>
+            <th>District</th>
+            <th>Added By</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for taluka in taluka %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ taluka.name }}</td>
+            <td>{{ taluka.district.name }}</td>
+            <td>{{ taluka.created_by.name }}</td>
+            <td style="display: flex; gap: 5px;">
+              <!-- Edit Taluka Button -->
+              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Edit_taluka{{ taluka.id }}">
+                Edit
+              </button>
+              <!-- Status Form -->
+              <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="taluka_id" value="{{ taluka.id }}">
+                {% if taluka.status == 1 %}
+                  <button class="btn btn-success" type="submit" name="change_taluka_status">Active</button>
+                {% else %}
+                  <button class="btn btn-danger" type="submit" name="change_taluka_status">Deactive</button>
+                {% endif %}
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Edit District Modals -->
+  {% for district in districts %}
+  <div class="modal fade" id="Edit_district{{ district.id }}" tabindex="-1" aria-labelledby="EditDistrictModalLabel{{ district.id }}" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="EditDistrictModalLabel{{ district.id }}">Edit District</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form method="POST" onsubmit="document.getElementById('edit_district_btn{{ district.id }}').style.display='none'; document.getElementById('editDistrictSpinner{{ district.id }}').style.display='inline-block';">
+          {% csrf_token %}
+          <div class="modal-body">
+            <input type="hidden" name="district_id" value="{{ district.id }}">
+            <div class="mb-3">
+              <label for="district_name{{ district.id }}">Name</label>
+              <input type="text" name="name" oninput="this.value = this.value.replace(/[^a-z]/g, '')" id="district_name{{ district.id }}" value="{{ district.name }}" class="form-control" placeholder="Enter District Name" required>
+            </div>
+            <div class="spinner-border" role="status" id="editDistrictSpinner{{ district.id }}"></div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" name="edit_district" class="btn btn-danger" id="edit_district_btn{{ district.id }}">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+
+  <!-- Edit Taluka Modals -->
+  {% for taluka in taluka %}
+  <div class="modal fade" id="Edit_taluka{{ taluka.id }}" tabindex="-1" aria-labelledby="EditTalukaModalLabel{{ taluka.id }}" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="EditTalukaModalLabel{{ taluka.id }}">Edit Taluka</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form method="POST" onsubmit="document.getElementById('edit_taluka_btn{{ taluka.id }}').style.display='none'; document.getElementById('editTalukaSpinner{{ taluka.id }}').style.display='inline-block';">
+          {% csrf_token %}
+          <div class="modal-body">
+            <input type="hidden" name="taluka_id" value="{{ taluka.id }}">
+            <div class="mb-3">
+              <label for="district_select{{ taluka.id }}">District</label>
+              <select class="form-control" name="district" id="district_select{{ taluka.id }}" required>
+                <option value="" disabled>Select District</option>
+                {% for district in districts %}
+                  <option value="{{ district.id }}" {% if district.id == taluka.district.id %}selected{% endif %}>{{ district.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="taluka_name{{ taluka.id }}">Name</label>
+              <input type="text" name="name" oninput="this.value = this.value.replace(/[^a-z]/g, '')" id="taluka_name{{ taluka.id }}" value="{{ taluka.name }}" class="form-control" placeholder="Enter Taluka Name" required>
+            </div>
+            <div class="spinner-border" role="status" id="editTalukaSpinner{{ taluka.id }}"></div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" name="edit_taluka" class="btn btn-danger" id="edit_taluka_btn{{ taluka.id }}">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock content %}

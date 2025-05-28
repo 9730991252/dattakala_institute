@@ -220,3 +220,27 @@ class Student_received_Fee_Bank_hostel(models.Model):
     batch = models.ForeignKey(Batch, on_delete=models.CASCADE, null=True,related_name='batch_student_received_fee_bank_hostel')
     utr_number = models.CharField(max_length=100, null=True, blank=True)
     
+class District(models.Model):
+    name = models.CharField(max_length=100, null=True, blank=True)
+    created_by = models.ForeignKey(Clerk, on_delete=models.CASCADE, null=True, related_name='created_by_district')
+    created_date = models.DateTimeField(auto_now_add=True, null=True)
+    updated_date = models.DateTimeField(auto_now=True, null=True)
+    updated_by = models.ForeignKey(Clerk, on_delete=models.CASCADE, null=True, related_name='updated_by_district')
+    status = models.IntegerField(default=1)
+
+class Taluka(models.Model):
+    name = models.CharField(max_length=100, null=True, blank=True)
+    district = models.ForeignKey(District, on_delete=models.CASCADE, null=True, related_name='district_taluka')
+    created_by = models.ForeignKey(Clerk, on_delete=models.CASCADE, null=True, related_name='created_by_taluka')
+    created_date = models.DateTimeField(auto_now_add=True, null=True)
+    updated_date = models.DateTimeField(auto_now=True, null=True)
+    updated_by = models.ForeignKey(Clerk, on_delete=models.CASCADE, null=True, related_name='updated_by_taluka')
+    status = models.IntegerField(default=1)
+    
+class Cast_category(models.Model):
+    name = models.CharField(max_length=100, null=True, blank=True)
+    created_by = models.ForeignKey(Clerk, on_delete=models.CASCADE, null=True, related_name='created_by_cast_category')
+    created_date = models.DateTimeField(auto_now_add=True, null=True)
+    updated_date = models.DateTimeField(auto_now=True, null=True)
+    updated_by = models.ForeignKey(Clerk, on_delete=models.CASCADE, null=True, related_name='updated_by_cast_category')
+    status = models.IntegerField(default=1)

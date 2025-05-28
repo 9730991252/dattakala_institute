@@ -6,16 +6,20 @@
 {% load static %}
 {% include 'office/office_navbar.html' %}
 {% include 'alert.html' %}
+{% load admin_tag %}
 <br>
 <div class="text-center"><b>Hostel Report</b></div>
 <br>
 <div class="container">
     <Form method="POST">
         {% csrf_token %}
-        <button class="btn btn-success" type="submit" name="download_excel"><i class="fa fa-download" aria-hidden="true"></i> Pending </button>
+        <button class="btn btn-success" type="submit" name="download_excel"><i class="fa fa-download" aria-hidden="true"></i> Pending Excel</button>
     </Form>
 </div>
+<br><br>
 
-<h1>{{test}}</h1>
+{% college_branches_hostel_student_details_admin clerk.batch_id %}
+{% hostel_summary_admin clerk.batch_id %}
+
 
 {% endblock content %}

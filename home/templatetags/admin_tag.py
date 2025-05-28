@@ -163,9 +163,9 @@ def hostel_summary_admin(batch_id):
     p = all_total_amount-all_received
     
     return {
-        'all_total_amount':all_total_amount,
-        'all_received':all_received,
-        'all_pending':all_total_amount-all_received,
+        'all_total_amount': f'{all_total_amount:,}',
+        'all_received': f'{all_received:,}',
+        'all_pending': f'{all_total_amount-all_received:,}',
         'total_student':Student_Hostel_Fee.objects.filter(batch_id=batch_id).count(),
         'male_student':Student_Hostel_Fee.objects.filter(batch_id=batch_id, student__gender='Male').count(),
         'female_student':Student_Hostel_Fee.objects.filter(batch_id=batch_id, student__gender='Female').count(),

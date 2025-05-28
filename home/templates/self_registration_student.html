@@ -1,143 +1,347 @@
 {% extends 'base.html' %}
 {% block head %}
 {% load static %}
-    <link rel="shortcut icon" type="jpg" href="{% static 'img/logo.jpg' %}" class="profile-image" >
-
+    <link rel="shortcut icon" type="jpg" href="{% static 'img/logo.jpg' %}" class="profile-image">
     <meta property="og:type" content="website" />
-    <meta property=og:url content= "https://dattakala.com" />  <!-- your  url -->
+    <meta property="og:url" content="https://dattakala.com" />
     <meta property="og:image:width" content="50"/>
     <meta property="og:image:height" content="50"/>
+    <!-- Include Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Ensure viewport for mobile responsiveness -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 {% endblock head %}
 {% block content %}
 <!-- header start -->
 <link rel="stylesheet" href="{% static 'css/index_header.css' %}">
-<header class="dk-header">
-  <div class="dk-header-top">
-    <nav class="dk-nav">
-      <a href="#">Events</a>
-      <a href="#">Features</a>
+<header class="dk-header bg-gradient-to-r from-blue-800 to-blue-600 text-white">
+  <div class="dk-header-top flex flex-col sm:flex-row justify-between items-center p-4 max-w-7xl mx-auto space-y-4 sm:space-y-0">
+    <nav class="dk-nav flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-6 text-center">
+      <a href="#" class="hover:text-blue-200 transition duration-300 text-sm sm:text-base">Events</a>
+      <a href="#" class="hover:text-blue-200 transition duration-300 text-sm sm:text-base">Features</a>
     </nav>
-    <div class="dk-social">
-      <a href="#"><i class="fa-brands fa-youtube"></i></a>
-      <a href="#"><i class="fa-brands fa-whatsapp"></i></a>
-      <a href="#"><i class="fa-brands fa-facebook"></i></a>
-      <a href="#"><i class="fa-brands fa-instagram"></i></a>
+    <div class="dk-social flex space-x-4">
+      <a href="#"><i class="fa-brands fa-youtube hover:text-blue-200 transition duration-300 text-lg"></i></a>
+      <a href="#"><i class="fa-brands fa-whatsapp hover:text-blue-200 transition duration-300 text-lg"></i></a>
+      <a href="#"><i class="fa-brands fa-facebook hover:text-blue-200 transition duration-300 text-lg"></i></a>
+      <a href="#"><i class="fa-brands fa-instagram hover:text-blue-200 transition duration-300 text-lg"></i></a>
     </div>
   </div>
-
-  <div class="dk-header-bottom">
-    <div class="dk-brand">
-      <h1>Dattakala Shikshan Sanstha</h1>
-      <p class="dk-subtitle">NAAC Accredited</p>
+  <div class="dk-header-bottom flex flex-col sm:flex-row justify-between items-center p-4 sm:p-6 max-w-7xl mx-auto border-t border-blue-500 space-y-4 sm:space-y-0">
+    <div class="dk-brand text-center sm:text-left">
+      <h1 class="text-2xl sm:text-3xl font-bold">Dattakala Shikshan Sanstha</h1>
+      <p class="dk-subtitle text-xs sm:text-sm mt-1">NAAC Accredited</p>
     </div>
-    <div class="dk-contact">
-      <div class="dk-contact-item">
-        <i class="fa-solid fa-phone-volume"></i>
+    <div class="dk-contact flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-8">
+      <div class="dk-contact-item flex items-center space-x-2 justify-center sm:justify-start">
+        <i class="fa-solid fa-phone-volume text-blue-200 text-lg"></i>
         <div>
-          <p class="dk-label">Phone</p>
-          <p>+91 9673002929</p>
+          <p class="dk-label text-xs font-semibold">Phone</p>
+          <p class="text-xs sm:text-sm">+91 9673002929</p>
         </div>
       </div>
-      <div class="dk-contact-item">
-        <i class="fa-solid fa-envelope"></i>
+      <div class="dk-contact-item flex items-center space-x-2 justify-center sm:justify-start">
+        <i class="fa-solid fa-envelope text-blue-200 text-lg"></i>
         <div>
-          <p class="dk-label">Email</p>
-          <p>dattakala@dattakala.edu.in</p>
+          <p class="dk-label text-xs font-semibold">Email</p>
+          <p class="text-xs sm:text-sm">dattakala@dattakala.edu.in</p>
         </div>
       </div>
     </div>
   </div>
 </header>
 <!-- header end -->
-<br>
-<section id="home">
-
+<section id="home" class="bg-gray-100 min-h-screen">
   <style>
-      .home_head{
-          text-align: center;
-          font-size: 20px;
+    .home_head {
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #1f2937;
+      margin: 1.5rem 0;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    @media (min-width: 640px) {
+      .home_head {
+        font-size: 2.5rem;
+        margin: 2rem 0;
       }
-  </style>
-    <!-- navBar start -->
-    {% include 'home/index_navbar.html' %}
-    {% include 'alert.html' %}
-    <!-- navBar end -->
-    
-    <br>
-    <div class="home_head">
-        <h>Student Self Registration Form</h>
-    </div>
-
-    <!-- Student First Form -->
-        <style>
-      /* Custom styles to complement Tailwind */
+    }
+    .form-container {
+      max-width: 90%;
+      background: white;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1rem auto;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    @media (min-width: 640px) {
       .form-container {
-        width: 400px;
-        background: linear-gradient(145deg, #ffffff, #f0f4f8);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-        border-radius: 12px;
-        padding: 2rem;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        margin: 0 auto;
+        max-width: 600px;
+        padding: 2.5rem;
+        margin: 2rem auto;
       }
-      .form-container:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
-      }
+    }
+    .form-container:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    }
+    .form-control {
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      padding: 0.5rem;
+      width: 100%;
+      font-size: 0.875rem;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    @media (min-width: 640px) {
       .form-control {
-        border: 1px solid #d1d5db;
-        border-radius: 8px;
         padding: 0.75rem;
-        width: 100%;
-        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        font-size: 1rem;
       }
-      .form-control:focus {
-        outline: none;
-        border-color: #3b82f6;
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-      }
+    }
+    .form-control:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+    .btn-primary {
+      background-color: #3b82f6;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.875rem;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      width: 100%;
+    }
+    @media (min-width: 640px) {
       .btn-primary {
-        background-color: #3b82f6;
-        color: white;
-        padding: 0.75rem 1.5rem;
-        border-radius: 8px;
-        transition: background-color 0.3s ease, transform 0.2s ease;
+        padding: 0.75rem 2rem;
+        font-size: 1rem;
       }
-      .btn-primary:hover {
-        background-color: #2563eb;
-        transform: translateY(-2px);
-      }
-      /* Ensure page background and centering */
+    }
+    .btn-primary:hover {
+      background-color: #2563eb;
+      transform: translateY(-2px);
+    }
+    .form-label {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: #374151;
+      margin-bottom: 0.5rem;
+    }
+
+    .page-container {
+      background-color: #f1f5f9;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+    @media (min-width: 640px) {
       .page-container {
-        background-color: #e2e8f0; /* Soft blue-gray background */
-        min-height: 100vh;
-        padding-top: 50px;
+        padding: 2rem;
       }
-        </style>
-
-    <div class="page-container">
-      <div class="form-container">
-        <h5 class="text-2xl font-bold text-center text-gray-800 mb-6">Add Student</h5>
-        <form method="POST" class="space-y-6">
-          {% csrf_token %}
-          <div class="mb-4">
-            <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Name</label>
-            <input type="text" oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')" name="name" id="name" class="form-control" placeholder="Enter student name" required>
-          </div>
-          <div class="mb-4">
-            <label for="aadhaar" class="block text-sm font-medium text-gray-700 mb-2">Aadhaar Number</label>
-            <input type="text"   oninput="this.value = this.value.replace(/[^0-9]/g, '')"  maxlength="12" name="aadhaar_number"  id="aadhaar" class="form-control" placeholder="Enter Aadhaar number" required>
-          </div>
-          <div class="text-center" id="add_student">
-            <img src='{% static "img/loader.gif" %}' id="loader" style="display: none; width: 50px; margin: 0 auto;">
-            <button type="submit" class="btn-primary" name="submit_student_detail">Submit</button>
-          </div>
-        </form>
-      </div>
+    }
+  </style>
+  <!-- navBar start -->
+  {% include 'home/index_navbar.html' %}
+  {% include 'alert.html' %}
+  <!-- navBar end -->
+  <div class="home_head">Student Self Registration Form</div>
+  {% if student == '' %}
+  <div class="page-container">
+    <div class="form-container">
+      <h5 class="text-xl sm:text-2xl font-bold text-center text-gray-800 mb-6 sm:mb-8">Add Student</h5>
+      <form method="POST" class="space-y-4 sm:space-y-6">
+        {% csrf_token %}
+        <div>
+          <label for="name" class="form-label">Name</label>
+          <input type="text" oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')" name="name" id="name" class="form-control" placeholder="Enter student name" required>
+        </div>
+        <div>
+          <label for="aadhaar" class="form-label">Aadhaar Number</label>
+          <input type="text" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="12" name="aadhaar_number" id="aadhaar" class="form-control" placeholder="Enter Aadhaar number" required>
+        </div>
+        <div class="text-center">
+          <img src='{% static "img/loader.gif" %}' id="loader" style="display: none; width: 40px sm; margin: 0 auto;">
+          <button type="submit" class="btn-primary" name="submit_student_detail">Submit</button>
+        </div>
+      </form>
     </div>
+  </div>
+  {% else %}
+  <div class="page-container">
+    <div class="form-container">
+      <h5 class="text-xl sm:text-2xl font-bold text-center text-gray-800 mb-6 sm:mb-8">Student Details</h5>
+      <form method="POST" class="space-y-4 sm:space-y-6">
+        {% csrf_token %}
+        <div>
+          <label for="name" class="form-label">Student Name As per Aadhar Card</label>
+          <input type="text" class="form-control" name="name" value="{{student.name}}" oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')" required>
+        </div>
+        <div>
+          <label for="aadhaar_number" class="form-label">Student Aadhaar Number</label>
+          <input type="text" class="form-control" name="aadhaar_number" value="{{student.aadhaar_number}}" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="12" required>
+        </div>
+        <div>
+          <label for="pan_number" class="form-label">Student PAN Number</label>
+          <input type="text" class="form-control" name="pan_number" value="{{student.pan_number}}" oninput="this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '')" maxlength="10" required>
+        </div>
+        <div>
+          <label for="gender" class="form-label">Gender</label>
+          <select class="form-control" name="gender" id="gender" required>
+            <option value="" disabled>Select Gender</option>
+            <option value="Male" {% if student.gender == 'Male' %}selected{% endif %}>Male</option>
+            <option value="Female" {% if student.gender == 'Female' %}selected{% endif %}>Female</option>
+          </select>
+        </div>
+        <div>
+          <label for="date_of_birth" class="form-label">Date of Birth</label>
+          <input type="date" class="form-control" name="date_of_birth" value="{{student.date_of_birth}}" required>
+        </div>
+        <div>
+          <label for="blood_group" class="form-label">Blood Group</label>
+          <select class="form-control" name="blood_group" id="blood_group" required>
+            <option value="" disabled>Select Blood Group</option>
+        <div>
+          <label for="taluka" class="form-label">Taluka</label>
+          <select class="form-control" name="taluka" id="taluka" required>
+            <option value="" disabled>Select Taluka</option>
+            <option value="" disabled>Please Select District First</option>
+          </select>
+        </div>
+        </div>
+        <div>
+          <label for="mobile" class="form-label">Student Mobile No.</label>
+          <input type="text" class="form-control" name="mobile" value="{{student.mobile}}" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="10" required>
+        </div>
+        <div>
+          <label for="parent_mobile" class="form-label">Parent Mobile No.</label>
+          <input type="text" class="form-control" name="parent_mobile" value="{{student.parent_mobile}}" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="10" required>
+        </div>
+        <div>
+          <label for="email" class="form-label">E-Mail ID</label>
+          <input type="email" class="form-control" name="email" value="{{student.email}}" required>
+        </div>
+        <div>
+          <label for="address" class="form-label">Permanent Address</label>
+          <textarea name="address" id="address" rows="3" class="form-control" required>{{student.address}}</textarea>
+        </div>
+        <div>
+          <label for="district" class="form-label">District</label>
+          <select class="form-control" name="district" id="district" onselect="get_taluka(this.value)" required>
+            <option value="" disabled>Select District</option>
+            {% for d in district %}
+            <option value="{{d.name}}" {% if student.district == d.name %}selected{% endif %}>{{d.name}}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div>
+          <label for="taluka" class="form-label">Taluka</label>
+          <select class="form-control" name="taluka" id="taluka" required>
+            <option value="" disabled>Select Taluka</option>
+            <div id="taluka_result">
+              <option value="" disabled>Please Select District First</option>
+            </div>
+          </select>
+        </div>
+        <div>
+          <label for="current_address" class="form-label">Current Address</label>
+          <textarea name="current_address" id="current_address" rows="3" class="form-control" required>{{student.current_address}}</textarea>
+        </div>
+        <div>
+          <label for="father_name" class="form-label">Parent Full Name</label>
+          <input type="text" class="form-control" name="father_name" value="{{student.father_name}}" oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')" required>
+        </div>
+        <div>
+          <label for="mother_name" class="form-label">Mother Full Name</label>
+          <input type="text" class="form-control" name="mother_name" value="{{student.mother_name}}" oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')" required>
+        </div>
+        <div>
+          <label for="come_to_college" class="form-label">Come to College</label>
+          <select class="form-control" name="come_to_college" id="come_to_college" required>
+            <option value="" disabled>Select Type</option>
+            <option value="Hostel" {% if student.come_to_college == 'Hostel' %}selected{% endif %}>Hostel</option>
+            <option value="Dattakala_Travelling" {% if student.come_to_college == 'Dattakala_Travelling' %}selected{% endif %}>Dattakala Travelling</option>
+            <option value="Self" {% if student.come_to_college == 'Self' %}selected{% endif %}>Self</option>
+          </select>
+        </div>
+        <div>
+          <label for="college" class="form-label">College</label>
+          <select class="form-control" name="college_id" id="college" onselect="get_college_branch(this.value)" required>
+            <option value="" disabled>Select College</option>
+            {% for c in college %}
+            <option value="{{c.id}}" {% if student.college_id == c.id %}selected{% endif %}>{{c.name}}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div>
+          <label for="year" class="form-label">Year of Admission taken in First Year OR Direct Second Year</label>
+          <select class="form-control" name="year_id" id="branch" required>
+            <option value="" disabled>Select</option>
+            {% for y in year %}
+            <option value="{{y.id}}" {% if student.year_id == y.id %}selected{% endif %}>{{y.name}}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div>
+          <label for="admission_year" class="form-label">Admission Year</label>
+          <select class="form-control" name="admission_year" id="admission_year" required>
+            <option value="" disabled>Select Year</option>
+            {% for y in admission_year %}
+            <option value="{{y.year}}" {% if student.admission_year == y.year %}selected{% endif %}>{{y.year}}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div>
+          <label for="admission_quota" class="form-label">Admission Quota</label>
+          <select class="form-control" name="admission_quota" id="admission_quota" required>
+            <option value="" disabled>Select Quota</option>
+            <option value="Cap" {% if student.admission_quota == 'Cap' %}selected{% endif %}>Cap</option>
+            <option value="Angaint_Cap" {% if student.admission_quota == 'Angaint_Cap' %}selected{% endif %}>Angaint Cap</option>
+            <option value="TFWS" {% if student.admission_quota == 'TFWS' %}selected{% endif %}>TFWS</option>
+          </select>
+        </div>
+        <div>
+          <label for="cast_category" class="form-label">Cast Category</label>
+          <select class="form-control" name="cast_category" id="cast_category" required>
+            <option value="" disabled>Select Cast Category</option>
+            {% for c in cast_category %}
+            <option value="{{c.id}}" {% if student.cast_category == c.id %}selected{% endif %}>{{c.name}}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div>
+          <label for="current_admission_type" class="form-label">Current Admission Type</label>
+          <select class="form-control" name="current_admission_type" id="current_admission_type" required>
+            <option value="" disabled>Select Type</option>
+            <option value="Temporary" {% if student.current_admission_type == 'Temporary' %}selected{% endif %}>Temporary</option>
+            <option value="Confirm" {% if student.current_admission_type == 'Confirm' %}selected{% endif %}>Confirm</option>
+          </select>
+        </div>
+        <div class="text-center">
+          <button type="submit" class="btn-primary">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <script>
+    function get_college_branch(id) {
+      $.ajax({
+        url: "{% url 'get_college_branch' %}",
+        method: "GET",
+        data: { c_id: id },
+        success: function(res) {
+          document.getElementById('branch').innerHTML = res.t;
+        }
+      });
+    }
 
+  </script>
+  {% endif %}
 </section>
-<br><br><br><br>
-<br><br><br><br>
+<br><br>
 {% include 'home/index_footer.html' %}
 {% endblock content %}

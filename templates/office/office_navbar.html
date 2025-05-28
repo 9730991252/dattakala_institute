@@ -95,7 +95,9 @@
             <div class="collapse" id="student" style="width: 90%;margin-left: auto;margin-right: 20px;">
               <div class="card card-body">
                 <a href="/office/add_student/" class="btn href_btn {% if request.path == '/office/add_student/' %} at_page {% endif %}">Add & View Student</a>
-                <a href="/office/download_qr_code/" class="btn href_btn {% if request.path == '/office//' %} at_page {% endif %} mt-2"><i class="fa fa-download" aria-hidden="true"></i> Download Qr Code</a>
+                <a href="/office/download_qr_code/" class="btn href_btn {% if request.path == '/office/download_qr_code/' %} at_page {% endif %} mt-2"><i class="fa fa-download" aria-hidden="true"></i> Student Self Registration QR Code</a>
+                <a href="/office/address/" class="btn href_btn {% if request.path == '/office/address/' %} at_page {% endif %} mt-2">Address</a>
+                <a href="/office/cast_category/" class="btn href_btn {% if request.path == '/office/cast_category/' %} at_page {% endif %} mt-2">Cast Category</a>
               </div>
             </div>
       </div>
@@ -125,7 +127,7 @@
                   </div>
                 </div>
           </div>
-                <div>
+          <div>
         <i class="fa-solid fa-building"></i> &nbsp;
             <button class="btn dropdown-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#college" aria-expanded="false" aria-controls="collapseExample">Colleges</button>
 
@@ -138,7 +140,8 @@
             </div>
 
         </div>
-      <i class="fa-solid fa-address-card"></i> &nbsp; <a href="/office/profile/" class="btn {% if request.path == '/office/profile/' %} at_page {% endif %}">Profile</a></div>
-      <a href="/office_logout/" class="btn text-danger">LogOut</a></div>
+
+          <i class="fa-solid fa-address-card"></i> &nbsp; <a href="/office/profile/" class="btn {% if request.path == '/office/profile/' %} at_page {% endif %}">Profile</a></div>
+          <a href="/office_logout/" class="btn text-danger">LogOut</a></div>
         </div>
       </div>

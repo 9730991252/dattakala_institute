@@ -10,4 +10,6 @@ urlpatterns = [
     path('profile/', views.profile, name='profile'),
     path('student_detail/<id>', views.student_detail, name='student_detail'),
     path('download_qr_code/', views.download_qr_code, name='download_qr_code'),
+    path('address/', views.address, name='address'),
+    path('cast_category/', views.cast_category, name='cast_category'),
 ]

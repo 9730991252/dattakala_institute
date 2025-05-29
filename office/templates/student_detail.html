@@ -54,7 +54,14 @@
                     <div id="basic_details">
                         Basic Details
                     </div>
-                    <div class="basic_details_body">
+                    <div class="basic_details_body" style="position: relative;">
+                        <div class="img_box" style="position: absolute;top: 0;right: 0;border-radius: 5px;overflow: hidden;">
+                            {% if student.image %}
+                            <img src="{{student.image.url}}" alt="student image" width="100px" height="100px">
+                            {% else %}
+                            <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="student image" width="100px" height="100px">
+                            {% endif %}
+                        </div>
                         <div class="basic_details_body_div">
                             <div class="basic_details_body1"> Student Name :</div>
                             <div class="basic_details_body2">{{student.name}}</div>
@@ -62,6 +69,10 @@
                         <div class="basic_details_body_div">
                             <div class="basic_details_body1">Aadhaar :</div>
                             <div class="basic_details_body2">{{student.aadhaar_number}}</div>
+                        </div>
+                        <div class="basic_details_body_div">
+                            <div class="basic_details_body1">Pan Number :</div>
+                            <div class="basic_details_body2">{{student.pan_number}}</div>
                         </div>
                         <div class="basic_details_body_div">
                             <div class="basic_details_body1">Gender :</div>
@@ -76,8 +87,33 @@
                             <div class="basic_details_body2">{{student.mobile}}</div>
                         </div>
                         <div class="basic_details_body_div" style="grid-column-start: 1;grid-column-end: 3;">
-                            <div class="basic_details_body1">Address :</div>
+                            <div class="basic_details_body1">Permanent Address :</div>
                             <div class="basic_details_body2">{{student.address}}</div>
+                        </div>
+                        <div class="basic_details_body_div" style="grid-column-start: 1;grid-column-end: 3;">
+                            <div class="basic_details_body1">Current Address :</div>
+                            <div class="basic_details_body2">{{student.address}}</div>
+                        </div>
+                        <div class="basic_details_body_div" >
+                            <div class="basic_details_body1">District:</div>
+                            <div class="basic_details_body2">{{student.district.name}}</div>
+                        </div>
+                        <div class="basic_details_body_div" >
+                            <div class="basic_details_body1">Taluka:</div>
+                            <div class="basic_details_body2">{{student.taluka.name}}</div>
+                        </div>
+                        <div class="basic_details_body_div">
+                            <div class="basic_details_body1">Blood Group :</div>
+                            <div class="basic_details_body2">{{student.blood_group}}</div>
+                        </div>
+                        <div class="basic_details_body_div">
+                            <div class="basic_details_body1">E-Mail :</div>
+                            <div class="basic_details_body2">{{student.email}}</div>
+                        </div>
+
+                        <div class="basic_details_body_div">
+                            <div class="basic_details_body1">Cast Category:</div>
+                            <div class="basic_details_body2">{{student.cast_category.name}}</div>
                         </div>
                     </div>
                     <br>

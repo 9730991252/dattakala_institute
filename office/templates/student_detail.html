@@ -1,204 +1,431 @@
 {% extends 'base.html' %}
 {% block head %}
+    <style>
+        /* Global Styles */
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #6c757d;
+            --accent-color: #17a2b8;
+            --background-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --border-radius: 8px;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
 
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+        }
+
+        /* Container and Layout */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .col-sidebar {
+            flex: 0 0 200px;
+            max-width: 200px;
+        }
+
+        .col-content {
+            flex: 1;
+            max-width: calc(100% - 220px);
+        }
+
+        /* Sidebar Buttons */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .sidebar .btn {
+            padding: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            text-align: left;
+            width: 100%;
+            box-shadow: var(--shadow);
+        }
+
+        .sidebar .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-form {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+        }
+
+        .btn-details {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid var(--secondary-color);
+        }
+
+        /* Details Sections */
+        .details-section {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .details-header {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 15px;
+            font-size: 18px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .details-body {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 10px;
+            padding: 15px;
+            background-color: #f1f9ff;
+        }
+
+        .details-item {
+            background-color: var(--card-bg);
+            padding: 10px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: var(--transition);
+        }
+
+        .details-item:hover {
+            background-color: #e9f4ff;
+        }
+
+        .details-label {
+            font-weight: 600;
+            color: var(--secondary-color);
+            flex: 0 0 150px;
+        }
+
+        .details-value {
+            flex: 1;
+        }
+
+        /* Student Image */
+        .img-box {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .img-box img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+        }
+
+        /* Approval Form */
+        .approval-form {
+            max-width: 400px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        .approval-form .form-control {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #ced4da;
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .approval-form .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+        }
+
+        .approval-form .btn {
+            width: 100%;
+            padding: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 6px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            transition: var(--transition);
+        }
+
+        .approval-form .btn:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .col-sidebar {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+
+            .col-content {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+
+            .sidebar {
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .details-body {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 {% endblock head %}
+
 {% block content %}
 {% load static %}
 {% include 'office/office_navbar.html' %}
 {% include 'alert.html' %}
 
-<style>
-    #basic_details, #parent_details, #college_details, #fee_details{
-        padding: 5px;
-        border-radius: 5px;
-        border: 1px solid #93e6ff;
-        background-color: #93e6ff;
-        text-align: center;
-        font-weight: 700;
-    }
-    .basic_details_body, .parent_details_body, .college_details_body, .fee_details_body{
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1px;
-    }
-    .basic_details_body_div, .parent_details_body_div, .college_details_body_div, .fee_details_body_div{
-        border-radius: 4px;
-        background-color: white;
-        padding: 5px;
-        display: flex;
-        justify-content: start;
-        align-items: center;
-        gap: 10px;
-    }
-</style>
-
-<br>
-
-
-
 <div class="container">
-    <div class="row"> 
-        <div class="col-sm-2">
-            <div style="display: flex;flex-direction: column;gap: 10px;">
-                <button class="btn btn-outline-success" onclick="location.reload()">Form</button>
-                <button class="btn btn-outline-primary" onclick="fetch_basic_details()">Basic Details</button>
-                <button class="btn btn-outline-primary" onclick="fetch_parent_details()">Parent Details</button>
-                <button class="btn btn-outline-primary" onclick="fetch_college_details()">College Details</button>
-                <button class="btn btn-outline-primary" onclick="fetch_fee_details()">Fee Details</button>
+    <div class="row">
+        <div class="col-sidebar">
+            <div class="sidebar">
+                <button class="btn btn-form" onclick="location.reload()">Form</button>
+                <button class="btn btn-details" onclick="fetch_basic_details()">Basic Details</button>
+                <button class="btn btn-details" onclick="fetch_parent_details()">Parent Details</button>
+                <button class="btn btn-details" onclick="fetch_college_details()">College Details</button>
+                <button class="btn btn-details" onclick="fetch_fee_details()">Fee Details</button>
             </div>
         </div>
-        <div class="col-sm-10">
-            <div class="text-center">Student Name <b> {{student.name}}</b></div>
-            <div class="container">
-                <div id="details_result">
-                    <div id="basic_details">
-                        Basic Details
-                    </div>
-                    <div class="basic_details_body" style="position: relative;">
-                        <div class="img_box" style="position: absolute;top: 0;right: 0;border-radius: 5px;overflow: hidden;">
+        <div class="col-content">
+            <h2 class="text-center" style="margin-bottom: 20px;">Student: <b>{{ student.name }}</b></h2>
+            <div id="details_result">
+                <!-- Basic Details -->
+                <div class="details-section">
+                    <div class="details-header">Basic Details</div>
+                    <div class="details-body" style="position: relative;">
+                        <div class="img-box">
                             {% if student.image %}
-                            <img src="{{student.image.url}}" alt="student image" width="100px" height="100px">
+                                <img src="{{ student.image.url }}" alt="Student Image">
                             {% else %}
-                            <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="student image" width="100px" height="100px">
+                                <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="Default Image">
                             {% endif %}
                         </div>
-                        <div class="basic_details_body_div">
-                            <div class="basic_details_body1"> Student Name :</div>
-                            <div class="basic_details_body2">{{student.name}}</div>
+                        <div class="details-item" style="display: unset;">
+                            <span class="details-label ">Student Name (As Per AAdhaar):</span><br>
+                            <span class="details-value">{{ student.name }}</span>
                         </div>
-                        <div class="basic_details_body_div">
-                            <div class="basic_details_body1">Aadhaar :</div>
-                            <div class="basic_details_body2">{{student.aadhaar_number}}</div>
+                        <div class="details-item"style="display: unset;">
+                            <span class="details-label" >Student Name (As Per SSC MarkSheet):</span><br>
+                            <span class="details-value">{{ student.student_name_as_per_ssc_marksheet }}</span>
                         </div>
-                        <div class="basic_details_body_div">
-                            <div class="basic_details_body1">Pan Number :</div>
-                            <div class="basic_details_body2">{{student.pan_number}}</div>
+                        <div class="details-item">
+                            <span class="details-label">Aadhaar:</span>
+                            <span class="details-value">{{ student.aadhaar_number }}</span>
                         </div>
-                        <div class="basic_details_body_div">
-                            <div class="basic_details_body1">Gender :</div>
-                            <div class="basic_details_body2">{{student.gender}}</div>
+                        <div class="details-item">
+                            <span class="details-label">Pan Number:</span>
+                            <span class="details-value">{{ student.pan_number }}</span>
                         </div>
-                        <div class="basic_details_body_div">
-                            <div class="basic_details_body1">Date of Birth :</div>
-                            <div class="basic_details_body2">{{student.date_of_birth|date:"d-M-Y"}}</div>
+                        <div class="details-item">
+                            <span class="details-label">Gender:</span>
+                            <span class="details-value">{{ student.gender }}</span>
                         </div>
-                        <div class="basic_details_body_div">
-                            <div class="basic_details_body1">Mobile :</div>
-                            <div class="basic_details_body2">{{student.mobile}}</div>
+                        <div class="details-item">
+                            <span class="details-label">Date of Birth:</span>
+                            <span class="details-value">{{ student.date_of_birth|date:"d-M-Y" }}</span>
                         </div>
-                        <div class="basic_details_body_div" style="grid-column-start: 1;grid-column-end: 3;">
-                            <div class="basic_details_body1">Permanent Address :</div>
-                            <div class="basic_details_body2">{{student.address}}</div>
+                        <div class="details-item">
+                            <span class="details-label">Mobile:</span>
+                            <span class="details-value">{{ student.mobile }}</span>
                         </div>
-                        <div class="basic_details_body_div" style="grid-column-start: 1;grid-column-end: 3;">
-                            <div class="basic_details_body1">Current Address :</div>
-                            <div class="basic_details_body2">{{student.address}}</div>
+                        <div class="details-item" style="grid-column: 1 / -1;">
+                            <span class="details-label">Permanent Address:</span>
+                            <span class="details-value">{{ student.address }}</span>
                         </div>
-                        <div class="basic_details_body_div" >
-                            <div class="basic_details_body1">District:</div>
-                            <div class="basic_details_body2">{{student.district.name}}</div>
+                        <div class="details-item" style="grid-column: 1 / -1;">
+                            <span class="details-label">Current Address:</span>
+                            <span class="details-value">{{ student.address }}</span>
                         </div>
-                        <div class="basic_details_body_div" >
-                            <div class="basic_details_body1">Taluka:</div>
-                            <div class="basic_details_body2">{{student.taluka.name}}</div>
+                        <div class="details-item">
+                            <span class="details-label">District:</span>
+                            <span class="details-value">{{ student.district.name }}</span>
                         </div>
-                        <div class="basic_details_body_div">
-                            <div class="basic_details_body1">Blood Group :</div>
-                            <div class="basic_details_body2">{{student.blood_group}}</div>
+                        <div class="details-item">
+                            <span class="details-label">Taluka:</span>
+                            <span class="details-value">{{ student.taluka.name }}</span>
                         </div>
-                        <div class="basic_details_body_div">
-                            <div class="basic_details_body1">E-Mail :</div>
-                            <div class="basic_details_body2">{{student.email}}</div>
+                        <div class="details-item">
+                            <span class="details-label">Blood Group:</span>
+                            <span class="details-value">{{ student.blood_group }}</span>
                         </div>
+                        <div class="details-item">
+                            <span class="details-label">E-Mail:</span>
+                            <span class="details-value">{{ student.email }}</span>
+                        </div>
+                        <div class="details-item">
+                            <span class="details-label">Cast Category:</span>
+                            <span class="details-value">{{ student.cast_category.name }}</span>
+                        </div>
+                    </div>
+                </div>
 
-                        <div class="basic_details_body_div">
-                            <div class="basic_details_body1">Cast Category:</div>
-                            <div class="basic_details_body2">{{student.cast_category.name}}</div>
+                <!-- Parent Details -->
+                <div class="details-section">
+                    <div class="details-header">Parent Details</div>
+                    <div class="details-body">
+                        <div class="details-item">
+                            <span class="details-label">Father Name:</span>
+                            <span class="details-value">{{ student.father_name }}</span>
+                        </div>
+                        <div class="details-item">
+                            <span class="details-label">Mother Name:</span>
+                            <span class="details-value">{{ student.mother_name }}</span>
+                        </div>
+                        <div class="details-item">
+                            <span class="details-label">Parent Mobile:</span>
+                            <span class="details-value">{{ student.parent_mobile }}</span>
+                        </div>
+                        <div class="details-item">
+                            <span class="details-label">Mother Mobile:</span>
+                            <span class="details-value">{{ student.mother_mobile }}</span>
                         </div>
                     </div>
-                    <br>
-                    <div id="parent_details">
-                        Parent Details
-                    </div>
-                    <div class="parent_details_body">
-                        <div class="parent_details_body_div">
-                            <div class="parent_details_body1">Father Name :</div>
-                            <div class="parent_details_body2">{{student.father_name}}</div>
-                        </div>
-                        <div class="parent_details_body_div">
-                            <div class="parent_details_body1">Mother Name :</div>
-                            <div class="parent_details_body2">{{student.mother_name}}</div>
-                        </div>
-                        <div class="parent_details_body_div">
-                            <div class="parent_details_body1">Parent Mobile :</div>
-                            <div class="parent_details_body2">{{student.parent_mobile}}</div>
-                        </div>
-                    </div>
-                    <div id="college_details">
-                        College Details
-                    </div>
-                    <div class="college_details_body">
-                        <div class="college_details_body_div">
-                            <div class="college_details_body1">College :</div>
-                            <div class="college_details_body2">{{student_college_details.college.name|slice:'35'}}</div>
-                        </div>
-                        <div class="college_details_body_div">
-                            <div class="college_details_body1">Branch :</div>
-                            <div class="college_details_body2">{{student_college_details.branch.name}}</div>
-                        </div>
-                        <div class="college_details_body_div">
-                            <div class="college_details_body1">Year :</div>
-                            <div class="college_details_body2">{{student_college_details.year.name}}</div>
-                        </div>
-                    </div>
-                    <div id="fee_details">
-                        Fee Details
-                    </div>
-                    <div class="fee_details_body">
-                        <div class="fee_details_body_div">
-                            <div class="fee_details_body1">Hostel Fee :</div>
-                            <div class="fee_details_body2">{{student_hostel_fee.hostel_fee.installment_name}}, ₹{{student_hostel_fee.hostel_fee.amount}}</div>
-                        </div>
-                    </div>
+                </div>
 
+                <!-- College Details -->
+                <div class="details-section">
+                    <div class="details-header">College Details</div>
+                    <div class="details-body">
+                        <div class="details-item">
+                            <span class="details-label">College:</span>
+                            <span class="details-value">{{ student_college_details.college.name|slice:"35" }}</span>
+                        </div>
+                        <div class="details-item">
+                            <span class="details-label">Branch:</span>
+                            <span class="details-value">{{ student_college_details.branch.name }}</span>
+                        </div>
+                        <div class="details-item">
+                            <span class="details-label">Year:</span>
+                            <span class="details-value">{{ student_college_details.year.name }}</span>
+                        </div>
+                        <div class="details-item">
+                            <span class="details-label">How To Arrive:</span>
+                            <span class="details-value">{{ student_college_details.how_to_arrive_college }}</span>
+                        </div>
+                        <div class="details-item">
+                            <span class="details-label">Admission Year:</span>
+                            <span class="details-value">{{ student_college_details.admission_year }}</span>
+                        </div>
+                        <div class="details-item">
+                            <span class="details-label">Admission Quota:</span>
+                            <span class="details-value">{{ student_college_details.admission_quota }}</span>
+                        </div>
+                        <div class="details-item">
+                            <span class="details-label">Current Admission Type:</span>
+                            <span class="details-value">{{ student_college_details.current_admission_type }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fee Details -->
+                <div class="details-section">
+                    <div class="details-header">Fee Details</div>
+                    <div class="details-body">
+                        <div class="details-item">
+                            <span class="details-label">Hostel Fee:</span>
+                            <span class="details-value">{{ student_hostel_fee.hostel_fee.installment_name }}, ₹{{ student_hostel_fee.hostel_fee.amount }}</span>
+                        </div>
+                        <div class="details-item">
+                            <span class="details-label">Hostel Form Number:</span>
+                            <span class="details-value">{{ student_hostel_fee.form_number }}</span>
+                        </div>
+                        <div class="details-item">
+                            <span class="details-label">Form Issued By:</span>
+                            <span class="details-value">{{ student_hostel_fee.form_issued_by.name }}</span>
+                        </div>
+                        <div class="details-item">
+                            <span class="details-label">Form Issued Date:</span>
+                            <span class="details-value">{{ student_hostel_fee.form_issued_date }}</span>
+                        </div>
+                    </div>
                 </div>
             </div>
-
         </div>
     </div>
+
+    <hr>
+
+    <form method="POST" class="approval-form">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="approve_form" class="form-label">Student Approval</label>
+            <select class="form-control" name="approve_status" id="approve_form">
+                <option value="0" class="text-warning" {% if student.approval_status == 0 %}selected{% endif %}>Pending</option>
+                <option value="1" class="text-success" {% if student.approval_status == 1 %}selected{% endif %}>Approve</option>
+                <option value="2" class="text-danger" {% if student.approval_status == 2 %}selected{% endif %}>Reject</option>
+            </select>
+        </div>
+        <button type="submit" class="btn" name="submit_student_approval">Submit</button>
+    </form>
 </div>
 
 <script>
-
-    function fetch_basic_details(){
-        document.getElementById('details_result').innerHTML = `{% include 'office/student_basic_detail_form.html' %}`
+    function fetch_basic_details() {
+        document.getElementById('details_result').innerHTML = `{% include 'office/student_basic_detail_form.html' %}`;
     }
-    function fetch_parent_details(){
-        document.getElementById('details_result').innerHTML = `{% include 'office/student_basic_parent_form.html' %}`
+
+    function fetch_parent_details() {
+        document.getElementById('details_result').innerHTML = `{% include 'office/student_basic_parent_form.html' %}`;
+    }
+
+    function fetch_college_details() {
+        document.getElementById('details_result').innerHTML = `{% include 'office/student_college_detail_form.html' %}`;
+    }
+
+    function fetch_fee_details() {
+        document.getElementById('details_result').innerHTML = `{% include 'office/student_fee_detail_form.html' %}`;
+    }
+
+    function get_college_branch(id) {
+        $.ajax({
+            url: "{% url 'get_college_branch' %}",
+            method: "GET",
+            data: { c_id: id },
+            success: function(res) {
+                document.getElementById('branch').innerHTML = res.t;
+            }
+        });
     }
 </script>
-
-<script>
-        function fetch_college_details(){
-        document.getElementById('details_result').innerHTML = `{% include 'office/student_college_detail_form.html' %}`
-    }
-    function fetch_fee_details(){
-        document.getElementById('details_result').innerHTML = `{% include 'office/student_fee_detail_form.html' %}`
-    }
-</script>
-<script>
-function get_college_branch(id) {
-    $.ajax({
-        url: "{% url 'get_college_branch' %}",
-        method: "GET",
-        data:{
-            c_id:id,
-        },
-        success: function(res){
-            document.getElementById('branch').innerHTML = res.t
-        }
-        })    
-}
-</script>
-
 {% endblock content %}

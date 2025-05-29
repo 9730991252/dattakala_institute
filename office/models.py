@@ -107,7 +107,8 @@ class Student(models.Model):
     taluka = models.ForeignKey(Taluka, on_delete=models.CASCADE, null=True)
     cast_category = models.ForeignKey(Cast_category, on_delete=models.CASCADE, null=True)
     image = models.ImageField(upload_to="student_images",default="",null=True, blank=True)
-    
+    student_name_as_per_ssc_marksheet = models.CharField(max_length=500, null=True)
+    mother_mobile = models.IntegerField(null=True)
 
 class Student_college_detail(models.Model):
     batch = models.ForeignKey(Batch, on_delete=models.CASCADE)
@@ -146,12 +147,6 @@ class Credit_Debit_category(models.Model):
     status = models.IntegerField(default=1)
 
 
-class Student_Image(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to="student_images",default="",null=True, blank=True)
-    added_date = models.DateTimeField(auto_now_add=True, null=True)
-    added_by = models.ForeignKey(Clerk, on_delete=models.CASCADE, null=True)
-    
 class Student_received_Fee_Bank(models.Model):
     credit_debit_category = models.ForeignKey(Credit_Debit_category, on_delete=models.CASCADE, null=True)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
@@ -222,7 +217,9 @@ class Student_Hostel_Fee(models.Model):
     added_by = models.ForeignKey(Clerk, on_delete=models.CASCADE, null=True)
     updated_date = models.DateTimeField(auto_now=True, null=True)
     updated_by = models.ForeignKey(Clerk, on_delete=models.CASCADE, null=True, related_name='updated_by_Student_Hostel_Fee')
-    
+    form_number = models.CharField(max_length=100, null=True)
+    form_issued_by = models.ForeignKey(Clerk, on_delete=models.CASCADE, null=True, related_name='form_issued_by_Student_Hostel_Fee')
+    form_issued_date = models.DateField(null=True)
     
 class Student_Received_Fee_Cash_Hostel(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)

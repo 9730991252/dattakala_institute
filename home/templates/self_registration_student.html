@@ -165,6 +165,11 @@
               <label class="form-label">Student Name (As per Aadhaar)</label>
               <input type="text" class="form-control" name="name" value="{{ student.name }}" oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')" required>
             </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Student Name (As per SSC Mark Sheet )</label>
+              <input type="text" class="form-control" name="student_name_as_per_ssc_marksheet" value="{{ student.student_name_as_per_ssc_marksheet|default_if_none:'' }}" oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')" required>
+            </div>
             
             <div class="col-md-6">
               <label class="form-label">Aadhaar Number</label>
@@ -214,6 +219,11 @@
             <div class="col-md-6">
               <label class="form-label">Parent Mobile No.</label>
               <input type="text" class="form-control" name="parent_mobile" value="{{ student.parent_mobile|default_if_none:'' }}" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="10" required>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Mother Mobile No.</label>
+              <input type="text" class="form-control" name="mother_mobile" value="{{ student.mother_mobile|default_if_none:'' }}" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="10" required>
             </div>
             
             <div class="col-md-6">

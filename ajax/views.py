@@ -61,7 +61,8 @@ def search_student_for_fees(request):
                     'aadhar_number':s.aadhaar_number,
                     'secret_pin':s.secret_pin,
                     'gender':s.gender,
-                    # 'img':Student_Image.objects.filter(student=s).first(),
+                    'approval_status':s.approval_status,
+                    'img': s.image, 
                 })
         context = {
             'student':st
@@ -92,8 +93,9 @@ def search_student_for_new_admission(request):
                     'secret_pin': s.secret_pin,
                     'gender': s.gender,
                     'added_by':s.added_by,
-                    'updated_by':s.updated_by
-                    # 'img': Student_Image.objects.filter(student=s).first(),
+                    'updated_by':s.updated_by,
+                    'approval_status':s.approval_status,
+                    'img': s.image, 
                 })
 
         context = {'student': st}

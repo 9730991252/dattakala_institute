@@ -74,6 +74,7 @@ def self_registration_student(request):
         # Save in student start
         s_id = request.POST.get('s_id')
         name = request.POST.get('name')
+        student_name_as_per_ssc_marksheet = request.POST.get('student_name_as_per_ssc_marksheet')
         aadhaar_number = request.POST.get('aadhaar_number')
         pan_number = request.POST.get('pan_number')
         gender = request.POST.get('gender')
@@ -88,6 +89,7 @@ def self_registration_student(request):
         current_address = request.POST.get('current_address')
         father_name = request.POST.get('father_name')
         mother_name = request.POST.get('mother_name')
+        mother_mobile = request.POST.get('mother_mobile')
         cast_category = request.POST.get('cast_category')
         # Save in student end
         # Save in college detail start
@@ -105,6 +107,8 @@ def self_registration_student(request):
             return redirect('student_registration')
         elif len(parent_mobile) < 10:
             messages.error(request, 'Parent mobile number should be of 10 digits')
+        elif len(mother_mobile) < 10:
+            messages.error(request, 'Mother mobile number should be of 10 digits')
             return redirect('student_registration')
         elif len(aadhaar_number) < 12:
             messages.error(request, 'Aadhaar number should be of 12 digits')
@@ -115,6 +119,7 @@ def self_registration_student(request):
                 return redirect('student_registration')
             else:
                 student.name = name
+                student.student_name_as_per_ssc_marksheet = student_name_as_per_ssc_marksheet
                 student.mobile = mobile
                 student.aadhaar_number = aadhaar_number
                 student.gender = gender
@@ -123,6 +128,7 @@ def self_registration_student(request):
                 student.father_name = father_name
                 student.mother_name = mother_name
                 student.parent_mobile = parent_mobile
+                student.mother_mobile = mother_mobile
                 student.blood_group = blood_group
                 student.email = email
                 student.current_address = current_address

@@ -190,8 +190,8 @@
 
 <div class="student_container">
     <div class="student_image">
-        {% if student_img and student_img.image %}
-            <img src="{{ student_img.image.url }}" alt="Student Image">
+        {% if student.image %}
+            <img src="{{ student.image.url }}" alt="Student Image">
         {% else %}
             <img src="https://cdn-icons-png.flaticon.com/512/201/201818.png" alt="No Image">
         {% endif %}
@@ -568,9 +568,10 @@
 
         <style>
             table {
-                width: 90%;
+                width: 110%;
                 border-collapse: collapse;
                 margin: 50px auto;
+                scale: 0.9;
             }
 
             tr:nth-of-type(odd) {
@@ -598,7 +599,7 @@
                     <th>Date</th>
                     <th>Amount</th>
                     <th>UTR / Challan </th>
-                    <th>Bank</th>
+                    <th>Bank / Cash</th>
                     <th>Received By</th>
                     <th>Action</th>
                 </tr>
@@ -607,12 +608,14 @@
                 {% for t in received_cash_hostel_fee %}
                 <tr>
                     <td>{{ t.paid_date|date:'d-m-y' }}</td>
-                    <td>₹.{{ t.received_amount }} Cash</td>
+                    <td>₹.{{ t.received_amount }}</td>
                     <td>{{t.challan_number}}</td>
-                    <td>-</td>
-                    <td style="position: relative;">
+                    <td>Cash</td>
+                    <td >
                         {{t.added_by.name}}
-                        <button style="position: absolute; top: 0; right: 0;" class="btn btn-outline-dark btn-sm"><i class="fa-solid fa-print"></i></button>
+                    </td>
+                    <td >
+                        <button class="btn btn-outline-dark btn-sm"><i class="fa-solid fa-print"></i></button>
                     </td>
                 </tr>
                 {% endfor %}
@@ -624,7 +627,6 @@
                     <td>{{ t.account.bank_name }}, {{ t.account.account_number }}</td>
                     <td>
                         {{t.added_by.name}}  {% if t.updated_by %} <h style="font-size: 12px;">(edited - {{t.updated_by.name}})</h> {% endif %}
-                        <button style="position: absolute; top: 0; right: 0;" class="btn btn-outline-dark btn-sm"><i class="fa-solid fa-print"></i></button>
                     </td>
                     <td >
                         <button class="btn btn-outline-dark btn-sm" data-bs-toggle="modal" data-bs-target="#edit_bank_t{{t.id}}"><i class="fa fa-pencil" aria-hidden="true"></i></button>

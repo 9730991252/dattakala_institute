@@ -255,10 +255,14 @@ def student_detail(request, id):
             return redirect('student_detail', id=student.id)
         if 'submit_hostel_fee_details' in request.POST:
             hostel_fee_id = request.POST.get('hostel_fee_id')
+            form_number = request.POST.get('form_number')
             if Student_Hostel_Fee.objects.filter(batch=clerk.batch, student=student).exists():
                 sh = Student_Hostel_Fee.objects.filter(batch=clerk.batch, student=student).first()
                 sh.hostel_fee_id = hostel_fee_id
+                sh.form_number = form_number
+                sh.form_issued_by = clerk
                 sh.updated_date = datetime.now()
+                sh.form_issued_date = date.today()  
                 sh.updated_by = clerk  
                 sh.save()
                 messages.success(request, 'Hostel fee updated successfully!')
@@ -267,12 +271,25 @@ def student_detail(request, id):
                 Student_Hostel_Fee(
                     batch=clerk.batch,
                     student=student,
+                    form_number=form_number,
+                    form_issued_date=date.today(),
+                    form_issued_by=clerk,
                     hostel_fee_id=hostel_fee_id,
                     added_by=clerk
                 ).save()
                 messages.success(request, 'Hostel fee added successfully!')
 
             return redirect('student_detail', id=student.id)
+        if 'submit_student_approval'in request.POST:
+            approve_status = request.POST.get('approve_status')
+            student = Student.objects.get(id=id)
+            student.approval_status = approve_status
+            student.approved_by = clerk
+            student.approved_date = datetime.now()
+            student.save()
+            messages.success(request, 'Student approval status updated successfully!')
+            return redirect('student_detail', id=student.id)
+            
         context={
             'clerk':clerk,
             'student':student,

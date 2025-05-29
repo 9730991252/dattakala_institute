@@ -136,7 +136,6 @@ def student_fee_detail(request, id):
         if not clerk:
             return redirect('office_login')
         student = get_object_or_404(Student, id=id)
-        student_img = Student_Image.objects.filter(student=student).first()
         cash_fee = Student_received_Fee_Cash.objects.filter(student=student, added_by__batch=clerk.batch)
         bank_fee = Student_received_Fee_Bank.objects.filter(student=student, added_by__batch=clerk.batch)
         received_cash_hostel_fee = Student_Received_Fee_Cash_Hostel.objects.filter(student=student, added_by__batch=clerk.batch)
@@ -209,7 +208,6 @@ def student_fee_detail(request, id):
             'student_fee_detail': student_fee_detail,
             'clerk': clerk,
             'student': student,
-            'student_img': student_img,
             'today_date':date.today(),
             'cash_fee':cash_fee,
             'bank_fee':bank_fee,

@@ -429,7 +429,7 @@
       <p style="width: 350px;color: red;margin: 0 auto;text-align: center;"><b>Dear Student Upload Recently passport size and clearly visible photo for the purpose of printing identity card. </b></p>
       <div class="student_box">
           <div class="img_box">
-              {% if student.image != None %}
+              {% if student.image %}
               <img onclick="document.getElementById('image{{student.id}}').click()" src="{{student.image.url}}" style="width: 100px; border-radius: 10px;" alt="">
               {% else %}
                   <label class="file_input" for="image{{student.id}}">

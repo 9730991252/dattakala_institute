@@ -283,7 +283,6 @@ def student_detail(request, id):
             return redirect('student_detail', id=student.id)
         if 'submit_student_approval'in request.POST:
             approve_status = request.POST.get('approve_status')
-            student = Student.objects.get(id=id)
             student.approval_status = approve_status
             student.approved_by = clerk
             student.approved_date = datetime.now()

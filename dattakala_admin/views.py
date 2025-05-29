@@ -11,6 +11,17 @@ def admin_home(request):
     else:
         return redirect('/')
     
+def admin_student(request):
+    if request.session.has_key('admin_mobile'):
+        mobile = request.session['admin_mobile']
+        a = Admin_detail.objects.filter(mobile=mobile).first()
+        context={
+            'a':a,
+        }
+        return render(request, 'admin_student.html', context)
+    else:
+        return redirect('/')
+    
 def admin_account(request):
     if request.session.has_key('admin_mobile'):
         mobile = request.session['admin_mobile']

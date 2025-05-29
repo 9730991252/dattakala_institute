@@ -1,5 +1,118 @@
 <div style="height: 80vh;overflow-y: scroll;">
+    <!-- Sticky Header -->
+    <div style="position: sticky; top: 0; background: rgba(255,255,255,0.95); padding: 20px; text-align: center; font-size: 1.1rem; font-weight: 700; border-bottom: 1px solid #ccc; z-index: 10; box-shadow: 0 8px 20px rgba(0,0,0,0.15);">
+        Student Details &nbsp;&nbsp;
+        <span class="badge male">Male {{male}}</span>
+        <span class="badge female">Female {{female}}</span>
+        <span class="badge total">Total {{total}}</span>
+    </div>
+<style>
+        .badge {
+            padding: 5px 12px;
+            margin: 4px;
+            border-radius: 25px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+            display: inline-block;
+        }
 
+        .male { background-color: #a0d2eb; color: #024e76; }
+        .female { background-color: #f9c6d0; color: #8a1c33; }
+        .total { background-color: #d2e3fc; color: #0b3d91; }
+        .total_amt { background-color: #fff3cd; color: #856404; }
+        .pending { background-color: #f8d7da; color: #721c24; }
+        .received { background-color: #d4edda; color: #155724; }
+
+        .college_branch_name_for_hostel {
+            margin: 20px auto 5px auto;
+            width: 95%;
+            background: #ffffffdd;
+            border-radius: 12px;
+            padding: 15px 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.95rem;
+            font-weight: 500;
+            /* box-shadow: 0 6px 16px rgba(0,0,0,0.12); */
+        }
+
+        .college_branch_name_for_hostel > div {
+            margin: 5px 10px;
+        }
+
+        .college_branch_name_for_hostel .college {
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: #1a237e;
+        }
+
+        .years_main_box_for_hostel {
+            margin: 0 auto 30px auto;
+            width: 99%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-evenly;
+            gap: 10px;
+        }
+
+        .year_box {
+            width: 310px;
+            background: linear-gradient(145deg, #ffffff, #f3f4f7);
+            border-radius: 12px;
+            padding: 15px;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+        }
+
+        .year_box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.2);
+        }
+
+        .year_box1 {
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .year_box2 {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.95rem;
+            margin: 6px 0;
+            padding: 0 5px;
+        }
+
+        .text-danger {
+            color: #c0392b;
+            font-weight: 600;
+        }
+
+        .text-success {
+            color: #27ae60;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .college_branch_name_for_hostel {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .years_main_box_for_hostel {
+                justify-content: center;
+            }
+
+            .year_box {
+                width: 95%;
+            }
+        }
+    </style>
     <style>
         .college_branch_name{
             margin: 0 auto;

@@ -7,6 +7,10 @@ from datetime import date
 from django.db.models import *
 from django.db.models import Avg, Sum, Min, Max
 from django.db.models import F
+import os
+import base64
+from django.core.files.base import ContentFile
+
 # Create your views here.
 
 # def check_clerk_available_amount(request, batch):
@@ -155,7 +159,7 @@ def self_registration_student(request):
                 student = Student.objects.get(id=s_id)
                 what_to_show_status = 'Upload_Image'
                 messages.success(request, 'College Details Added Successfully. Now Add Your Image and Conform.')
-
+        
     
     admission_year = []
     current_year = date.today().year
@@ -163,6 +167,25 @@ def self_registration_student(request):
         start_year = current_year - i
         end_year_short = str((current_year - i + 1))[-2:]
         admission_year.append({'year': f'{start_year} - {end_year_short}'})
+    if student:
+        student_college_detail = Student_college_detail.objects.filter(batch=batch, student=student).first()
+    else:
+        student_college_detail = None
+    if 'add_image' in request.POST:
+        id = request.POST.get('id')
+        img_data = request.POST.get('img')  # base64 string
+        student = Student.objects.filter(id=id).first()
+        if student.image:
+            old_image_path = student.image.path
+            if os.path.isfile(old_image_path):
+                os.remove(old_image_path)
+        format, imgstr = img_data.split(';base64,')
+        ext = format.split('/')[-1]
+        data = ContentFile(base64.b64decode(imgstr), name=f'{id}.{ext}')
+        student.image.save(f'{student.name}.webp', data, save=True)
+
+        messages.success(request, 'Your Registration is Completed.')
+        return redirect('/')
     context = {
         'student':student,
         'district':District.objects.filter(status=1).order_by('name'),
@@ -171,7 +194,7 @@ def self_registration_student(request):
         'admission_year':admission_year,
         'cast_category':Cast_category.objects.filter(status=1),
         'what_to_show_status':what_to_show_status,
-        'student_college_detail':get_object_or_404(Student_college_detail, batch=batch, student=student)
+        'student_college_detail':student_college_detail
         
     }
     return render(request, 'self_registration_student.html', context)

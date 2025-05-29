@@ -32,3 +32,6 @@ from django.core.paginator import Paginator
 from django.db.models import F
 from django.db import models
 from num2words import num2words
+import os
+import base64
+from django.core.files.base import ContentFile

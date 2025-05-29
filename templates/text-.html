@@ -1,22 +1,380 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
-<body>
-<canvas class="img" id="qrCode"></canvas>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+{% extends 'base.html' %}
+{% block head %}
+{% load static %}
+    <link rel="shortcut icon" type="jpg" href="{% static 'img/logo.jpg' %}" class="profile-image" >
 
-<script>
-  const qrCodeElement = document.getElementById('qrCode');
-qrCodeElement.getContext('2d').clearRect(0, 0, qrCodeElement.width, qrCodeElement.height);
-const qr = new QRious({
-  element: qrCodeElement,
-  value: `https://dattakala.com/self_registration_student/`,
-  size: 200,
-});
-</script>
-</body>
-</html>
+    <meta property="og:type" content="website" />
+    <meta property=og:url content= "https://dattakala.com" />  <!-- your  url -->
+    <meta property="og:image:width" content="50"/>
+    <meta property="og:image:height" content="50"/>
+{% endblock head %}
+{% block content %}
+<!-- header start -->
+<link rel="stylesheet" href="{% static 'css/index_header.css' %}">
+<header class="dk-header">
+  <div class="dk-header-top">
+    <nav class="dk-nav">
+      <a href="#">Events</a>
+      <a href="#">Features</a>
+    </nav>
+    <div class="dk-social">
+      <a href="#"><i class="fa-brands fa-youtube"></i></a>
+      <a href="#"><i class="fa-brands fa-whatsapp"></i></a>
+      <a href="#"><i class="fa-brands fa-facebook"></i></a>
+      <a href="#"><i class="fa-brands fa-instagram"></i></a>
+    </div>
+  </div>
+
+  <div class="dk-header-bottom">
+    <div class="dk-brand">
+      <h1>Dattakala Shikshan Sanstha</h1>
+      <p class="dk-subtitle">NAAC Accredited</p>
+    </div>
+    <div class="dk-contact">
+      <div class="dk-contact-item">
+        <i class="fa-solid fa-phone-volume"></i>
+        <div>
+          <p class="dk-label">Phone</p>
+          <p>+91 9673002929</p>
+        </div>
+      </div>
+      <div class="dk-contact-item">
+        <i class="fa-solid fa-envelope"></i>
+        <div>
+          <p class="dk-label">Email</p>
+          <p>dattakala@dattakala.edu.in</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+<!-- header end -->
+<br>
+<section id="home">
+
+  <style>
+      .home_head{
+          text-align: center;
+          font-size: 20px;
+      }
+  </style>
+    <!-- navBar start -->
+    {% include 'home/index_navbar.html' %}
+    {% include 'alert.html' %}
+    <!-- navBar end -->
+    {% if what_to_show_status == 'Form' %}
+    <div id="form_box">
+      
+      {% if student == '' %}
+      <!-- Student First Form -->
+      <style>
+        /* Custom styles to complement Tailwind */
+        .form-container {
+          width: 400px;
+          background: linear-gradient(145deg, #ffffff, #f0f4f8);
+          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+          border-radius: 12px;
+          padding: 2rem;
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+          margin: 0 auto;
+        }
+        .form-container:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        }
+        .form-control {
+          border: 1px solid #d1d5db;
+          border-radius: 8px;
+          padding: 0.75rem;
+          width: 100%;
+          transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .form-control:focus {
+          outline: none;
+          border-color: #3b82f6;
+          box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+        .btn-primary {
+          background-color: #3b82f6;
+          color: white;
+          padding: 0.75rem 1.5rem;
+          border-radius: 8px;
+          transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .btn-primary:hover {
+          background-color: #2563eb;
+          transform: translateY(-2px);
+        }
+        /* Ensure page background and centering */
+        .page-container {
+          background-color: #e2e8f0; /* Soft blue-gray background */
+          min-height: 100vh;
+          padding-top: 50px;
+        }
+        </style>
+      <div class="page-container">
+        <div class="form-container">
+          <h5 class="text-2xl font-bold text-center text-gray-800 mb-6">Student Self Registration</h5>
+          <form method="POST" class="space-y-6">
+            {% csrf_token %}
+            <div class="mb-4">
+              <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Name</label>
+              <input type="text" oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')" name="name" id="name" class="form-control" placeholder="Enter student name" required>
+            </div>
+            <div class="mb-4">
+              <label for="aadhaar" class="block text-sm font-medium text-gray-700 mb-2">Aadhaar Number</label>
+              <input type="text"   oninput="this.value = this.value.replace(/[^0-9]/g, '')"  maxlength="12" name="aadhaar_number"  id="aadhaar" class="form-control" placeholder="Enter Aadhaar number" required>
+            </div>
+            <div class="text-center" id="add_student">
+              <img src='{% static "img/loader.gif" %}' id="loader" style="display: none; width: 50px; margin: 0 auto;">
+              <button type="submit" class="btn-primary" name="submit_student_detail">Submit</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      {% else %}
+      <br><br>
+      <style>
+        .form-label {
+          font-weight: 600;
+        }
+        .form-control, .form-select {
+          border-radius: 8px;
+        }
+        .shadow {
+          box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+        .btn-primary {
+          font-size: 1rem;
+          font-weight: 600;
+          border-radius: 8px;
+        }
+      </style>
+      <div class="container mt-5 mb-5 p-4 shadow rounded bg-light">
+        <h3 class="mb-4 text-center text-primary">Student Registration Form</h3>
+        <form method="POST">
+          {% csrf_token %}
+          <input type="hidden" name="s_id" value="{{student.id}}">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Student Name (As per Aadhaar)</label>
+              <input type="text" class="form-control" name="name" value="{{ student.name }}" oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')" required>
+            </div>
+            
+            <div class="col-md-6">
+              <label class="form-label">Aadhaar Number</label>
+              <input type="text" class="form-control" name="aadhaar_number" value="{{ student.aadhaar_number }}" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="12" required>
+            </div>
+            
+            <div class="col-md-6">
+              <label class="form-label">PAN Number</label>
+              <input type="text" class="form-control" name="pan_number" value="{{ student.pan_number }}" required>
+            </div>
+            
+            <div class="col-md-6">
+              <label class="form-label">Gender</label>
+              <select class="form-select" name="gender" required>
+                <option value="">Select Gender</option>
+                <option value="Male" {% if student.gender == 'Male' %} selected {% endif %}>Male</option>
+                <option value="Female" {% if student.gender == 'Female' %} selected {% endif %}>Female</option>
+              </select>
+            </div>
+            
+            <div class="col-md-6">
+              <label class="form-label">Date of Birth</label>
+              <input type="date" class="form-control" name="date_of_birth" value="{{ student.date_of_birth|date:'Y-m-d' }}" required>
+            </div>
+            
+            <div class="col-md-6">
+              <label class="form-label">Blood Group</label>
+              <select class="form-select" name="blood_group" required>
+                <option value="">Select Blood Group</option>
+                
+                <option value="A+" {% if student.blood_group == 'A+' %} selected {% endif %} >A+</option>
+                <option value="A-" {% if student.blood_group == 'A-' %} selected {% endif %} >A-</option>
+                <option value="B+" {% if student.blood_group == 'B+' %} selected {% endif %} >B+</option>
+                <option value="B-" {% if student.blood_group == 'B-' %} selected {% endif %} >B-</option>
+                <option value="O+" {% if student.blood_group == 'O+' %} selected {% endif %} >O+</option>
+                <option value="O-" {% if student.blood_group == 'O-' %} selected {% endif %} >O-</option>
+                <option value="AB+" {% if student.blood_group == 'AB+' %} selected {% endif %} >AB+</option>
+                <option value="AB-" {% if student.blood_group == 'AB-' %} selected {% endif %} >AB-</option>
+              </select>
+            </div>
+            
+            <div class="col-md-6">
+              <label class="form-label">Mobile No.</label>
+              <input type="text" class="form-control" name="mobile" value="{{ student.mobile|default_if_none:'' }}" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="10" required>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Parent Mobile No.</label>
+              <input type="text" class="form-control" name="parent_mobile" value="{{ student.parent_mobile|default_if_none:'' }}" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="10" required>
+            </div>
+            
+            <div class="col-md-6">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-control" name="email" value="{{ student.email|default_if_none:'' }}" required>
+            </div>
+            
+            <div class="col-md-6">
+              <label class="form-label">Permanent Address</label>
+              <textarea class="form-control" name="address" rows="2" required>{{ student.address|default_if_none:'' }}</textarea>
+            </div>
+            
+            <div class="col-md-6">
+              <label class="form-label">District</label>
+              <select class="form-select" name="district" id="district" onchange="get_taluka(this.value)" required>
+                <option value="">Select District</option>
+                {% for d in district %}
+                <option value="{{ d.id }}" {% if student.district == d %} selected {% endif %}>{{ d.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            
+            <div class="col-md-6">
+              <label class="form-label">Taluka</label>
+              <select class="form-select" name="taluka" id="taluka" required>
+                {% if student.taluka %}
+                  <option value="{{student.taluka.id}}">{{student.taluka.name}}</option>
+                {% else %}
+                  <option value="">Please Select District First</option>
+                {% endif %}
+              </select>
+            </div>
+            
+            <div class="col-md-6">
+              <label class="form-label">Current Address</label>
+              <textarea class="form-control" name="current_address" rows="2" required>{{ student.current_address|default_if_none:'' }}</textarea>
+            </div>
+            
+            <div class="col-md-6">
+              <label class="form-label">Father's/Parent Full Name</label>
+              <input type="text" class="form-control" name="father_name" value="{{ student.father_name|default_if_none:'' }}" oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')" required>
+            </div>
+            
+            <div class="col-md-6">
+              <label class="form-label">Mother's Full Name</label>
+              <input type="text" class="form-control" name="mother_name" value="{{ student.mother_name|default_if_none:'' }}" oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')" required>
+            </div>
+            
+            <div class="col-md-6">
+              <label class="form-label">How to Arrive College</label>
+              <select class="form-select" name="come_to_college" required>
+                <option value="">Select Type</option>
+                <option value="Hostel" {% if student_college_detail.how_to_arrive_college == 'Hostel' %} selected {% endif %} >Hostel</option>
+                <option value="Dattakala_Travelling" {% if student_college_detail.how_to_arrive_college == 'Dattakala_Travelling' %} selected {% endif %} >Dattakala Travelling</option>
+                <option value="Self" {% if student_college_detail.how_to_arrive_college == 'Self' %} selected {% endif %} >Self</option>
+              </select>
+            </div>
+            
+            <div class="col-md-6">
+              <label class="form-label">College</label>
+              <select class="form-select" name="college_id" onchange="get_college_branch(this.value)" required>
+                <option value="">Select College</option>
+                {% for c in college %}
+                <option value="{{ c.id }}" {% if student_college_detail.college == c %} selected {% endif %}>{{ c.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            
+            <div class="col-md-6">
+              <label class="form-label">Admission Branch</label>
+              <select class="form-select" name="branch_id" id="branch" required>
+                {% if student_college_detail.branch %}
+                  <option value="{{student_college_detail.blanch_id}}">{{ student_college_detail.branch.name }}</option>
+                {% else %}
+                  <option value="">Select College First</option>
+                {% endif %}
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Year of Admission</label>
+              <select class="form-select" name="year_id" id="" required>
+                <option value="">Select</option>
+                {% for y in years %}
+                <option value="{{ y.id }}">{{ y.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Admission Year</label>
+              <select class="form-select" name="admission_year" required>
+                <option>Select Year</option>
+                {% for y in admission_year %}
+                <option value="{{ y.year }}">{{ y.year }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            
+            <div class="col-md-6">
+              <label class="form-label">Admission Quota</label>
+              <select class="form-select" name="admission_quota">
+                <option value="">Select Quota</option>
+                <option value="Cap">Cap</option>
+                <option value="Angaint_Cap">Angaint Cap</option>
+                <option value="TFWS">TFWS</option>
+                <option value="Management">Management</option>
+              </select>
+            </div>
+            
+            <div class="col-md-6">
+              <label class="form-label">Cast Category</label>
+              <select class="form-select" name="cast_category" required>
+                <option value="">Select Cast Category</option>
+                {% for c in cast_category %}
+                <option value="{{ c.id }}">{{ c.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            
+            <div class="col-md-6">
+              <label class="form-label">Current Admission Type</label>
+              <select class="form-select" name="current_admission_type">
+                <option value="">Select Type</option>
+                <option value="Provisional">Provisional</option>
+                <option value="Confirm">Confirm</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="text-center mt-4">
+            <button type="submit" class="btn btn-primary px-5" name="submit_student_full_detail">Next <i class="fa-solid fa-arrow-right"></i></button>
+          </div>
+        </form>
+      </div>
+      <script>
+        function get_college_branch(id) {
+          $.ajax({
+            url: "{% url 'get_college_branch' %}",
+            method: "GET",
+            data: { c_id: id },
+            success: function (res) {
+              document.getElementById('branch').innerHTML = res.t;
+            }
+          });
+        }
+        function get_taluka(id) {
+          $.ajax({
+            url: "{% url 'get_taluka' %}",
+            method: "GET",
+            data: { c_id: id },
+            success: function (res) {
+              document.getElementById('taluka').innerHTML = res.t;
+            }
+          });
+        }
+      </script>
+      {% endif %}
+    </div>
+    {% else %}
+    <div class="upload_image_box">
+
+    </div>
+    {% endif %}
+
+</section>
+<br><br><br><br>
+<br><br><br><br>
+{% include 'home/index_footer.html' %}
+{% endblock content %}

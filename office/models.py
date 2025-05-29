@@ -49,6 +49,32 @@ class Year(models.Model):
     updated_date = models.DateTimeField(auto_now=True, null=True)
     updated_by = models.ForeignKey(Clerk, on_delete=models.CASCADE, null=True, related_name='updated_by_years')
     
+
+class District(models.Model):
+    name = models.CharField(max_length=100, null=True, blank=True)
+    created_by = models.ForeignKey(Clerk, on_delete=models.CASCADE, null=True, related_name='created_by_district')
+    created_date = models.DateTimeField(auto_now_add=True, null=True)
+    updated_date = models.DateTimeField(auto_now=True, null=True)
+    updated_by = models.ForeignKey(Clerk, on_delete=models.CASCADE, null=True, related_name='updated_by_district')
+    status = models.IntegerField(default=1)
+
+class Taluka(models.Model):
+    name = models.CharField(max_length=100, null=True, blank=True)
+    district = models.ForeignKey(District, on_delete=models.CASCADE, null=True, related_name='district_taluka')
+    created_by = models.ForeignKey(Clerk, on_delete=models.CASCADE, null=True, related_name='created_by_taluka')
+    created_date = models.DateTimeField(auto_now_add=True, null=True)
+    updated_date = models.DateTimeField(auto_now=True, null=True)
+    updated_by = models.ForeignKey(Clerk, on_delete=models.CASCADE, null=True, related_name='updated_by_taluka')
+    status = models.IntegerField(default=1)
+    
+class Cast_category(models.Model):
+    name = models.CharField(max_length=100, null=True, blank=True)
+    created_by = models.ForeignKey(Clerk, on_delete=models.CASCADE, null=True, related_name='created_by_cast_category')
+    created_date = models.DateTimeField(auto_now_add=True, null=True)
+    updated_date = models.DateTimeField(auto_now=True, null=True)
+    updated_by = models.ForeignKey(Clerk, on_delete=models.CASCADE, null=True, related_name='updated_by_cast_category')
+    status = models.IntegerField(default=1)
+    
 GENDER_CHOICES = (
     ('Male', "Male"),
     ('Female', "Female"),
@@ -76,13 +102,23 @@ class Student(models.Model):
     blood_group = models.CharField(max_length=100, null=True)
     email = models.EmailField(null=True)
     current_address = models.CharField(max_length=500, null=True)
+    pan_number = models.CharField(max_length=20, null=True)
+    district = models.ForeignKey(District, on_delete=models.CASCADE, null=True)
+    taluka = models.ForeignKey(Taluka, on_delete=models.CASCADE, null=True)
+    cast_category = models.ForeignKey(Cast_category, on_delete=models.CASCADE, null=True)
+    image = models.ImageField(upload_to="student_images",default="",null=True, blank=True)
+    
 
 class Student_college_detail(models.Model):
     batch = models.ForeignKey(Batch, on_delete=models.CASCADE)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    how_to_arrive_college = models.CharField(max_length=100, null=True)
     college = models.ForeignKey(College, on_delete=models.CASCADE)
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
     year = models.ForeignKey(Year, on_delete=models.CASCADE)
+    admission_year = models.CharField(max_length=100, null=True)
+    admission_quota = models.CharField(max_length=100, null=True)
+    current_admission_type = models.CharField(max_length=100, null=True)
     added_by = models.ForeignKey(Clerk, on_delete=models.CASCADE, null=True)
     added_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True, null=True)
@@ -220,27 +256,4 @@ class Student_received_Fee_Bank_hostel(models.Model):
     batch = models.ForeignKey(Batch, on_delete=models.CASCADE, null=True,related_name='batch_student_received_fee_bank_hostel')
     utr_number = models.CharField(max_length=100, null=True, blank=True)
     
-class District(models.Model):
-    name = models.CharField(max_length=100, null=True, blank=True)
-    created_by = models.ForeignKey(Clerk, on_delete=models.CASCADE, null=True, related_name='created_by_district')
-    created_date = models.DateTimeField(auto_now_add=True, null=True)
-    updated_date = models.DateTimeField(auto_now=True, null=True)
-    updated_by = models.ForeignKey(Clerk, on_delete=models.CASCADE, null=True, related_name='updated_by_district')
-    status = models.IntegerField(default=1)
 
-class Taluka(models.Model):
-    name = models.CharField(max_length=100, null=True, blank=True)
-    district = models.ForeignKey(District, on_delete=models.CASCADE, null=True, related_name='district_taluka')
-    created_by = models.ForeignKey(Clerk, on_delete=models.CASCADE, null=True, related_name='created_by_taluka')
-    created_date = models.DateTimeField(auto_now_add=True, null=True)
-    updated_date = models.DateTimeField(auto_now=True, null=True)
-    updated_by = models.ForeignKey(Clerk, on_delete=models.CASCADE, null=True, related_name='updated_by_taluka')
-    status = models.IntegerField(default=1)
-    
-class Cast_category(models.Model):
-    name = models.CharField(max_length=100, null=True, blank=True)
-    created_by = models.ForeignKey(Clerk, on_delete=models.CASCADE, null=True, related_name='created_by_cast_category')
-    created_date = models.DateTimeField(auto_now_add=True, null=True)
-    updated_date = models.DateTimeField(auto_now=True, null=True)
-    updated_by = models.ForeignKey(Clerk, on_delete=models.CASCADE, null=True, related_name='updated_by_cast_category')
-    status = models.IntegerField(default=1)

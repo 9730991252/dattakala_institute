@@ -43,7 +43,9 @@ def index(request):
     return render(request, 'index.html', context)
 
 def self_registration_student(request):
+    batch = Batch.objects.filter(start_date__year__lte=date.today().year, end_date__year__gte=date.today().year).first()
     student = ''
+    what_to_show_status = 'Form'
     if 'submit_student_detail'in request.POST:
         name = request.POST.get('name')
         aadhaar_number = request.POST.get('aadhaar_number')
@@ -64,8 +66,96 @@ def self_registration_student(request):
                     aadhaar_number=aadhaar_number,
                 )
                 student = Student.objects.filter(aadhaar_number=aadhaar_number).first()
-    
-    batch = Batch.objects.filter(start_date__year__lte=date.today().year, end_date__year__gte=date.today().year).first()
+    if 'submit_student_full_detail'in request.POST:
+        # Save in student start
+        s_id = request.POST.get('s_id')
+        name = request.POST.get('name')
+        aadhaar_number = request.POST.get('aadhaar_number')
+        pan_number = request.POST.get('pan_number')
+        gender = request.POST.get('gender')
+        date_of_birth = request.POST.get('date_of_birth')
+        blood_group = request.POST.get('blood_group')
+        mobile = request.POST.get('mobile')
+        parent_mobile = request.POST.get('parent_mobile')
+        email = request.POST.get('email')
+        address = request.POST.get('address')
+        district = request.POST.get('district')
+        taluka = request.POST.get('taluka')
+        current_address = request.POST.get('current_address')
+        father_name = request.POST.get('father_name')
+        mother_name = request.POST.get('mother_name')
+        cast_category = request.POST.get('cast_category')
+        # Save in student end
+        # Save in college detail start
+        how_to_arrive_college = request.POST.get('come_to_college')
+        college_id = request.POST.get('college_id')
+        branch_id = request.POST.get('branch_id')
+        year_id = request.POST.get('year_id')
+        admission_year = request.POST.get('admission_year')
+        admission_quota = request.POST.get('admission_quota') 
+        current_admission_type = request.POST.get('current_admission_type')
+        # Save in college detail end
+        student = Student.objects.filter(id=s_id).first()
+        if len(mobile) < 10:
+            messages.error(request, 'Mobile number should be of 10 digits')
+            return redirect('student_registration')
+        elif len(parent_mobile) < 10:
+            messages.error(request, 'Parent mobile number should be of 10 digits')
+            return redirect('student_registration')
+        elif len(aadhaar_number) < 12:
+            messages.error(request, 'Aadhaar number should be of 12 digits')
+            return redirect('student_registration')
+        else:
+            if Student.objects.filter(aadhaar_number=aadhaar_number).exclude(id=student.id).exists():
+                messages.error(request, 'Student Already Exists with this Aadhaar Number')
+                return redirect('student_registration')
+            else:
+                student.name = name
+                student.mobile = mobile
+                student.aadhaar_number = aadhaar_number
+                student.gender = gender
+                student.address = address
+                student.date_of_birth = date_of_birth
+                student.father_name = father_name
+                student.mother_name = mother_name
+                student.parent_mobile = parent_mobile
+                student.blood_group = blood_group
+                student.email = email
+                student.current_address = current_address
+                student.pan_number = pan_number
+                student.district_id = district
+                student.taluka_id = taluka
+                student.cast_category_id = cast_category
+                student.save()
+                student_college_detail = Student_college_detail.objects.filter(student_id=s_id, batch=batch).first()
+                if student_college_detail:
+                    student_college_detail.batch=batch
+                    student_college_detail.student_id = s_id
+                    student_college_detail.how_to_arrive_college = how_to_arrive_college
+                    student_college_detail.college_id = college_id
+                    student_college_detail.branch_id = branch_id
+                    student_college_detail.year_id = year_id
+                    student_college_detail.admission_year = admission_year
+                    student_college_detail.admission_quota = admission_quota
+                    student_college_detail.current_admission_type = current_admission_type
+                    student_college_detail.save()
+                else:
+                    student_college_detail = Student_college_detail(
+                        batch=batch,
+                        student_id=s_id,
+                        how_to_arrive_college=how_to_arrive_college,
+                        college_id=college_id,
+                        branch_id=branch_id,
+                        year_id=year_id,
+                        admission_year=admission_year,
+                        admission_quota=admission_quota,
+                        current_admission_type=current_admission_type,
+                    )
+                    student_college_detail.save()
+                student = Student.objects.get(id=s_id)
+                what_to_show_status = 'Upload_Image'
+                messages.success(request, 'College Details Added Successfully. Now Add Your Image and Conform.')
+
     
     admission_year = []
     current_year = date.today().year
@@ -79,7 +169,9 @@ def self_registration_student(request):
         'college':College.objects.filter(batch=batch),
         'years':Year.objects.filter(batch=batch),
         'admission_year':admission_year,
-        'cast_category':Cast_category.objects.filter(status=1)
+        'cast_category':Cast_category.objects.filter(status=1),
+        'what_to_show_status':what_to_show_status,
+        'student_college_detail':get_object_or_404(Student_college_detail, batch=batch, student=student)
         
     }
     return render(request, 'self_registration_student.html', context)

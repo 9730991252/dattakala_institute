@@ -80,7 +80,7 @@
           <div class="modal-body">
             <div class="mb-3">
               <label for="district_name">Name</label>
-              <input type="text" name="name" oninput="this.value = this.value.replace(/[^a-z]/g, '')" id="district_name" class="form-control" placeholder="Enter District Name" required>
+              <input type="text" name="name" oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '')" id="district_name" class="form-control" placeholder="Enter District Name" required>
             </div>
             <div class="spinner-border" role="status" id="addDistrictSpinner"></div>
           </div>
@@ -115,7 +115,7 @@
             </div>
             <div class="mb-3">
               <label for="taluka_name">Name</label>
-              <input type="text" name="name" oninput="this.value = this.value.replace(/[^a-z]/g, '')" id="taluka_name" class="form-control" placeholder="Enter Taluka Name" required>
+              <input type="text" name="name" oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '')" id="taluka_name" class="form-control" placeholder="Enter Taluka Name" required>
             </div>
             <div class="spinner-border" role="status" id="addTalukaSpinner"></div>
           </div>
@@ -228,7 +228,7 @@
             <input type="hidden" name="district_id" value="{{ district.id }}">
             <div class="mb-3">
               <label for="district_name{{ district.id }}">Name</label>
-              <input type="text" name="name" oninput="this.value = this.value.replace(/[^a-z]/g, '')" id="district_name{{ district.id }}" value="{{ district.name }}" class="form-control" placeholder="Enter District Name" required>
+              <input type="text" name="name" oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '')" id="district_name{{ district.id }}" value="{{ district.name }}" class="form-control" placeholder="Enter District Name" required>
             </div>
             <div class="spinner-border" role="status" id="editDistrictSpinner{{ district.id }}"></div>
           </div>
@@ -266,7 +266,7 @@
             </div>
             <div class="mb-3">
               <label for="taluka_name{{ taluka.id }}">Name</label>
-              <input type="text" name="name" oninput="this.value = this.value.replace(/[^a-z]/g, '')" id="taluka_name{{ taluka.id }}" value="{{ taluka.name }}" class="form-control" placeholder="Enter Taluka Name" required>
+              <input type="text" name="name" oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '')" id="taluka_name{{ taluka.id }}" value="{{ taluka.name }}" class="form-control" placeholder="Enter Taluka Name" required>
             </div>
             <div class="spinner-border" role="status" id="editTalukaSpinner{{ taluka.id }}"></div>
           </div>

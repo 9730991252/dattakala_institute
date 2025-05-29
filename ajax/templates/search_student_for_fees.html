@@ -88,7 +88,7 @@
 
         <div class="student_container">
         {% for s in student %}
-        <a href="/account/student_fee_detail/{{s.id}}">
+        <a {% if s.approval_status == 0 %} onclick="alert('Please Approve the Student First')" {% elif s.approval_status == 1 %} href="/account/student_fee_detail/{{s.id}}" {% else %} onclick="alert('You Cant Open Rejected Student')" {% endif %} >
             <div class="student_box">
                 <div class="img_box">
                     {% if s.img %}

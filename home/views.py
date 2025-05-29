@@ -57,6 +57,7 @@ def self_registration_student(request):
             registration_qr_count.save()
         else:
             Self_registration_qr_count.objects.create(count=1)
+            
         name = request.POST.get('name')
         aadhaar_number = request.POST.get('aadhaar_number')
         if len(aadhaar_number) < 12:
@@ -68,7 +69,7 @@ def self_registration_student(request):
                 if student.approval_status == 0:
                     pass
                 else:
-                    messages.error(request, 'Please Visit to Office!')
+                    messages.success(request, 'Your Form Is Successfully Submitted. Please Visit to Office!')
                     return redirect('/self_registration_student/#home')
             else:
                 Student.objects.create(

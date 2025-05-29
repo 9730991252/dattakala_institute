@@ -10,7 +10,8 @@ def office_home(request):
         
         messages.success(request, f'Welcome {clerk.name}!')
         context={
-            'clerk':clerk
+            'clerk':clerk,
+            'self_registration_qr_count':Self_registration_qr_count.objects.filter().first()
         }
         return render(request, 'office_home.html', context)
     else:

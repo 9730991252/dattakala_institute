@@ -51,6 +51,12 @@ def self_registration_student(request):
     student = ''
     what_to_show_status = 'Form'
     if 'submit_student_detail'in request.POST:
+        registration_qr_count = Self_registration_qr_count.objects.filter().first()
+        if registration_qr_count:
+            registration_qr_count.count += 1
+            registration_qr_count.save()
+        else:
+            Self_registration_qr_count.objects.create(count=1)
         name = request.POST.get('name')
         aadhaar_number = request.POST.get('aadhaar_number')
         if len(aadhaar_number) < 12:

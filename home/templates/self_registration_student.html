@@ -212,18 +212,13 @@
             </div>
             
             <div class="col-md-6">
-              <label class="form-label">Mobile No.</label>
+              <label class="form-label">Contact/Mobile No.</label>
               <input type="text" class="form-control" name="mobile" value="{{ student.mobile|default_if_none:'' }}" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="10" required>
             </div>
 
             <div class="col-md-6">
-              <label class="form-label">Parent Mobile No.</label>
-              <input type="text" class="form-control" name="parent_mobile" value="{{ student.parent_mobile|default_if_none:'' }}" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="10" required>
-            </div>
-
-            <div class="col-md-6">
-              <label class="form-label">Mother Mobile No.</label>
-              <input type="text" class="form-control" name="mother_mobile" value="{{ student.mother_mobile|default_if_none:'' }}" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="10" required>
+              <label class="form-label">Whatsapp No.</label>
+              <input type="text" class="form-control" name="whatsapp_number" value="{{ student.whatsapp_number|default_if_none:'' }}" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="10" required>
             </div>
             
             <div class="col-md-6">
@@ -256,6 +251,11 @@
                 {% endif %}
               </select>
             </div>
+            <div class="col-md-6">
+              <label class="form-label">Pin Code</label>
+              <input type="text" class="form-control" name="pin_code" value="{{ student.pin_code|default_if_none:'' }}" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="6" required>
+            </div>
+
             
             <div class="col-md-6">
               <label class="form-label">Current Address</label>
@@ -263,15 +263,34 @@
             </div>
             
             <div class="col-md-6">
+              <label class="form-label">Is Father Alive</label>
+              <select class="form-select" name="come_to_college" required>
+                <option value="">Select</option>
+                <option value="Yes" {% if student_college_detail.is_father_alive == 'Yes' %} selected {% endif %} >Yes</option>
+                <option value="No" {% if student_college_detail.is_father_alive == 'No' %} selected {% endif %} >No</option>
+              </select>
+            </div>
+
+            <div class="col-md-6">
               <label class="form-label">Father's/Parent Full Name</label>
               <input type="text" class="form-control" name="father_name" value="{{ student.father_name|default_if_none:'' }}" oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')" required>
             </div>
-            
+
+            <div class="col-md-6">
+              <label class="form-label">Father Mobile No.</label>
+              <input type="text" class="form-control" name="parent_mobile" value="{{ student.parent_mobile|default_if_none:'' }}" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="10" required>
+            </div>
+
             <div class="col-md-6">
               <label class="form-label">Mother's Full Name</label>
               <input type="text" class="form-control" name="mother_name" value="{{ student.mother_name|default_if_none:'' }}" oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')" required>
             </div>
             
+            <div class="col-md-6">
+              <label class="form-label">Mother Mobile No.</label>
+              <input type="text" class="form-control" name="mother_mobile" value="{{ student.mother_mobile|default_if_none:'' }}" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="10" required>
+            </div>
+
             <div class="col-md-6">
               <label class="form-label">How to Arrive College</label>
               <select class="form-select" name="come_to_college" required>
@@ -303,7 +322,7 @@
               </select>
             </div>
             <div class="col-md-6">
-              <label class="form-label">Year of Admission</label>
+              <label class="form-label">Current Year</label>
               <select class="form-select" name="year_id" id="" required>
                 <option value="">Select</option>
                 {% for y in years %}
@@ -313,7 +332,7 @@
             </div>
 
             <div class="col-md-6">
-              <label class="form-label">Admission Year</label>
+              <label class="form-label">Year of Admission (first Year / Direct Second Year)</label>
               <select class="form-select" name="admission_year" required>
                 <option>Select Year</option>
                 {% for y in admission_year %}
@@ -328,21 +347,27 @@
                 <option value="">Select Quota</option>
                 <option value="Cap" {% if student_college_detail.admission_quota == 'Cap' %} selected {% endif %}>Cap</option>
                 <option value="Angaint_Cap" {% if student_college_detail.admission_quota == 'Angaint_Cap' %} selected {% endif %}>Angaint Cap</option>
+                <option value="EWS" {% if student_college_detail.admission_quota == 'EWS' %} selected {% endif %}>EWS</option>
                 <option value="TFWS" {% if student_college_detail.admission_quota == 'TFWS' %} selected {% endif %}>TFWS</option>
                 <option value="Management" {% if student_college_detail.admission_quota == 'Management' %} selected {% endif %}>Management</option>
               </select>
             </div>
             
             <div class="col-md-6">
-              <label class="form-label">Cast Category</label>
+              <label class="form-label">Category</label>
               <select class="form-select" name="cast_category" required>
-                <option value="">Select Cast Category</option>
+                <option value="">Select Category</option>
                 {% for c in cast_category %}
                 <option value="{{ c.id }}" {% if student.cast_category == c %} selected {% endif %}>{{ c.name }}</option>
                 {% endfor %}
               </select>
             </div>
             
+            <div class="col-md-6">
+              <label class="form-label">Cast</label>
+              <input type="text" class="form-control" name="cast" value="{{ student.cast|default_if_none:'' }}"  required>
+            </div>
+
             <div class="col-md-6">
               <label class="form-label">Current Admission Type</label>
               <select class="form-select" name="current_admission_type">
@@ -552,9 +577,9 @@ const pageAccessedByReload = (
       .includes('reload')
 );
 
-if (pageAccessedByReload == true){
-  window.location.href = '/';
-}
+// if (pageAccessedByReload == true){
+//   window.location.href = '/';
+// }
 
 </script> 
 {% include 'home/index_footer.html' %}

@@ -72,9 +72,9 @@ def college_branches_student_details_admin(batch_id):
 
     return { 
             'branches': branches,
-            'male': Student_college_detail.objects.filter(batch_id=batch_id, student__gender='Male').exclude(student__approval_status=2).count(),
-            'female': Student_college_detail.objects.filter(batch_id=batch_id, student__gender='Female').exclude(student__approval_status=2).count(),
-            'total': Student_college_detail.objects.filter(batch_id=batch_id).exclude(student__approval_status=2).count(),
+            'total':Student_Hostel_Fee.objects.filter(batch_id=batch_id).exclude(student__approval_status=2).count(),
+            'male':Student_Hostel_Fee.objects.filter(batch_id=batch_id, student__gender='Male').exclude(student__approval_status=2).count(),
+            'female':Student_Hostel_Fee.objects.filter(batch_id=batch_id, student__gender='Female').exclude(student__approval_status=2).count(),
     }
     
 @register.inclusion_tag('inclusion_tag/college_branches_hostel_student_details_admin.html')
@@ -114,9 +114,9 @@ def college_branches_hostel_student_details_admin(batch_id):
             'name': b.name,
             'college':b.college,
             'years':year,
-            'male':Student_college_detail.objects.filter(branch=b, student__gender='Male').exclude(student__approval_status=2).count(),
-            'female':Student_college_detail.objects.filter(branch=b, student__gender='Female').exclude(student__approval_status=2).count(),
-            'total':Student_college_detail.objects.filter(branch=b).exclude(student__approval_status=2).count(),
+            'male':Student_college_detail.objects.filter(branch=b, student__gender='Male').count(),
+            'female':Student_college_detail.objects.filter(branch=b, student__gender='Female').count(),
+            'total':Student_college_detail.objects.filter(branch=b).count(),
             'branch_total_amount':branch_total_amount,
             'branch_received':branch_received,
             'pending_amount':branch_total_amount-branch_received,
@@ -151,9 +151,9 @@ def college_branches_hostel_student_details_admin(batch_id):
         'all_received':all_received,
         'all_pending':all_total_amount-all_received,
         'branches':branches,
-        'total_student':Student_Hostel_Fee.objects.filter(batch_id=batch_id).count(),
-        'male_student':Student_Hostel_Fee.objects.filter(batch_id=batch_id, student__gender='Male').count(),
-        'female_student':Student_Hostel_Fee.objects.filter(batch_id=batch_id, student__gender='Female').count(),
+        'total_student':Student_Hostel_Fee.objects.filter(batch_id=batch_id).exclude(student__approval_status=2).count(),
+        'male_student':Student_Hostel_Fee.objects.filter(batch_id=batch_id, student__gender='Male').exclude(student__approval_status=2).count(),
+        'female_student':Student_Hostel_Fee.objects.filter(batch_id=batch_id, student__gender='Female').exclude(student__approval_status=2).count(),
         'college':college,
     } 
     

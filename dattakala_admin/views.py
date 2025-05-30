@@ -49,69 +49,38 @@ def admin_student_detail(request, id):
     if request.session.has_key('admin_mobile'):
         mobile = request.session['admin_mobile']
         a = Admin_detail.objects.filter(mobile=mobile).first()
-        
-        student = get_object_or_404(Student, id=id)
-        if student:
-            student_approval = Student_approval.objects.filter(student=student).first()
-            if student_approval:
-                if student_approval.office_approval_status == 0 or student_approval.store_approval_status == 0 or student_approval.account_approval_status == 0:
-                    messages.error(request, 'Please Approve the Student First')
-                    return redirect('student_fees')
-                if student_approval.office_approval_status == 2 or student_approval.store_approval_status == 2 or student_approval.account_approval_status == 2:
-                    messages.error(request, 'You Cant Open Rejected Student')
-                    return redirect('student_fees')
-            else:
-                messages.error(request, 'Please Approve the Student First')
-                return redirect('student_fees')
-            
+        student = Student.objects.filter(id=id).first()
+        student_approval, created = Student_approval.objects.get_or_create(
+                student=student,
+                batch=a.batch,
+                defaults={
+                    'store_approved_by': None,
+                    'office_approved_by': None,
+                    'account_approved_by': None,
+                }
+            )
 
-        cash_fee = Student_received_Fee_Cash.objects.filter(student=student, added_by__batch=a.batch)
-        bank_fee = Student_received_Fee_Bank.objects.filter(student=student, added_by__batch=a.batch)
-        received_cash_hostel_fee = Student_Received_Fee_Cash_Hostel.objects.filter(student=student, added_by__batch=a.batch)
-        received_bank_hostel_fee = Student_received_Fee_Bank_hostel.objects.filter(student=student, added_by__batch=a.batch)
-        paid_fee = int(cash_fee.aggregate(Sum('received_amount'))['received_amount__sum'] or 0) + int(bank_fee.aggregate(Sum('received_amount'))['received_amount__sum'] or 0) +  int(received_cash_hostel_fee.aggregate(Sum('received_amount'))['received_amount__sum'] or 0) +  int(received_bank_hostel_fee.aggregate(Sum('received_amount'))['received_amount__sum'] or 0)
-        student_hostel_fee = Student_Hostel_Fee.objects.filter(batch=a.batch, student=student).first()
-        total_fee = student_fee.objects.filter(student=student, batch=a.batch).aggregate(Sum('amount'))['amount__sum'] or 0
-        if student_hostel_fee:
-            total_fee += int(student_hostel_fee.hostel_fee.amount)
-        print('total_fee', total_fee)
-        student_fee_detail = []
-        for cdt in Credit_Debit_category.objects.filter(status=1):
-            detail_total_fee = student_fee.objects.filter(credit_debit_category=cdt, student=student).aggregate(Sum('amount'))['amount__sum'] or 0
-            detail_paid_fee = Student_received_Fee_Cash.objects.filter(credit_debit_category=cdt, student=student).aggregate(Sum('received_amount'))['received_amount__sum'] or 0
-            detail_paid_fee += Student_received_Fee_Bank.objects.filter(credit_debit_category=cdt, student=student).aggregate(Sum('received_amount'))['received_amount__sum'] or 0
-            if detail_total_fee >0:
-                student_fee_detail.append({
-                    'category': cdt,
-                    'total_fee': detail_total_fee,
-                    'detail_paid_fee': detail_paid_fee,
-                    'remaining_fee': detail_total_fee - detail_paid_fee
-                })
-
+        admission_year = []
+        current_year = date.today().year
+        for i in range(0, 11):
+            start_year = current_year - i
+            end_year_short = str((current_year - i + 1))[-2:]
+            admission_year.append({'year': f'{start_year} - {end_year_short}'})
         context = {
-            'student_fee_detail': student_fee_detail,
             'a': a,
-            'student': student,
-            'today_date':date.today(),
-            'cash_fee':cash_fee,
-            'bank_fee':bank_fee,
-            'paid_fee':paid_fee,
-            'remaining_fee':int(total_fee)-int(paid_fee),
-            'accounts':Bank_Account.objects.filter(status=1),
-            'total_fee': total_fee,
-            'credit_debit_category': Credit_Debit_category.objects.filter(status=1),
-            'student_fee': student_fee.objects.filter(student=student, batch=a.batch),
-            'student_hostel_fee': student_hostel_fee,
-            'student_college': Student_college_detail.objects.filter(student=student, batch=a.batch).first(),
-            'received_cash_hostel_fee':received_cash_hostel_fee,
-            'received_bank_hostel_fee':received_bank_hostel_fee,
-            'all_hostel_fee_installment':Hostel_Fee_installment.objects.filter(status=1, batch=a.batch)
+            'student':student,
+            'colleges':College.objects.filter(batch=a.batch, status=1),
+            'branches':Branch.objects.filter(batch=a.batch, status=1),
+            'years':Year.objects.filter(batch=a.batch, status=1),
+            'student_college_details':Student_college_detail.objects.filter(student=student, batch=a.batch).first(),
+            'hostel_fee':Hostel_Fee_installment.objects.filter(batch=a.batch, status=1),
+            'student_hostel_fee':Student_Hostel_Fee.objects.filter(student=student, batch=a.batch).first(),
+            'student_approval':Student_approval.objects.filter(student=student, batch=a.batch).first(),
+            'district':District.objects.filter(status=1).order_by('name'),
+            'cast_category':Cast_category.objects.filter(status=1),
+            'admission_year':admission_year
         }
-        
-        context={
-            'a':a,
-            'accounts':Bank_Account.objects.all(),
-        }
+
         return render(request, 'admin_student_detail.html', context)
     else:
         return redirect('/')

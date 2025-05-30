@@ -163,7 +163,7 @@ def student_fee_detail(request, id):
             Student_Received_Fee_Cash_Hostel.objects.create(
                 student=student,
                 received_amount=received_amount,
-                paid_date=r_date,
+                paid_date=r_date, 
                 added_by=clerk,
                 batch=clerk.batch,
                 challan_number=challan_number

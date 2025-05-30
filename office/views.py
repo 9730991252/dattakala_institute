@@ -381,6 +381,11 @@ def student_detail(request, id):
             start_year = current_year - i
             end_year_short = str((current_year - i + 1))[-2:]
             admission_year.append({'year': f'{start_year} - {end_year_short}'})
+            
+        student_hostel_fee = Student_Hostel_Fee.objects.filter(batch=clerk.batch, student=student).first()
+        total_fee = student_fee.objects.filter(student=student, batch=clerk.batch).aggregate(Sum('amount'))['amount__sum'] or 0
+        if student_hostel_fee:
+            total_fee += int(student_hostel_fee.hostel_fee.amount)
         context={
             'clerk':clerk,
             'student':student,
@@ -393,7 +398,8 @@ def student_detail(request, id):
             'student_approval':Student_approval.objects.filter(student=student, batch=clerk.batch).first(),
             'district':District.objects.filter(status=1).order_by('name'),
             'cast_category':Cast_category.objects.filter(status=1),
-            'admission_year':admission_year
+            'admission_year':admission_year,
+            'total_fee':total_fee
         }
         return render(request, 'student_detail.html', context)
     else:

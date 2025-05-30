@@ -223,7 +223,7 @@ def student_fee_detail(request, id):
             'clerk': clerk,
             'student': student,
             'today_date':date.today(),
-            'cash_fee':cash_fee,
+            'cash_fee':cash_fee, 
             'bank_fee':bank_fee,
             'paid_fee':paid_fee,
             'remaining_fee':int(total_fee)-int(paid_fee),

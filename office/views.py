@@ -205,9 +205,6 @@ def student_detail(request, id):
             elif len(whatsapp_number) < 10:
                 messages.error(request, 'Whatsapp number should be of 10 digits')
                 return redirect('student_registration')
-            elif len(pan_number) < 10:
-                messages.error(request, 'Pan number should be of 10 digits')
-                return redirect('student_registration')
             elif len(pin_code) < 6:
                 messages.error(request, 'Pin Code should be of 6 digits')
                 return redirect('student_registration')

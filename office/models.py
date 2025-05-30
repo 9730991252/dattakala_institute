@@ -23,6 +23,7 @@ class Clerk(models.Model):
     mobile = models.IntegerField(unique=True)
     secret_pin = models.IntegerField()
     status = models.IntegerField(default=1)
+    aadhar_number = models.IntegerField(null=True)
     
 class College(models.Model):
     batch = models.ForeignKey(Batch, on_delete=models.CASCADE, related_name='colleges')

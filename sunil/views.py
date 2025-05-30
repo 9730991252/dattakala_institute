@@ -49,21 +49,24 @@ def sunil_home(request):
         if 'Add_clerk' in request.POST:
             batch_id = request.POST.get('batch_id')
             mobile = request.POST.get('mobile')
+            aadhar_number = request.POST.get('aadhar_number')
             
-            if Clerk.objects.filter(batch_id=batch_id,mobile=mobile).exists():
+            if Clerk.objects.filter(batch_id=batch_id,aadhar_number=aadhar_number).exists():
                 return redirect('sunil_home')
             else:
                 Clerk(
                     batch_id=batch_id,
                     name=request.POST.get('name'),
                     mobile=mobile,
-                    secret_pin=request.POST.get('secret_pin')
+                    secret_pin=request.POST.get('secret_pin'),
+                    aadhar_number=aadhar_number
                 ).save()
             return redirect('sunil_home')
         if 'edit_clerk' in request.POST:
             clerk_id = request.POST.get('id')
             mobile = request.POST.get('mobile')
             batch_id = request.POST.get('batch_id')
+            
             
             if Clerk.objects.filter(mobile=mobile, batch_id=batch_id).exists():
                 existing_clerk = Clerk.objects.get(mobile=mobile, batch_id=batch_id)

@@ -220,9 +220,9 @@
         <div class="col-sidebar">
             <div class="sidebar">
                 <button class="btn btn-form" onclick="location.reload()">Form</button>
-                <button class="btn btn-details" onclick="fetch_basic_details()">Basic Details</button>
-                <button class="btn btn-details" onclick="fetch_parent_details()">Parent Details</button>
-                <button class="btn btn-details" onclick="fetch_college_details()">College Details</button>
+                <button class="btn btn-details basic_details" onclick="fetch_basic_details()">Basic Details</button>
+                <button class="btn btn-details parent_details" onclick="fetch_parent_details()">Parent Details</button>
+                <button class="btn btn-details college_details" onclick="fetch_college_details()">College Details</button>
                 <button class="btn btn-details" onclick="fetch_fee_details()">Fee Details</button>
             </div>
         </div>
@@ -558,4 +558,26 @@
         });
     }
 </script>
+      <script>
+        function get_college_branch(id) {
+          $.ajax({
+            url: "{% url 'get_college_branch' %}",
+            method: "GET",
+            data: { c_id: id },
+            success: function (res) {
+              document.getElementById('branch').innerHTML = res.t;
+            }
+          });
+        }
+        function get_taluka(id) {
+          $.ajax({
+            url: "{% url 'get_taluka' %}",
+            method: "GET",
+            data: { c_id: id },
+            success: function (res) {
+              document.getElementById('taluka').innerHTML = res.t;
+            }
+          });
+        }
+      </script>
 {% endblock content %}

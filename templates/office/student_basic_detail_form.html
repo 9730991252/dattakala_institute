@@ -1,98 +1,152 @@
-<style>
-  .form-container {
-    max-width: 700px;
-    margin: 40px auto;
-    padding: 40px;
-    background: #fff;
-    border-radius: 16px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-    font-family: 'Segoe UI', sans-serif;
-  }
 
-  .form-group {
-    display: flex;
-    align-items: center;
-    margin-bottom: 24px;
-    gap: 20px;
-  }
+      <style>
+        .basic_details{
+          background-color: aquamarine;
+        }
+        .form-label {
+          font-weight: 600;
+        }
+        .form-control, .form-select {
+          border-radius: 8px;
+        }
+        .shadow {
+          box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+        .btn-primary {
+          font-size: 1rem;
+          font-weight: 600;
+          border-radius: 8px;
+        }
+      </style>
+      <div class="container mt-5 mb-5 p-4 shadow rounded bg-light">
+        <form method="POST">
+          {% csrf_token %}
+          <input type="hidden" name="s_id" value="{{student.id}}">
+          <div class="row g-3">
+            <div class="col-md-5">
+              <label class="form-label">Student Name (As per Aadhaar)</label>
+              <input type="text" class="form-control" name="name" value="{{ student.name }}" oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')" required>
+            </div>
 
-  .form-group label {
-    flex: 0 0 180px;
-    font-size: 16px;
-    font-weight: 600;
-    color: #333;
-  }
+            <div class="col-md-5">
+              <label class="form-label">Student Name (As per SSC Mark Sheet )</label>
+              <input type="text" class="form-control" name="student_name_as_per_ssc_marksheet" value="{{ student.student_name_as_per_ssc_marksheet|default_if_none:'' }}" oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')" required>
+            </div>
+            
+            <div class="col-md-5">
+              <label class="form-label">Aadhaar Number</label>
+              <input type="text" class="form-control" name="aadhaar_number" value="{{ student.aadhaar_number }}" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="12" required>
+            </div>
+            
+            <div class="col-md-5">
+              <label class="form-label">PAN Number</label>
+              <input type="text" class="form-control" name="pan_number" maxlength="10" value="{{ student.pan_number }}" required>
+            </div>
+            
+            <div class="col-md-5">
+              <label class="form-label">Gender</label>
+              <select class="form-select" name="gender" required>
+                <option value="">Select Gender</option>
+                <option value="Male" {% if student.gender == 'Male' %} selected {% endif %}>Male</option>
+                <option value="Female" {% if student.gender == 'Female' %} selected {% endif %}>Female</option>
+              </select>
+            </div>
+            
+            <div class="col-md-5">
+              <label class="form-label">Date of Birth</label>
+              <input type="date" class="form-control" name="date_of_birth" value="{{ student.date_of_birth|date:'Y-m-d' }}" required>
+            </div>
+            
+            <div class="col-md-5">
+              <label class="form-label">Blood Group</label>
+              <select class="form-select" name="blood_group" required>
+                <option value="">Select Blood Group</option>
+                
+                <option value="A+" {% if student.blood_group == 'A+' %} selected {% endif %} >A+</option>
+                <option value="A-" {% if student.blood_group == 'A-' %} selected {% endif %} >A-</option>
+                <option value="B+" {% if student.blood_group == 'B+' %} selected {% endif %} >B+</option>
+                <option value="B-" {% if student.blood_group == 'B-' %} selected {% endif %} >B-</option>
+                <option value="O+" {% if student.blood_group == 'O+' %} selected {% endif %} >O+</option>
+                <option value="O-" {% if student.blood_group == 'O-' %} selected {% endif %} >O-</option>
+                <option value="AB+" {% if student.blood_group == 'AB+' %} selected {% endif %} >AB+</option>
+                <option value="AB-" {% if student.blood_group == 'AB-' %} selected {% endif %} >AB-</option>
+              </select>
+            </div>
+            
+            <div class="col-md-5">
+              <label class="form-label">Contact/Mobile No.</label>
+              <input type="text" class="form-control" name="mobile" value="{{ student.mobile|default_if_none:'' }}" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="10" required>
+            </div>
 
-  .form-group input,
-  .form-group textarea {
-    flex: 1;
-    padding: 12px 14px;
-    border: 1.5px solid #ccc;
-    border-radius: 8px;
-    font-size: 15px;
-    background-color: #fafafa;
-    transition: border-color 0.3s, box-shadow 0.3s;
-  }
+            <div class="col-md-5">
+              <label class="form-label">Whatsapp No.</label>
+              <input type="text" class="form-control" name="whatsapp_number" value="{{ student.whatsapp_number|default_if_none:'' }}" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="10" required>
+            </div>
+            
+            <div class="col-md-5">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-control" name="email" value="{{ student.email|default_if_none:'' }}" required>
+            </div>
+            
+            <div class="col-md-5">
+              <label class="form-label">Permanent Address</label>
+              <textarea class="form-control" name="address" rows="2" required>{{ student.address|default_if_none:'' }}</textarea>
+            </div>
+            
+            <div class="col-md-5">
+              <label class="form-label">District</label>
+              <select class="form-select" name="district" id="district" onchange="get_taluka(this.value)" required>
+                <option value="">Select District</option>
+                {% for d in district %}
+                <option value="{{ d.id }}" {% if student.district == d %} selected {% endif %}>{{ d.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            
+            <div class="col-md-5">
+              <label class="form-label">Taluka</label>
+              <select class="form-select" name="taluka" id="taluka" required>
+                {% if student.taluka %}
+                  <option value="{{student.taluka.id}}">{{student.taluka.name}}</option>
+                {% else %}
+                  <option value="">Please Select District First</option>
+                {% endif %}
+              </select>
+            </div>
+            <div class="col-md-5">
+              <label class="form-label">Pin Code</label>
+              <input type="text" class="form-control" name="pin_code" value="{{ student.pin_code|default_if_none:'' }}" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="6" required>
+            </div>
 
-  .form-group input:focus,
-  .form-group textarea:focus {
-    border-color: #6c63ff;
-    box-shadow: 0 0 8px rgba(108, 99, 255, 0.2);
-    background-color: #fff;
-    outline: none;
-  }
+            
+            <div class="col-md-5">
+              <label class="form-label">Current Address</label>
+              <textarea class="form-control" name="current_address" rows="2" required>{{ student.current_address|default_if_none:'' }}</textarea>
+            </div>
+            
+            <div class="col-md-5">
+              <label class="form-label">Category</label>
+              <select class="form-select" name="cast_category" required>
+                <option value="">Select Category</option>
+                {% for c in cast_category %}
+                <option value="{{ c.id }}" {% if student.cast_category == c %} selected {% endif %}>{{ c.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            
+            <div class="col-md-5"> 
+              <label class="form-label">Cast</label>
+              <input type="text" class="form-control" name="cast" value="{{ student.cast|default_if_none:'' }}"  required>
+            </div>
 
-  .form-group textarea {
-    resize: vertical;
-    min-height: 100px;
-  }
+          </div>
+          
+          <div class="text-center mt-4">
+            <button type="submit" class="btn btn-primary px-5" name="submit_basic_details">Submit</button>
+          </div>
+        </form>
+      </div>
 
-  .submit_btn {
-    width: 100%;
-    padding: 16px;
-    background-color: #6c63ff;
-    color: white;
-    font-size: 16px;
-    font-weight: bold;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background 0.3s, transform 0.2s;
-  }
+    </div>
 
-  .submit_btn:hover {
-    background-color: #5848e5;
-    transform: translateY(-2px);
-  }
-</style>
 
-<form method="POST" class="form-container">
-  <div class="form-group">
-    <label for="name">Name</label>
-    <input type="text" id="name" value="{{ student.name }}" name="name" required>
-  </div>
-  <div class="form-group">
-    <label for="aadhaar">Aadhaar</label>
-    <input type="text" id="aadhaar" oninput="this.value = this.value.replace(/[^0-9]/g, '')"  maxlength="12" name="aadhaar" value="{{ student.aadhaar_number }}" required>
-  </div>
-  <div class="form-group">
-    <label for="gender">Gender</label>
-    <select class="form-control" name="gender" id="" required>
-      <option value="Male">Male</option>
-      <option value="Female">Female</option>
-    </select>
-  </div>
-  <div class="form-group">
-    <label for="dob">Date of Birth</label>
-    <input type="date" id="dob" value="{{ student.date_of_birth|date:'Y-m-d' }}" name="dob" required>
-  </div>
-  <div class="form-group">
-    <label for="mobile">Mobile</label>
-    <input type="text" oninput="this.value = this.value.replace(/[^0-9]/g, '')"  maxlength="10"  id="mobile" name="mobile" value="{{ student.mobile|default_if_none:'' }}" required>
-  </div>
-  <div class="form-group">
-    <label for="address">Address</label>
-    <textarea name="address" id="address" required>{% if student.address != None %}{{ student.address }}{% endif %}</textarea>
-  </div>
-  <button type="submit" class="submit_btn" name="submit_basic_details">Submit</button>
-</form>

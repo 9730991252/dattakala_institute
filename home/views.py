@@ -66,11 +66,14 @@ def self_registration_student(request):
         else:
             student = Student.objects.filter(aadhaar_number=aadhaar_number).first()
             if student:
-                if student.approval_status == 0:
-                    pass
-                else:
-                    messages.success(request, 'Your Form Is Successfully Submitted. Please Visit to Office!')
-                    return redirect('/self_registration_student/#home')
+                student_approval = Student_approval.objects.filter(student=student, batch=batch).first() 
+                if student_approval:
+                    if student_approval.office_approval_status == 0 and student_approval.account_approval_status == 0 and student_approval.store_approval_status == 0:
+                        print('yes')
+                        pass
+                    else:
+                        messages.success(request, 'Your Form Is Successfully Submitted. Please Visit to Office!')
+                        return redirect('/#home')
             else:
                 Student.objects.create(
                     name=name,
@@ -191,12 +194,7 @@ def self_registration_student(request):
                 messages.success(request, 'College Details Added Successfully. Now Add Your Image and Conform.')
         
     
-    admission_year = []
-    current_year = date.today().year
-    for i in range(0, 11):
-        start_year = current_year - i
-        end_year_short = str((current_year - i + 1))[-2:]
-        admission_year.append({'year': f'{start_year} - {end_year_short}'})
+    
     if student:
         student_college_detail = Student_college_detail.objects.filter(batch=batch, student=student).first()
     else:
@@ -216,6 +214,12 @@ def self_registration_student(request):
 
         messages.success(request, 'Your Registration is Completed.')
         return redirect('/')
+    admission_year = []
+    current_year = date.today().year
+    for i in range(0, 11):
+        start_year = current_year - i
+        end_year_short = str((current_year - i + 1))[-2:]
+        admission_year.append({'year': f'{start_year} - {end_year_short}'})
     context = {
         'student':student,
         'district':District.objects.filter(status=1).order_by('name'),

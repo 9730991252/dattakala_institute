@@ -1,91 +1,106 @@
-{% load static %}
-<style>
-  form {
-    max-width: 480px;
-    margin: 0 auto;
-    padding: 32px;
-    background: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-    transition: transform 0.3s ease-in-out;
-  }
 
-  form div {
-    margin-bottom: 20px;
-  }
+      <style>
+        .form-label {
+          font-weight: 600;
+        }
+        .form-control, .form-select {
+          border-radius: 8px;
+        }
+        .shadow {
+          box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+        .btn-primary {
+          font-size: 1rem;
+          font-weight: 600;
+          border-radius: 8px;
+        }
+        .college_details{
+          background-color: aquamarine;
+        }
+      </style>
+      <div class="container mt-5 mb-5 p-4 shadow rounded bg-light">
+        <form method="POST">
+          {% csrf_token %}
+          <input type="hidden" name="s_id" value="{{student.id}}">
+          <div class="row g-3">
+            <div class="col-md-5">
+              <label class="form-label">How to Arrive College</label>
+              <select class="form-select" name="come_to_college" required>
+                <option value="">Select Type</option>
+                <option value="Hostel" {% if student_college_details.how_to_arrive_college == 'Hostel' %} selected {% endif %} >Hostel</option>
+                <option value="Dattakala_Travelling" {% if student_college_details.how_to_arrive_college == 'Dattakala_Travelling' %} selected {% endif %} >Dattakala Travelling</option>
+                <option value="Self" {% if student_college_details.how_to_arrive_college == 'Self' %} selected {% endif %} >Self</option>
+              </select>
+            </div>
+            
+            <div class="col-md-5">
+              <label class="form-label">College</label>
+              <select class="form-select" name="college_id" onchange="get_college_branch(this.value)" required>
+                <option value="">Select College</option>
+                {% for c in colleges %}
+                <option value="{{ c.id }}" {% if student_college_details.college == c %} selected {% endif %}>{{ c.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            
+            <div class="col-md-5">
+              <label class="form-label">Admission Branch</label>
+              <select class="form-select" name="branch_id" id="branch" required>
+                {% if student_college_details.branch %}
+                  <option value="{{student_college_details.branch_id}}">{{ student_college_details.branch.name }}</option>
+                {% else %}
+                  <option value="">Select College First</option>
+                {% endif %}
+              </select>
+            </div>
+            <div class="col-md-5">
+              <label class="form-label">Current Year</label>
+              <select class="form-select" name="year_id" id="" required>
+                <option value="">Select</option>
+                {% for y in years %}
+                  <option value="{{ y.id }}" {% if student_college_details.year == y %} selected {% endif %}>{{ y.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
 
-  label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-    font-size: 15px;
-    color: #444;
-  }
+            <div class="col-md-5">
+              <label class="form-label">Year of Admission (first Year / Direct Second Year)</label>
+              <select class="form-select" name="admission_year" required>
+                <option>Select Year</option>
+                {% for y in admission_year %}
+                <option value="{{ y.year }}" {% if student_college_details.admission_year == y.year %} selected {% endif %} >{{ y.year }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            
+            <div class="col-md-5">
+              <label class="form-label">Admission Quota</label>
+              <select class="form-select" name="admission_quota">
+                <option value="">Select Quota</option>
+                <option value="Cap" {% if student_college_details.admission_quota == 'Cap' %} selected {% endif %}>Cap</option>
+                <option value="Against_Cap" {% if student_college_details..admission_quota == 'Against_Cap' %} selected {% endif %}>Against Cap</option>
+                <option value="EWS" {% if student_college_details.admission_quota == 'EWS' %} selected {% endif %}>EWS</option>
+                <option value="TFWS" {% if student_college_details.admission_quota == 'TFWS' %} selected {% endif %}>TFWS</option>
+                <option value="Management" {% if student_college_details.admission_quota == 'Management' %} selected {% endif %}>Management</option>
+              </select>
+            </div>
 
-  input[type="text"],
-  input[type="date"],
-  input[type="number"],
-  textarea {
-    width: 100%;
-    padding: 12px 14px;
-    border: 1.5px solid #ccc;
-    border-radius: 8px;
-    font-size: 15px;
-    transition: border-color 0.3s, box-shadow 0.3s;
-    background-color: #fafafa;
-  }
+            <div class="col-md-5">
+              <label class="form-label">Current Admission Type</label>
+              <select class="form-select" name="current_admission_type">
+                <option value="">Select Type</option>
+                <option value="Provisional" {% if student_college_details.current_admission_type == 'Provisional' %} selected {% endif %}>Provisional</option>
+                <option value="Confirm" {% if student_college_details.current_admission_type == 'Confirm' %} selected {% endif %}>Confirm</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="text-center mt-4">
+            <button type="submit" class="btn btn-primary px-5" name="submit_college_details">Submit</button>
+          </div>
+        </form>
+      </div>
 
-  input:focus, textarea:focus {
-    border-color: #6c63ff;
-    box-shadow: 0 0 6px rgba(108, 99, 255, 0.2);
-    outline: none;
-    background-color: #fff;
-  }
-
-  .submit_btn{
-    width: 100%;
-    padding: 14px;
-    background-color: #444;
-    color: white;
-    font-size: 15px;
-    font-weight: 600;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background 0.3s, transform 0.2s;
-  }
-
-  button:hover {
-    background-color: #333;
-    transform: translateY(-1.5px);
-  }
-</style>
-
-<form method="POST" onsubmit="document.getElementById('loader').style.display = 'unset'; document.getElementById('submit_college_details').style.display = 'none'">
-    <div>
-        <select class="form-control" name="college_id" onchange="get_college_branch(this.value)" required>
-            <option value="">Select College</option>
-            {% for c in colleges %}
-                <option value="{{c.id}}" {% if c == student_college_details.college %} selected {% endif %}>{{c.name}}</option>
-            {% endfor %}
-        </select>
     </div>
-    <div>
-        <select class="form-control" name="branch_id" id="branch" required>
-            <option value="">Select College Branch</option>
-            <option value="{{student_college_details.branch.id}}" selected>{{student_college_details.branch.name}}</option>
-        </select>
-    </div>
-    <div>
-        <select class="form-control" name="year_id" required>
-            <option value="">Select Year</option>
-            {% for c in years %}
-                <option value="{{c.id}}" {% if c == student_college_details.year %} selected {% endif %}>{{c.name}}</option>
-            {% endfor %}
-        </select>
-    </div>
 
-  <img src='{% static "img/loader.gif" %}' id="loader" style="display: none; width: 50px; margin: 0 auto;">
-  <button type="submit"  class="submit_btn" id="submit_college_details"  name="submit_college_details">Submit</button>
-</form>
 

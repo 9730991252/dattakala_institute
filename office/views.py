@@ -181,78 +181,124 @@ def student_detail(request, id):
         student = Student.objects.filter(id=id).first()
         if 'submit_basic_details' in request.POST:
             name = request.POST.get('name')
-            student.name = name
-            student.updated_date = datetime.now()
-            student.updated_by = clerk
-            aadhaar_number = request.POST.get('aadhaar')
-            if Student.objects.filter(aadhaar_number=aadhaar_number).exclude(id=student.id).exists():
-                messages.error(request, 'Aadhaar Number already exists So Skipped!')
-                return redirect('student_detail', id=student.id)
-            elif int(len(aadhaar_number)) < 12:
-                messages.error(request, 'Please Inter Valid Aadhaar Number!')
-                return redirect('student_detail', id=student.id)
-            else:
-                student.aadhaar_number = aadhaar_number
-
-            dob = request.POST.get('dob')
-            student.date_of_birth = dob
-
-            student_mobile = request.POST.get('mobile')
-            if int(len(student_mobile)) < 10:
-                messages.error(request, 'Please Inter Valid Mobile Number!')
-                return redirect('student_detail', id=student.id)
-            student.mobile = student_mobile
-            
+            student_name_as_per_ssc_marksheet = request.POST.get('student_name_as_per_ssc_marksheet')
+            aadhaar_number = request.POST.get('aadhaar_number')
+            pan_number = request.POST.get('pan_number').upper()
             gender = request.POST.get('gender')
-            student.gender = gender
-
+            date_of_birth = request.POST.get('date_of_birth')
+            blood_group = request.POST.get('blood_group')
+            mobile = request.POST.get('mobile')
+            email = request.POST.get('email')
             address = request.POST.get('address')
-            student.address = address
+            district = request.POST.get('district')
+            taluka = request.POST.get('taluka')
+            current_address = request.POST.get('current_address')
+            cast_category = request.POST.get('cast_category')
+            whatsapp_number = request.POST.get('whatsapp_number')
+            cast = request.POST.get('cast')
+            pin_code = request.POST.get('pin_code')
+            # Save in student end
 
-            student.save()
-            messages.success(request, 'Student details updated successfully!')
-            return redirect('student_detail', id=student.id)
-        if 'submit_parent_details'in request.POST:
-            father_name = request.POST.get('father_name')
-            student.father_name = father_name
-            student.updated_date = datetime.now()
-            student.updated_by = clerk
-            mother_name = request.POST.get('mother_name')
-            student.mother_name = mother_name
-
-            parent_mobile = request.POST.get('parent_mobile')
-            if len(str(int(parent_mobile))) != 10:
-                messages.error(request, 'Parent Mobile number must be 10 digits!')
+            if len(mobile) < 10:
+                messages.error(request, 'Mobile number should be of 10 digits')
+                return redirect('student_registration')
+            elif len(whatsapp_number) < 10:
+                messages.error(request, 'Whatsapp number should be of 10 digits')
+                return redirect('student_registration')
+            elif len(pan_number) < 10:
+                messages.error(request, 'Pan number should be of 10 digits')
+                return redirect('student_registration')
+            elif len(pin_code) < 6:
+                messages.error(request, 'Pin Code should be of 6 digits')
+                return redirect('student_registration')
+            elif len(aadhaar_number) < 12:
+                messages.error(request, 'Aadhaar number should be of 12 digits')
+                return redirect('student_registration')
+            else:
+                if Student.objects.filter(aadhaar_number=aadhaar_number).exclude(id=student.id).exists():
+                    messages.error(request, 'Student Already Exists with this Aadhaar Number')
+                    return redirect('student_registration')
+                else:
+                    student.updated_date = datetime.now()
+                    student.updated_by = clerk
+                    student.name = name
+                    student.student_name_as_per_ssc_marksheet = student_name_as_per_ssc_marksheet
+                    student.mobile = mobile
+                    student.aadhaar_number = aadhaar_number
+                    student.gender = gender
+                    student.address = address
+                    student.date_of_birth = date_of_birth
+                    student.blood_group = blood_group
+                    student.email = email
+                    student.current_address = current_address
+                    student.pan_number = pan_number
+                    student.district_id = district
+                    student.taluka_id = taluka
+                    student.cast_category_id = cast_category
+                    student.whatsapp_number = whatsapp_number
+                    student.cast = cast
+                    student.pin_code = pin_code
+                    student.save()
+                    messages.success(request, 'Student Basic Details Added Successfully')
                 return redirect('student_detail', id=student.id)
-            student.parent_mobile = parent_mobile
-
-            student.save()
-            messages.success(request, 'Parent details updated successfully!')
+        if 'submit_parent_details'in request.POST:
+            parent_mobile = request.POST.get('parent_mobile')
+            father_name = request.POST.get('father_name')
+            mother_name = request.POST.get('mother_name')
+            mother_mobile = request.POST.get('mother_mobile')
+            is_father_alive = request.POST.get('is_father_alive')
+            if len(parent_mobile) < 10:
+                messages.error(request, 'Parent mobile number should be of 10 digits')
+            elif len(mother_mobile) < 10:
+                messages.error(request, 'Mother mobile number should be of 10 digits')
+            else:
+                student.parent_mobile = parent_mobile
+                student.father_name = father_name
+                student.mother_name = mother_name
+                student.mother_mobile = mother_mobile
+                student.is_father_alive = is_father_alive
+                student.updated_date = datetime.now()
+                student.updated_by = clerk
+                student.save()
+                messages.success(request, 'Parent Details Added Successfully')
             return redirect('student_detail', id=student.id)
         if 'submit_college_details'in request.POST:
+            how_to_arrive_college = request.POST.get('come_to_college')
             college_id = request.POST.get('college_id')
             branch_id = request.POST.get('branch_id')
             year_id = request.POST.get('year_id')
-            if Student_college_detail.objects.filter(batch=clerk.batch, student=student).exists():
-                sc = Student_college_detail.objects.filter(batch=clerk.batch, student=student).first()
-                sc.college_id = college_id
-                sc.branch_id = branch_id
-                sc.year_id = year_id
-                sc.updated_date = datetime.now()
-                sc.updated_by = clerk 
-                sc.save()
-                messages.success(request, 'College details updated successfully!')
-                return redirect('student_detail', id=student.id)
+            admission_year = request.POST.get('admission_year')
+            admission_quota = request.POST.get('admission_quota') 
+            current_admission_type = request.POST.get('current_admission_type')
+            student_college_detail = Student_college_detail.objects.filter(student=student, batch=clerk.batch).first()
+            if student_college_detail:
+                student_college_detail.updated_date = datetime.now()
+                student_college_detail.updated_by = clerk
+                student_college_detail.batch=clerk.batch
+                student_college_detail.student = student
+                student_college_detail.how_to_arrive_college = how_to_arrive_college
+                student_college_detail.college_id = college_id
+                student_college_detail.branch_id = branch_id
+                student_college_detail.year_id = year_id
+                student_college_detail.admission_year = admission_year
+                student_college_detail.admission_quota = admission_quota
+                student_college_detail.current_admission_type = current_admission_type
+                student_college_detail.save()
             else:
-                Student_college_detail(
+                student_college_detail = Student_college_detail(
                     batch=clerk.batch,
                     student=student,
+                    how_to_arrive_college=how_to_arrive_college,
                     college_id=college_id,
                     branch_id=branch_id,
                     year_id=year_id,
+                    admission_year=admission_year,
+                    admission_quota=admission_quota,
+                    current_admission_type=current_admission_type,
                     added_by=clerk
-                ).save()
-                messages.success(request, 'College details added successfully!')
+                )
+                student_college_detail.save()
+            messages.success(request, 'College details added successfully!')
             return redirect('student_detail', id=student.id)
         if 'submit_hostel_fee_details' in request.POST:
             hostel_fee_id = request.POST.get('hostel_fee_id')
@@ -332,7 +378,12 @@ def student_detail(request, id):
 
             messages.success(request, "Account approval status updated successfully!")
             return redirect('student_detail', id=student.id)
-            
+        admission_year = []
+        current_year = date.today().year
+        for i in range(0, 11):
+            start_year = current_year - i
+            end_year_short = str((current_year - i + 1))[-2:]
+            admission_year.append({'year': f'{start_year} - {end_year_short}'})
         context={
             'clerk':clerk,
             'student':student,
@@ -343,6 +394,9 @@ def student_detail(request, id):
             'hostel_fee':Hostel_Fee_installment.objects.filter(batch=clerk.batch, status=1),
             'student_hostel_fee':Student_Hostel_Fee.objects.filter(student=student, batch=clerk.batch).first(),
             'student_approval':Student_approval.objects.filter(student=student, batch=clerk.batch).first(),
+            'district':District.objects.filter(status=1).order_by('name'),
+            'cast_category':Cast_category.objects.filter(status=1),
+            'admission_year':admission_year
         }
         return render(request, 'student_detail.html', context)
     else:

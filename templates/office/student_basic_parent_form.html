@@ -1,78 +1,65 @@
-<style>
 
-  form {
-    max-width: 480px;
-    margin: 0 auto;
-    padding: 32px;
-    background: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-    transition: transform 0.3s ease-in-out;
-  }
+      <style>
+        .parent_details{
+          background-color: aquamarine;
+        }
+        .form-label {
+          font-weight: 600;
+        }
+        .form-control, .form-select {
+          border-radius: 8px;
+        }
+        .shadow {
+          box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+        .btn-primary {
+          font-size: 1rem;
+          font-weight: 600;
+          border-radius: 8px;
+        }
+      </style>
+      <div class="container mt-5 mb-5 p-4 shadow rounded bg-light">
+        <form method="POST">
+          {% csrf_token %}
+          <input type="hidden" name="s_id" value="{{student.id}}">
+          <div class="row g-3">            
+            
+            <div class="col-md-5">
+              <label class="form-label">Is Father Alive</label>
+              <select class="form-select" name="is_father_alive" required>
+                <option value="">Select</option>
+                <option value="Yes" {% if student.is_father_alive == 'Yes' %} selected {% endif %} >Yes</option>
+                <option value="No" {% if student.is_father_alive == 'No' %} selected {% endif %} >No</option>
+              </select>
+            </div>
 
-  form div {
-    margin-bottom: 20px;
-  }
+            <div class="col-md-5">
+              <label class="form-label">Father's/Parent Full Name</label>
+              <input type="text" class="form-control" name="father_name" value="{{ student.father_name|default_if_none:'' }}" oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')" required>
+            </div>
 
-  label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-    font-size: 15px;
-    color: #444;
-  }
+            <div class="col-md-5">
+              <label class="form-label">Father Mobile No.</label>
+              <input type="text" class="form-control" name="parent_mobile" value="{{ student.parent_mobile|default_if_none:'' }}" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="10" required>
+            </div>
 
-  input[type="text"],
-  input[type="date"],
-  input[type="number"],
-  textarea {
-    width: 100%;
-    padding: 12px 14px;
-    border: 1.5px solid #ccc;
-    border-radius: 8px;
-    font-size: 15px;
-    transition: border-color 0.3s, box-shadow 0.3s;
-    background-color: #fafafa;
-  }
+            <div class="col-md-5">
+              <label class="form-label">Mother's Full Name</label>
+              <input type="text" class="form-control" name="mother_name" value="{{ student.mother_name|default_if_none:'' }}" oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')" required>
+            </div>
+            
+            <div class="col-md-5">
+              <label class="form-label">Mother Mobile No.</label>
+              <input type="text" class="form-control" name="mother_mobile" value="{{ student.mother_mobile|default_if_none:'' }}" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="10" required>
+            </div>
+          </div>
+          
+          <div class="text-center mt-4">
+            <button type="submit" class="btn btn-primary px-5" name="submit_parent_details">Submit</button>
+          </div>
+        </form>
+      </div>
 
-  input:focus, textarea:focus {
-    border-color: #6c63ff;
-    box-shadow: 0 0 6px rgba(108, 99, 255, 0.2);
-    outline: none;
-    background-color: #fff;
-  }
+    </div>
 
-  .submit_btn{
-    width: 100%;
-    padding: 14px;
-    background-color: #444;
-    color: white;
-    font-size: 15px;
-    font-weight: 600;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background 0.3s, transform 0.2s;
-  }
 
-  button:hover {
-    background-color: #333;
-    transform: translateY(-1.5px);
-  }
-</style>
-
-<form method="POST">
-  <div>
-    <label for="father_name">Father Name</label>
-    <input type="text" id="father_name" value="{{ student.father_name|default_if_none:'' }}" name="father_name" required>
-  </div>
-  <div>
-    <label for="mother_name">Mother Name</label>
-    <input type="text" id="mother_name" value="{{ student.mother_name|default_if_none:'' }}" name="mother_name" required>
-  </div>
-  <div>
-    <label for="parent_mobile">Parent Mobile</label>
-    <input type="text" id="parent_mobile" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="10"  name="parent_mobile" value="{{ student.parent_mobile|default_if_none:'' }}" required>
-  </div>
-  <button type="submit" class="submit_btn" name="submit_parent_details">Submit</button>
-</form>

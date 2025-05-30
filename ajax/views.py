@@ -46,6 +46,7 @@ def get_taluka(request):
     return JsonResponse({'t': t})
 
 def search_student_for_fees(request):
+    batch = Batch.objects.filter(start_date__year__lte=date.today().year, end_date__year__gte=date.today().year).first()
     if request.method == 'GET':
         words = request.GET['words']
         st = []
@@ -63,6 +64,8 @@ def search_student_for_fees(request):
                     'gender':s.gender,
                     'approval_status':s.approval_status,
                     'img': s.image, 
+                    'approval':Student_approval.objects.filter(student=s, batch=batch).first,
+                    
                 })
         context = {
             'student':st
@@ -71,6 +74,7 @@ def search_student_for_fees(request):
     return JsonResponse({'t': t})
 
 def search_student_for_new_admission(request):
+    batch = Batch.objects.filter(start_date__year__lte=date.today().year, end_date__year__gte=date.today().year).first()
     t = ''
     status = 0
     if request.method == 'GET':
@@ -94,7 +98,7 @@ def search_student_for_new_admission(request):
                     'gender': s.gender,
                     'added_by':s.added_by,
                     'updated_by':s.updated_by,
-                    'approval_status':s.approval_status,
+                    'approval':Student_approval.objects.filter(student=s, batch=batch).first,
                     'img': s.image, 
                 })
 

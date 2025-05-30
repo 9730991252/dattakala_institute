@@ -281,13 +281,56 @@ def student_detail(request, id):
                 messages.success(request, 'Hostel fee added successfully!')
 
             return redirect('student_detail', id=student.id)
-        if 'submit_student_approval'in request.POST:
-            approve_status = request.POST.get('approve_status')
-            student.approval_status = approve_status
-            student.approved_by = clerk
-            student.approved_date = datetime.now()
-            student.save()
-            messages.success(request, 'Student approval status updated successfully!')
+        student_approval, created = Student_approval.objects.get_or_create(
+                student=student,
+                batch=clerk.batch,
+                defaults={
+                    'store_approved_by': None,
+                    'office_approved_by': None,
+                    'account_approved_by': None,
+                }
+            )
+
+            # --- Handle Store Approval ---
+        if 'submit_store_student_approval' in request.POST:
+            approve_status = int(request.POST.get('approve_status'))
+            reject_reason = request.POST.get('reject_Reason', '')
+
+            student_approval.store_approval_status = approve_status
+            student_approval.store_rejected_reason = reject_reason if approve_status == 2 else None
+            student_approval.store_approved_by = clerk
+            student_approval.store_approved_date = datetime.now()
+            student_approval.save()
+
+            messages.success(request, "Store approval status updated successfully!")
+            return redirect('student_detail', id=student.id)
+
+        # --- Handle Office Approval ---
+        if 'submit_office_student_approval' in request.POST:
+            approve_status = int(request.POST.get('approve_status'))
+            reject_reason = request.POST.get('reject_Reason', '')
+
+            student_approval.office_approval_status = approve_status
+            student_approval.office_rejected_reason = reject_reason if approve_status == 2 else None
+            student_approval.office_approved_by = clerk
+            student_approval.office_approved_date = datetime.now()
+            student_approval.save()
+
+            messages.success(request, "Office approval status updated successfully!")
+            return redirect('student_detail', id=student.id)
+
+        # --- Handle Account Approval ---
+        if 'submit_account_student_approval' in request.POST:
+            approve_status = int(request.POST.get('approve_status'))
+            reject_reason = request.POST.get('reject_Reason', '')
+
+            student_approval.account_approval_status = approve_status
+            student_approval.account_rejected_reason = reject_reason if approve_status == 2 else None
+            student_approval.account_approved_by = clerk
+            student_approval.account_approved_date = datetime.now()
+            student_approval.save()
+
+            messages.success(request, "Account approval status updated successfully!")
             return redirect('student_detail', id=student.id)
             
         context={
@@ -299,6 +342,7 @@ def student_detail(request, id):
             'student_college_details':Student_college_detail.objects.filter(student=student, batch=clerk.batch).first(),
             'hostel_fee':Hostel_Fee_installment.objects.filter(batch=clerk.batch, status=1),
             'student_hostel_fee':Student_Hostel_Fee.objects.filter(student=student, batch=clerk.batch).first(),
+            'student_approval':Student_approval.objects.filter(student=student, batch=clerk.batch).first(),
         }
         return render(request, 'student_detail.html', context)
     else:

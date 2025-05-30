@@ -114,6 +114,22 @@ class Student(models.Model):
     whatsapp_number = models.IntegerField(null=True)
     pin_code = models.IntegerField(null=True)
 
+class Student_approval(models.Model):
+    batch = models.ForeignKey(Batch, on_delete=models.CASCADE, null=True)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    office_approval_status = models.IntegerField(default=0)  # 0 = pending, 1 = approved, 2 = rejected
+    store_approval_status = models.IntegerField(default=0)  # 0 = pending, 1 = approved, 2 = rejected
+    account_approval_status = models.IntegerField(default=0)  # 0 = pending, 1 = approved, 2 = rejected
+    office_approved_by = models.ForeignKey(Clerk, on_delete=models.CASCADE, null=True, related_name='office_by_clerk')
+    store_approved_by = models.ForeignKey(Clerk, on_delete=models.CASCADE, null=True, related_name='store_by_clerk')
+    account_approved_by = models.ForeignKey(Clerk, on_delete=models.CASCADE, null=True, related_name='account_by_clerk')
+    office_approved_date = models.DateTimeField(null=True)
+    store_approved_date = models.DateTimeField(null=True)
+    account_approved_date = models.DateTimeField(null=True)
+    office_rejected_reason = models.CharField(max_length=100, null=True)
+    store_rejected_reason = models.CharField(max_length=100, null=True)
+    account_rejected_reason = models.CharField(max_length=100, null=True)                                                                       
+
 class Student_college_detail(models.Model):
     batch = models.ForeignKey(Batch, on_delete=models.CASCADE)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)

@@ -14,6 +14,7 @@
         }
 
         .student_box {
+            width: 350px;
             display: flex;
             align-items: center;
             padding: 20px;
@@ -88,8 +89,8 @@
 
         <div class="student_container">
         {% for s in student %}
-        <a {% if s.approval_status == 0 %} onclick="alert('Please Approve the Student First')" {% elif s.approval_status == 1 %} href="/account/student_fee_detail/{{s.id}}" {% else %} onclick="alert('You Cant Open Rejected Student')" {% endif %} >
-            <div class="student_box">
+        <a href="/account/student_fee_detail/{{s.id}}">
+            <div class="student_box" style="position: relative;">
                 <div class="img_box">
                     {% if s.img %}
                         <img src="{{s.img.url}}" alt="{{s.name}}">
@@ -110,15 +111,38 @@
                     <div class="mobile">📞 {{s.mobile}}</div>
                     <div class="aadhaar_number">🆔 Aadhaar: {{s.aadhaar_number}}</div>
                     <div class="gender">Added BY: {{s.added_by.name}} {% if s.updated_by %} <h style="font-size: 12px;">(edited - {{s.updated_by.name}})</h> {% endif %}</div>
-                    <div class="">
-                        Approval Status:
-                        {% if s.approval_status == 0 %} 
-                            <b class="bg-warning" style="padding: 3px;border-radius: 4px;">Pending</b>
-                        {% elif s.approval_status == 1 %}
-                            <b class="bg-success text-white" style="padding: 3px;border-radius: 4px;">Approved</b>
+            </div>
+            <br><br><br><br><br><br><br><br><br><br>
+            <div style="position: absolute;justify-content: space-evenly; bottom: 10px;left: 10px;right: 10px;display: flex;gap: 10px;">
+                <div style="display: flex;flex-direction: column;gap: 5px;">
+                    <div>Store</div>
+                    <div>{% if s.approval.store_approval_status == 2 %} 
+                        <b class="bg-danger text-white" style="padding: 3px;border-radius: 4px;">Reject</b>
+                        {% elif s.approval.store_approval_status == 1 %}
+                        <b class="bg-success text-white" style="padding: 3px;border-radius: 4px;">Approved</b>
                         {% else %}
-                            <b class="bg-danger text-white" style="padding: 3px;border-radius: 4px;">Reject</b>
-                        {% endif %}            
+                        <b class="bg-warning" style="padding: 3px;border-radius: 4px;">Pending</b>
+                        {% endif %}</div>
+                </div>
+                <div style="display: flex;flex-direction: column;gap: 5px;">
+                    <div>Office</div>
+                        <div>{% if s.approval.office_approval_status == 2 %} 
+                        <b class="bg-danger text-white" style="padding: 3px;border-radius: 4px;">Reject</b>
+                        {% elif s.approval.office_approval_status == 1 %}
+                        <b class="bg-success text-white" style="padding: 3px;border-radius: 4px;">Approved</b>
+                        {% else %}
+                        <b class="bg-warning" style="padding: 3px;border-radius: 4px;">Pending</b>
+                        {% endif %}</div>
+                </div>
+                <div style="display: flex;flex-direction: column;gap: 5px;">
+                    <div>Account</div>
+                    <div>{% if s.approval.account_approval_status == 2 %} 
+                        <b class="bg-danger text-white" style="padding: 3px;border-radius: 4px;">Reject</b>
+                        {% elif s.approval.account_approval_status == 1 %}
+                        <b class="bg-success text-white" style="padding: 3px;border-radius: 4px;">Approved</b>
+                        {% else %}
+                        <b class="bg-warning" style="padding: 3px;border-radius: 4px;">Pending</b>
+                        {% endif %}</div>
                 </div>
             </div>
             </div>

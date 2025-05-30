@@ -137,12 +137,18 @@ def student_fee_detail(request, id):
             return redirect('office_login')
         student = get_object_or_404(Student, id=id)
         if student:
-            if student.approval_status == 0:
+            student_approval = Student_approval.objects.filter(student=student).first()
+            if student_approval:
+                if student_approval.office_approval_status == 0 or student_approval.store_approval_status == 0 or student_approval.account_approval_status == 0:
+                    messages.error(request, 'Please Approve the Student First')
+                    return redirect('student_fees')
+                if student_approval.office_approval_status == 2 or student_approval.store_approval_status == 2 or student_approval.account_approval_status == 2:
+                    messages.error(request, 'You Cant Open Rejected Student')
+                    return redirect('student_fees')
+            else:
                 messages.error(request, 'Please Approve the Student First')
                 return redirect('student_fees')
-            if student.approval_status == 2:
-                messages.error(request, 'You Cant Open Rejected Student')
-                return redirect('student_fees')
+            
 
         cash_fee = Student_received_Fee_Cash.objects.filter(student=student, added_by__batch=clerk.batch)
         bank_fee = Student_received_Fee_Bank.objects.filter(student=student, added_by__batch=clerk.batch)

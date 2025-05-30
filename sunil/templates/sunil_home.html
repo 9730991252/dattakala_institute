@@ -5,6 +5,7 @@
 {% block content %}
 {% load static %}
 {% include 'home/index_navbar.html' %}
+{% include 'alert.html' %}
 <style>
     .flex{
         display: flex;
@@ -154,7 +155,11 @@
 
               <div class="mb-3">
                 <label for="">Mobile</label>
-                <input type="text" class="form-control" name="mobile" placeholder="Enter Mobile Number" required>
+                <input type="text" class="form-control" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="10" name="mobile" placeholder="Enter Mobile Number" required>
+              </div>
+              <div class="mb-3">
+                <label for="">Aadhar Number</label>
+                <input type="text" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="12" class="form-control" name="aadhar_number" placeholder="Enter Aadhar Number" required>
               </div>
 
               <div class="mb-3">
@@ -176,6 +181,7 @@
           <tr>
             <th scope="col">Name</th>
             <th scope="col">Mobile</th>
+            <th scope="col">Aadhar Number</th>
             <th scope="col">Pin</th>
             <th scope="col">Batch</th>
             <th scope="col">Status</th>
@@ -187,6 +193,7 @@
           <tr>
             <th scope="row">{{ c.name }}</th>
             <td>{{ c.mobile }}</td>
+            <td>{{ c.aadhar_number }}</td>
             <td>{{ c.secret_pin }}</td>
             <td>{{ c.batch.name }}</td>
             <td>
@@ -236,6 +243,10 @@
                     <div class="mb-3">
                       <label for="">Mobile</label>
                       <input type="text" class="form-control" name="mobile" value="{{ c.mobile }}" required>
+                    </div>
+                    <div class="mb-3">
+                      <label for="">Aadhar Number</label>
+                      <input type="text" class="form-control" name="aadhar_number" value="{{ c.aadhar_number }}" required>
                     </div>
                     <div class="mb-3">
                       <label for="">Secret Pin</label>

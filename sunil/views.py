@@ -52,6 +52,7 @@ def sunil_home(request):
             aadhar_number = request.POST.get('aadhar_number')
             
             if Clerk.objects.filter(batch_id=batch_id,aadhar_number=aadhar_number).exists():
+                messages.error(request, 'Clerk with this aadhar number already exists in this batch')
                 return redirect('sunil_home')
             else:
                 Clerk(
@@ -64,19 +65,20 @@ def sunil_home(request):
             return redirect('sunil_home')
         if 'edit_clerk' in request.POST:
             clerk_id = request.POST.get('id')
-            mobile = request.POST.get('mobile')
             batch_id = request.POST.get('batch_id')
+            aadhar_number = request.POST.get('aadhar_number')
+            mobile = request.POST.get('mobile')
             
             
-            if Clerk.objects.filter(mobile=mobile, batch_id=batch_id).exists():
-                existing_clerk = Clerk.objects.get(mobile=mobile, batch_id=batch_id)
-                if existing_clerk.id != int(clerk_id):
-                    return redirect('sunil_home')
+            if Clerk.objects.filter(aadhar_number=aadhar_number, batch_id=batch_id).exclude(id=clerk_id).exists():
+                messages.error(request, 'Clerk with this aadhar number already exists in this batch')
+                return redirect('sunil_home')
             clerk = Clerk.objects.get(id=clerk_id)
             clerk.name = request.POST.get('name')
             clerk.mobile = mobile
             clerk.secret_pin = request.POST.get('secret_pin')
             clerk.batch_id = batch_id
+            clerk.aadhar_number = aadhar_number
             clerk.save()
             return redirect('sunil_home')
         if 'clerk_active' in request.POST:

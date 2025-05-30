@@ -266,8 +266,8 @@
               <label class="form-label">Is Father Alive</label>
               <select class="form-select" name="is_father_alive" required>
                 <option value="">Select</option>
-                <option value="Yes" {% if student_college_detail.is_father_alive == 'Yes' %} selected {% endif %} >Yes</option>
-                <option value="No" {% if student_college_detail.is_father_alive == 'No' %} selected {% endif %} >No</option>
+                <option value="Yes" {% if student.is_father_alive == 'Yes' %} selected {% endif %} >Yes</option>
+                <option value="No" {% if student.is_father_alive == 'No' %} selected {% endif %} >No</option>
               </select>
             </div>
 

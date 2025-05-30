@@ -109,6 +109,10 @@ class Student(models.Model):
     image = models.ImageField(upload_to="student_images",default="",null=True, blank=True)
     student_name_as_per_ssc_marksheet = models.CharField(max_length=500, null=True)
     mother_mobile = models.IntegerField(null=True)
+    cast = models.CharField(max_length=100, null=True)
+    is_father_alive = models.CharField(max_length=20, null=True)
+    whatsapp_number = models.IntegerField(null=True)
+    pin_code = models.IntegerField(null=True)
 
 class Student_college_detail(models.Model):
     batch = models.ForeignKey(Batch, on_delete=models.CASCADE)

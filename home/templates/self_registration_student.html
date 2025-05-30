@@ -178,7 +178,7 @@
             
             <div class="col-md-6">
               <label class="form-label">PAN Number</label>
-              <input type="text" class="form-control" name="pan_number" value="{{ student.pan_number }}" required>
+              <input type="text" class="form-control" name="pan_number" maxlength="10" value="{{ student.pan_number }}" required>
             </div>
             
             <div class="col-md-6">
@@ -264,7 +264,7 @@
             
             <div class="col-md-6">
               <label class="form-label">Is Father Alive</label>
-              <select class="form-select" name="come_to_college" required>
+              <select class="form-select" name="is_father_alive" required>
                 <option value="">Select</option>
                 <option value="Yes" {% if student_college_detail.is_father_alive == 'Yes' %} selected {% endif %} >Yes</option>
                 <option value="No" {% if student_college_detail.is_father_alive == 'No' %} selected {% endif %} >No</option>
@@ -577,9 +577,9 @@ const pageAccessedByReload = (
       .includes('reload')
 );
 
-// if (pageAccessedByReload == true){
-//   window.location.href = '/';
-// }
+if (pageAccessedByReload == true){
+  window.location.href = '/';
+}
 
 </script> 
 {% include 'home/index_footer.html' %}

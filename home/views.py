@@ -83,7 +83,7 @@ def self_registration_student(request):
         name = request.POST.get('name')
         student_name_as_per_ssc_marksheet = request.POST.get('student_name_as_per_ssc_marksheet')
         aadhaar_number = request.POST.get('aadhaar_number')
-        pan_number = request.POST.get('pan_number')
+        pan_number = request.POST.get('pan_number').upper()
         gender = request.POST.get('gender')
         date_of_birth = request.POST.get('date_of_birth')
         blood_group = request.POST.get('blood_group')
@@ -98,6 +98,10 @@ def self_registration_student(request):
         mother_name = request.POST.get('mother_name')
         mother_mobile = request.POST.get('mother_mobile')
         cast_category = request.POST.get('cast_category')
+        whatsapp_number = request.POST.get('whatsapp_number')
+        cast = request.POST.get('cast')
+        pin_code = request.POST.get('pin_code')
+        is_father_alive = request.POST.get('is_father_alive')
         # Save in student end
         # Save in college detail start
         how_to_arrive_college = request.POST.get('come_to_college')
@@ -116,6 +120,15 @@ def self_registration_student(request):
             messages.error(request, 'Parent mobile number should be of 10 digits')
         elif len(mother_mobile) < 10:
             messages.error(request, 'Mother mobile number should be of 10 digits')
+            return redirect('student_registration')
+        elif len(whatsapp_number) < 10:
+            messages.error(request, 'Whatsapp number should be of 10 digits')
+            return redirect('student_registration')
+        elif len(pan_number) < 10:
+            messages.error(request, 'Pan number should be of 10 digits')
+            return redirect('student_registration')
+        elif len(pin_code) < 6:
+            messages.error(request, 'Pin Code should be of 6 digits')
             return redirect('student_registration')
         elif len(aadhaar_number) < 12:
             messages.error(request, 'Aadhaar number should be of 12 digits')
@@ -143,6 +156,10 @@ def self_registration_student(request):
                 student.district_id = district
                 student.taluka_id = taluka
                 student.cast_category_id = cast_category
+                student.whatsapp_number = whatsapp_number
+                student.cast = cast
+                student.pin_code = pin_code
+                student.is_father_alive = is_father_alive
                 student.save()
                 student_college_detail = Student_college_detail.objects.filter(student_id=s_id, batch=batch).first()
                 if student_college_detail:

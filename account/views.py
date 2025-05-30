@@ -201,6 +201,19 @@ def student_fee_detail(request, id):
                 updated_by=clerk
             ) 
             messages.success(request, 'Bank Hostel updated Successfully!')
+        if 'Edit_cash_hostel_fee'in request.POST:
+            transaction_id = request.POST.get('transaction_id')
+            received_amount = request.POST.get('received_amount')
+            paid_date = request.POST.get('date')
+            challan_number = request.POST.get('challan_number')
+            Student_Received_Fee_Cash_Hostel.objects.filter(id=transaction_id).update(
+                received_amount=received_amount,
+                paid_date=paid_date,
+                updated_date=datetime.now(),
+                updated_by=clerk,
+                challan_number=challan_number
+            )
+            messages.success(request, 'Cash Hostel updated Successfully!')
         total_fee = student_fee.objects.filter(student=student, batch=clerk.batch).aggregate(Sum('amount'))['amount__sum'] or 0
         if student_hostel_fee:
             total_fee += int(student_hostel_fee.hostel_fee.amount)

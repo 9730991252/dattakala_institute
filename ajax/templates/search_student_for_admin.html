@@ -1,0 +1,151 @@
+<br><br><br>
+<style>
+.student_container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .student_box {
+            width: 350px;
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease-in-out;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+
+        .student_box:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .img_box {
+            flex-shrink: 0;
+        }
+
+        .img_box img {
+            width: 90px;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 3px solid #e0e0e0;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .img_box img:hover {
+            transform: scale(1.08);
+        }
+
+        .name_mobile_box {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin-left: 20px;
+        }
+
+        .name {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #222;
+            margin-bottom: 6px;
+        }
+
+        .mobile,
+        .aadhaar_number,
+        .gender {
+            font-size: 0.95rem;
+            color: #444;
+            margin: 2px 0;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 600px) {
+            .student_box {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .name_mobile_box {
+                margin-left: 0;
+                margin-top: 12px;
+            }
+        }
+    </style>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600;700&display=swap" rel="stylesheet">
+
+        <div class="student_container">
+        {% for s in student %}
+        <a href="/dattakala_admin/admin_student_detail/{{s.id}}">
+            <div class="student_box" style="position: relative;">
+                <div class="img_box">
+                    {% if s.img %}
+                        <img src="{{s.img.url}}" alt="{{s.name}}">
+                    {% else %}
+                        <img src="https://cdn-icons-png.flaticon.com/512/201/201818.png" alt="No Image">
+                    {% endif %}
+
+                    <form method="POST" enctype="multipart/form-data" id="form{{s.id}}">
+                        {% csrf_token %}
+                        <input type="hidden" name="id" value="{{s.id}}">
+                        <input type="hidden" name="img" id="croppedImgInput{{s.id}}">
+                        <button type="submit" name="add_image" id="add_btn{{s.id}}" style="display: none;"></button>
+                    </form>
+                </div>
+
+                <div class="name_mobile_box">
+                    <div class="name">{{s.name}} </div>
+                    <div class="mobile">📞 {{s.mobile}}</div>
+                    <div class="aadhaar_number">🆔 Aadhaar: {{s.aadhaar_number}}</div>
+                    <div class="gender">Added BY: {{s.added_by.name}} {% if s.updated_by %} <h style="font-size: 12px;">(edited - {{s.updated_by.name}})</h> {% endif %}</div>
+            </div>
+            <br><br><br><br><br><br><br><br><br><br>
+            <div style="position: absolute;justify-content: space-evenly; bottom: 10px;left: 10px;right: 10px;display: flex;gap: 10px;">
+                <div style="display: flex;flex-direction: column;gap: 5px;">
+                    <div>Store</div>
+                    <div>{% if s.approval.store_approval_status == 2 %} 
+                        <b class="bg-danger text-white" style="padding: 3px;border-radius: 4px;">Reject</b>
+                        {% elif s.approval.store_approval_status == 1 %}
+                        <b class="bg-success text-white" style="padding: 3px;border-radius: 4px;">Approved</b>
+                        {% else %}
+                        <b class="bg-warning" style="padding: 3px;border-radius: 4px;">Pending</b>
+                        {% endif %}</div>
+                </div>
+                <div style="display: flex;flex-direction: column;gap: 5px;">
+                    <div>Office</div>
+                        <div>{% if s.approval.office_approval_status == 2 %} 
+                        <b class="bg-danger text-white" style="padding: 3px;border-radius: 4px;">Reject</b>
+                        {% elif s.approval.office_approval_status == 1 %}
+                        <b class="bg-success text-white" style="padding: 3px;border-radius: 4px;">Approved</b>
+                        {% else %}
+                        <b class="bg-warning" style="padding: 3px;border-radius: 4px;">Pending</b>
+                        {% endif %}</div>
+                </div>
+                <div style="display: flex;flex-direction: column;gap: 5px;">
+                    <div>Account</div>
+                    <div>{% if s.approval.account_approval_status == 2 %} 
+                        <b class="bg-danger text-white" style="padding: 3px;border-radius: 4px;">Reject</b>
+                        {% elif s.approval.account_approval_status == 1 %}
+                        <b class="bg-success text-white" style="padding: 3px;border-radius: 4px;">Approved</b>
+                        {% else %}
+                        <b class="bg-warning" style="padding: 3px;border-radius: 4px;">Pending</b>
+                        {% endif %}</div>
+                </div>
+            </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>

@@ -118,24 +118,21 @@ def self_registration_student(request):
         student = Student.objects.filter(id=s_id).first()
         if len(mobile) < 10:
             messages.error(request, 'Mobile number should be of 10 digits')
-            return redirect('student_registration')
+            return redirect('self_registration_student')
         elif len(parent_mobile) < 10:
             messages.error(request, 'Parent mobile number should be of 10 digits')
         elif len(mother_mobile) < 10:
             messages.error(request, 'Mother mobile number should be of 10 digits')
-            return redirect('student_registration')
+            return redirect('self_registration_student')
         elif len(whatsapp_number) < 10:
             messages.error(request, 'Whatsapp number should be of 10 digits')
-            return redirect('student_registration')
-        elif len(pan_number) < 10:
-            messages.error(request, 'Pan number should be of 10 digits')
-            return redirect('student_registration')
+            return redirect('self_registration_student')
         elif len(pin_code) < 6:
             messages.error(request, 'Pin Code should be of 6 digits')
-            return redirect('student_registration')
+            return redirect('self_registration_student')
         elif len(aadhaar_number) < 12:
             messages.error(request, 'Aadhaar number should be of 12 digits')
-            return redirect('student_registration')
+            return redirect('self_registration_student')
         else:
             if Student.objects.filter(aadhaar_number=aadhaar_number).exclude(id=student.id).exists():
                 messages.error(request, 'Student Already Exists with this Aadhaar Number')
@@ -192,9 +189,7 @@ def self_registration_student(request):
                 student = Student.objects.get(id=s_id)
                 what_to_show_status = 'Upload_Image'
                 messages.success(request, 'College Details Added Successfully. Now Add Your Image and Conform.')
-        
-    
-    
+            
     if student:
         student_college_detail = Student_college_detail.objects.filter(batch=batch, student=student).first()
     else:
@@ -253,6 +248,10 @@ def office_login(request):
         batch_id=request.POST ['batch_id']
         number=request.POST ['mobile']
         pin=request.POST ['pin']
+        a = Admin_detail.objects.filter(batch_id=batch_id,mobile=number,pin=pin,status=1)
+        if a:
+            request.session['admin_mobile'] = request.POST["mobile"]
+            return redirect('admin_home')
         c= Clerk.objects.filter(batch_id=batch_id,mobile=number,secret_pin=pin,status=1)
         if c:
             request.session['office_mobile'] = request.POST["mobile"]
@@ -266,24 +265,7 @@ def office_login(request):
     return render(request, 'office_login.html', context)
 
 
-def admin_login(request):
-    if request.session.has_key('admin_mobile'):
-        return redirect('admin_home')
-    if request.method == "POST":
-        batch_id=request.POST ['batch_id']
-        number=request.POST ['mobile']
-        pin=request.POST ['pin']
-        c= Admin_detail.objects.filter(batch_id=batch_id,mobile=number,pin=pin,status=1)
-        if c:
-            request.session['admin_mobile'] = request.POST["mobile"]
-            return redirect('admin_home')
-        else:
-            messages.error(request,f"Mobile Number or Secret Pin invalid.")
-            return redirect('/admin_login/')
-    context = {
-        'batch':Batch.objects.all(),
-    }
-    return render(request, 'admin_login.html',context)
+
 
 
 

@@ -8,8 +8,32 @@
 {% include 'alert.html' %}
 {% load admin_tag %}
 
+<div id="student_result">
+    
+    {% college_branches_student_details_admin a.batch_id %}
+    
+</div>
+<br><br><br>
+<div class="container" style="margin-top: 20px;position: fixed;bottom: 0;left: 0;right: 0;">
+  <div class="d-flex justify-content-center">
+    <input type="text" name="search" oninput="search_student(this.value)" class="form-control" placeholder="Search Student by Name or Mobile or Aadhar" style="width: 50%; border: 2px solid #3498db;">
+  </div>
+</div>
 
-{% college_branches_student_details_admin a.batch_id %}
+<script>
+  function search_student(words){
+      $.ajax({
+          url: "{% url 'search_student_for_admin' %}",
+          method: "GET",
+          data:{
+              words:words,
+          },
+          success: function(res){
 
+              $("#student_result").html(res.t)
+          }
+      })
+  }
+</script>
 
 {% endblock content %}

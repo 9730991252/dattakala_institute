@@ -73,6 +73,36 @@ def search_student_for_fees(request):
         t = render_to_string('search_student_for_fees.html', context)
     return JsonResponse({'t': t})
 
+def search_student_for_admin(request):
+    batch = Batch.objects.filter(start_date__year__lte=date.today().year, end_date__year__gte=date.today().year).first()
+    if request.method == 'GET':
+        words = request.GET['words']
+        st = []
+        if words:
+            student = list(Student.objects.filter(name__icontains=words))
+            student += Student.objects.filter(mobile__icontains=words)
+            student += Student.objects.filter(aadhaar_number__icontains=words)
+            for s in student:
+                approval = Student_approval.objects.filter(student=s, batch=batch).first()
+                if approval is None or (approval.office_approval_status != 2 and approval.account_approval_status != 2 and approval.store_approval_status != 2):
+                    st.append({
+                         'id':s.id,
+                        'name':s.name,
+                        'mobile':s.mobile,
+                        'aadhar_number':s.aadhaar_number,
+                        'secret_pin':s.secret_pin,
+                        'gender':s.gender,
+                        'approval_status':s.approval_status,
+                        'img': s.image, 
+                        'approval':approval,
+                        
+                    })
+        context = {
+            'student':st
+        }
+        t = render_to_string('search_student_for_admin.html', context)
+    return JsonResponse({'t': t})
+
 def search_student_for_new_admission(request):
     batch = Batch.objects.filter(start_date__year__lte=date.today().year, end_date__year__gte=date.today().year).first()
     t = ''

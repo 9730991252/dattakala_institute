@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+{% block head %}
+<style>
+@media print {
+    @page {
+        size: 8.5in 11in; /* Standard US Letter size */
+        margin: 0.5in;
+        padding-top: 0.2in;
+    }
+    body {
+        color: #000 !important; /* Enforce black text */
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        background: #fff !important; /* White background */
+    }
+}
+.main_container {
+    width: 100%;
+    max-width: 8in;
+    min-height: 10in;
+    border: 1px solid #000;
+    font-family: 'Times New Roman', Times, serif;
+    color: #000;
+    margin: 0 auto;
+    padding: 10px;
+    box-sizing: border-box;
+}
+.header {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
+    align-items: center;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    position: relative;
+}
+.logo_box {
+    height: 80px;
+    width: 80px;
+}
+.student_image {
+    position: absolute;
+    height: 100%;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+.logo_box img, .student_image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+.header_heading {
+    text-align: center;
+    font-size: 14px;
+    font-weight: normal;
+}
+.college_name {
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    margin: 5px 0;
+}
+.branch_name {
+    font-size: 17px;
+    font-weight: bold;
+    text-align: center;
+}
+.body {
+    width: 100%;
+    font-size: 14px;
+}
+.body_basic_details, .parent_details, .college_details {
+    margin-bottom: 20px;
+}
+.basic_Details_heading, .parent_Details_heading, .college_Details_heading {
+    font-weight: bold;
+    text-align: center;
+    border-top: 1px solid #000;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+}
+.basic_details_body, .parent_details_body, .college_details_body {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    padding: 10px;
+}
+.basic_details_body div, .parent_details_body div, .college_details_body div {
+    display: flex;
+    flex-direction: column;
+}
+
+.signature_section {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: end;
+    margin-top: 30px;
+    padding-top: 10px;
+}
+
+
+</style>
+{% endblock head %}
+{% block content %}
+{% load static %}
+{% include 'alert.html' %}
+
+<div class="main_container">
+    <div class="header">
+        <div class="logo_box"><img src="{% static 'img/logo.jpg' %}" alt="College Logo"></div>
+        <div>
+            <div class="header_heading">Dattakala Shikshan Sanstha</div>
+            <div class="college_name">{{ student_college_detail.college.name }}</div>
+            <div class="branch_name">Admission Form</div>
+        </div>
+        <div class="student_image"><img src="{% if student.image %} {{student.image.url}} {% else %} {% endif %} " alt=""></div>
+    </div>
+    <div class="body">
+        <div class="body_basic_details">
+            <div class="basic_Details_heading">Basic Details</div>
+            <div class="basic_details_body">
+                <div><span>Student Name (As per Aadhaar)</span><span>{{ student.name }}</span></div>
+                <div><span>Student Name (As per SSC Mark Sheet)</span><span>{{ student.student_name_as_per_ssc_marksheet }}</span></div>
+                <div><span>Aadhaar Number</span><span>{{ student.aadhaar_number }}</span></div>
+                <div><span>PAN Number</span><span>{{ student.pan_number }}</span></div>
+                <div><span>Gender</span><span>{{ student.gender }}</span></div>
+                <div><span>Date of Birth</span><span>{{ student.date_of_birth|date:"d-M-Y" }}</span></div>
+                <div><span>Blood Group</span><span>{{ student.blood_group }}</span></div>
+                <div><span>Contact/Mobile No.</span><span>{{ student.mobile }}</span></div>
+                <div><span>Whatsapp Number</span><span>{{ student.whatsapp_number }}</span></div>
+                <div><span>Email</span><span>{{ student.email }}</span></div>
+                <div><span>Permanent Address</span><span>{{ student.address }}</span></div>
+                <div><span>Current Address</span><span>{{ student.address }}</span></div>
+                <div><span>District</span><span>{{ student.district.name }}</span></div>
+                <div><span>Taluka</span><span>{{ student.taluka.name }}</span></div>
+                <div><span>Pin Code</span><span>{{ student.pin_code }}</span></div>
+                <div><span>Category</span><span>{{ student.cast_category.name }}</span></div>
+                <div><span>Cast</span><span>{{ student.cast }}</span></div>
+            </div>
+        </div>
+        <div class="parent_details">
+            <div class="parent_Details_heading">Parent Details</div>
+            <div class="parent_details_body">
+                <div><span>Is Father Alive</span><span>{{ student.is_father_alive }}</span></div>
+                <div><span>Father's/Parent Full Name</span><span>{{ student.father_name }}</span></div>
+                <div><span>Father Mobile</span><span>{{ student.parent_mobile }}</span></div>
+                <div><span>Mother Name</span><span>{{ student.mother_name }}</span></div>
+                <div><span>Mother Mobile</span><span>{{ student.mother_mobile }}</span></div>
+            </div>
+        </div>
+        <div class="college_details">
+            <div class="college_Details_heading">College Details</div>
+            <div class="college_details_body">
+                <div><span>How to Arrive College</span><span>{{ student_college_details.how_to_arrive_college }}</span></div>
+                <div><span>College</span><span>{{ student_college_details.college.name }}</span></div>
+                <div><span>Admission Branch</span><span>{{ student_college_details.branch.name }}</span></div>
+                <div><span>Current Year</span><span>{{ student_college_details.year.name }}</span></div>
+                <div><span>Year of Admission</span><span>{{ student_college_details.admission_year }}</span></div>
+                <div><span>Admission Quota</span><span>{{ student_college_details.admission_quota }}</span></div>
+                <div><span>Current Admission Type</span><span>{{ student_college_details.current_admission_type }}</span></div>
+            </div>
+        </div>
+    </div>
+    <div class="signature_section">
+        <div>Student Sign <br>&nbsp;</div>
+        <div>College Office Sign <br> Name</div>
+        <div>Account Sign <br> Name</div>
+        <div>Principle Sign <br> Name</div>
+    </div>
+</div>
+<div style="margin-left: 50px;">{{date_today|date:'d/m/Y'}}</div>
+
+
+<script>
+window.onload = function () {
+    window.print();
+    setTimeout(function() {
+        location.href = '/office/student_detail/{{student.id}}'
+    }, 1000)
+}
+
+
+</script>
+{% endblock content %}

@@ -17,6 +17,23 @@ def office_home(request):
     else:
         return redirect('office_login')
     
+def print_student_admission(request, id):
+    if request.session.has_key('office_mobile'):
+        mobile = request.session['office_mobile']
+        clerk = Clerk.objects.filter(mobile=mobile).first()
+        if not clerk:
+            return redirect('office_login')
+        
+        context={
+            'clerk':clerk,
+            'student':Student.objects.filter(id=id).first(),
+            'student_college_details':Student_college_detail.objects.filter(student=id, batch=clerk.batch).first(),
+            'date_today':date.today()
+        }
+        return render(request, 'print_student_admission.html', context)
+    else:
+        return redirect('office_login')
+    
 def cast_category(request):
     if request.session.has_key('office_mobile'):
         mobile = request.session['office_mobile']

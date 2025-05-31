@@ -1,91 +1,228 @@
+{% extends 'base.html' %}
+{% block head %}
+
+{% endblock head %}
+{% block content %}
 {% load static %}
-<style>
-  form {
-    max-width: 480px;
-    margin: 0 auto;
-    padding: 32px;
-    background: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-    transition: transform 0.3s ease-in-out;
-  }
+{% include 'alert.html' %}
 
-  form div {
-    margin-bottom: 20px;
-  }
-
-  label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-    font-size: 15px;
-    color: #444;
-  }
-
-  input[type="text"],
-  input[type="date"],
-  input[type="number"],
-  textarea {
-    width: 100%;
-    padding: 12px 14px;
-    border: 1.5px solid #ccc;
-    border-radius: 8px;
-    font-size: 15px;
-    transition: border-color 0.3s, box-shadow 0.3s;
-    background-color: #fafafa;
-  }
-
-  input:focus, textarea:focus {
-    border-color: #6c63ff;
-    box-shadow: 0 0 6px rgba(108, 99, 255, 0.2);
-    outline: none;
-    background-color: #fff;
-  }
-
-  .submit_btn{
-    width: 100%;
-    padding: 14px;
-    background-color: #444;
-    color: white;
-    font-size: 15px;
-    font-weight: 600;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background 0.3s, transform 0.2s;
-  }
-
-  button:hover {
-    background-color: #333;
-    transform: translateY(-1.5px);
-  }
+<style media="print">
+      @page{
+        size: 8in 12in;
+        margin: 0in;
+        padding: 0in;
+        } 
+    .main_container{
+        width: 98%;
+        height: 11.5in;
+        border: 1px solid black;
+        position: relative;
+    }
+    .header{
+        width: 100%;
+        border-bottom: 1px solid black;
+        display: grid;
+        grid-template-columns: 1fr 3fr;
+    }
+    .logo_box{
+        height: 100px;
+        width: 100px;
+        img{
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+    .header_heading{
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        text-align: center;
+    }
+    .college_name{
+        font-size: 20px;
+        font-weight: 700;
+    }
+    .body{
+        width: 100%;
+    }
+    .body_basic_details, .parent_details, .college_details{
+        width: 100%;
+    }
+    .basic_details_body, .parent_details_body, .college_details_body{
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+    }
 </style>
 
-<form method="POST" onsubmit="document.getElementById('loader').style.display = 'unset'; document.getElementById('submit_college_details').style.display = 'none'">
-    <div>
-        <select class="form-control" name="college_id" onchange="get_college_branch(this.value)" required>
-            <option value="">Select College</option>
-            {% for c in colleges %}
-                <option value="{{c.id}}" {% if c == student_college_details.college %} selected {% endif %}>{{c.name}}</option>
-            {% endfor %}
-        </select>
-    </div>
-    <div>
-        <select class="form-control" name="branch_id" id="branch" required>
-            <option value="">Select College Branch</option>
-            <option value="{{student_college_details.branch.id}}" selected>{{student_college_details.branch.name}}</option>
-        </select>
-    </div>
-    <div>
-        <select class="form-control" name="year_id" required>
-            <option value="">Select Year</option>
-            {% for c in years %}
-                <option value="{{c.id}}" {% if c == student_college_details.year %} selected {% endif %}>{{c.name}}</option>
-            {% endfor %}
-        </select>
-    </div>
 
-  <img src='{% static "img/loader.gif" %}' id="loader" style="display: none; width: 50px; margin: 0 auto;">
-  <button type="submit"  class="submit_btn" id="submit_college_details"  name="submit_college_details">Submit</button>
-</form>
 
+<div class="main_container">
+    <div class="header">
+        <div class="logo_box"><img src="{% static 'img/logo.jpg' %}" alt=""></div>
+        <div>
+            <br>
+            <div class="header_heading">
+                Dattakala Shikshan Sansth's
+            </div>
+            <div class="college_name">{{student_college_detail.college.name}}</div>
+            <div class="branch_name">Admission Form </div>
+        </div>
+    </div>
+    <div class="body">
+        <div class="body_basic_details">
+            <div class="basic_Details_heading text-center">Basic Details</div>
+            <div class="basic_details_body">
+                <div>
+                    <div>Student Name (As per Aadhaar)</div>
+                    <div>{{student.name}}</div>
+                </div>
+                <div>
+                    <div>Student Name (As per SSC Mark Sheet )</div>
+                    <div>{{ student.student_name_as_per_ssc_marksheet }}</div>
+                </div>
+                <div>
+                    <div>Aadhaar Number</div>
+                    <div>{{ student.aadhaar_number }}</div>
+                </div>
+                <div>
+                    <div>PAN Number</div>
+                    <div>{{ student.pan_number }}</div>
+                </div>
+                <div>
+                    <div>Gender</div>
+                    <div>{{ student.gender }}</div>
+                </div>
+                <div>
+                    <div>Date of Birth</div>
+                    <div>{{ student.date_of_birth|date:"d-M-Y" }}</div>
+                </div>
+                <div>
+                    <div>Blood Group</div>
+                    <div>{{ student.blood_group }}</div>
+                </div>
+                <div>
+                    <div>Contact/Mobile No.</div>
+                    <div>{{ student.mobile }}</div>
+                </div>
+                <div>
+                    <div>Whatsapp Number</div>
+                    <div>{{ student.whatsapp_number }}</div>
+                </div>
+                <div>
+                    <div>Email</div>
+                    <div>{{ student.email }}</div>
+                </div>
+                <div>
+                    <div>Permanent Address</div>
+                    <div>{{ student.address }}</div>
+                </div>
+                <div>
+                    <div>Current Address</div>
+                    <div>{{ student.address }}</div>
+                </div>
+                <div>
+                    <div>District</div>
+                    <div>{{ student.district.name }}</div>
+                </div>
+                <div>
+                    <div>Taluka</div>
+                    <div>{{ student.taluka.name }}</div>
+                </div>
+                <div>
+                    <div>Pin Code</div>
+                    <div>{{ student.pin_code }}</div>
+                </div>
+                <div>
+                    <div>Category</div>
+                    <div>{{ student.cast_category.name }}</div>
+                </div>
+                <div>
+                    <div>Cast</div>
+                    <div>{{ student.cast }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="parent_details">
+            <div class="parent_Details_heading text-center">Parent Details</div>
+            <div class="parent_details_body">
+                <div>
+                    <div>Is Father Alive</div>
+                    <div>{{ student.is_father_alive }}</div>
+                </div>
+                <div>
+                    <div>Father's/Parent Full Name</div>
+                    <div>{{ student.father_name }}</div>
+                </div>
+                <div>
+                    <div>Father Mobile</div>
+                    <div>{{ student.parent_mobile }}</div>
+                </div>
+                <div>
+                    <div>Mother Name</div>
+                    <div>{{ student.mother_name }}</div>
+                </div>
+                <div>
+                    <div>Mother Mobile</div>
+                    <div>{{ student.mother_mobile }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="college_details">
+            <div class="college_Details_heading text-center">College Details</div>
+            <div class="college_details_body">
+                <div>
+                    <div>How to Arrive College</div>
+                    <div>{{ student_college_details.how_to_arrive_college }}</div>
+                </div>
+                <div>
+                    <div>College</div>
+                    <div>{{ student_college_details.college.name}}</div>
+                </div>
+                <div>
+                    <div>Admission Branch</div>
+                    <div>{{ student_college_details.branch.name }}</div>
+                </div>
+                <div>
+                    <div>Current Year</div>
+                    <div>{{ student_college_details.year.name }}</div>
+                </div>
+                <div>
+                    <div>Year of Admission (first Year / Direct Second Year)</div>
+                    <div>{{ student_college_details.admission_year }}</div>
+                </div>
+                <div>
+                    <div>Admission Quota</div>
+                    <div>{{ student_college_details.admission_quota }}</div>
+                </div>
+                <div>
+                    <div>Current Admission Type</div>
+                    <div>{{ student_college_details.current_admission_type }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+<div>
+    <div>
+        <div>Student Sign</div>
+        <div></div>
+    </div>
+    <div>
+        <div>Office Sign</div>
+        <div></div>
+    </div>
+    <div>
+        <div>Store Sign</div>
+        <div></div>
+    </div>
+</div>
+</div>
+<script>
+    window.onload = function () {
+        window.print();
+    }
+</script>
+
+
+{% endblock content %}

@@ -16,13 +16,13 @@ class Admin_detail(models.Model):
     pin =models.CharField(max_length=10, null=True)
     status = models.IntegerField(default=1, null=True)
     
-class Employee_category(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-    status = models.IntegerField(default=1)
+# class Employee_category(models.Model):
+#     name = models.CharField(max_length=100, unique=True)
+#     status = models.IntegerField(default=1)
     
 class Employee(models.Model):
     batch = models.ForeignKey(Batch, on_delete=models.CASCADE, related_name='clerks')
-    category = models.ForeignKey(Employee_category, on_delete=models.CASCADE, related_name='category', null=True)
+    # category = models.ForeignKey(Employee_category, on_delete=models.CASCADE, related_name='category', null=True)
     name = models.CharField(max_length=100, unique=True)
     mobile = models.IntegerField(unique=True)
     secret_pin = models.IntegerField()

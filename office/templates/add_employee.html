@@ -110,7 +110,7 @@
         <td>{{ forloop.counter }}</td>
         <td>{{ e.name }}</td>
         <td>{{ e.mobile }}</td>
-        <td>{{ e.aadhar_number }}</td>
+        <td>{{ e.aadhar_number|stringformat:"s"|slice:"0:4" }}-{{ e.aadhar_number|stringformat:"s"|slice:"4:8" }}-{{ e.aadhar_number|stringformat:"s"|slice:"8:" }}</td>
         <td>{{ e.category.name }}</td>
         <td style="display: flex; gap: 5px;">
           <!-- Edit Button -->

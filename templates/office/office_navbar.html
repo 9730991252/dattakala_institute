@@ -1,4 +1,5 @@
 {% load static %}
+{% load admin_tag %}
 <style>
 /* NavBar Start */
     .navbar{
@@ -169,12 +170,11 @@
         const secs = (secondsRemaining % 60).toString().padStart(2, '0');
         timerElement.textContent = `${mins}:${secs}`;
     }
-
     function countdown() {
       updateDisplay();
       if (secondsRemaining <= 0) {
         clearInterval(interval);
-        location.href = '/'
+        location.href = '/office_logout/'
         return;
       }
       secondsRemaining--;

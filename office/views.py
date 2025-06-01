@@ -117,6 +117,7 @@ def add_employee(request):
             'male_employee': male_employee,
             'female_employee': female_employee,
         })
+        
     # Render page
     context = {
         'clerk': clerk,

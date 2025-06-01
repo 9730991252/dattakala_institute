@@ -16,6 +16,8 @@ register = template.Library()
 # def customer_selected_item_count(category_id):
 #     return selected_item_category.objects.filter(category_id=category_id,status = 1).count()
 
+
+
 # @register.inclusion_tag('inclusion_tag/home/customer_qr_code_cart_orders.html')
 # def customer_qr_code_cart_orders(hotel_id):
 #     return{'customer_cart':Customer_cart.objects.filter(table__hotel_id=hotel_id)}

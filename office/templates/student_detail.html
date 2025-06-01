@@ -442,6 +442,181 @@
                 <a href="/office/print_student_admission/{{student.id}}" class="btn btn-success"><i class="fa fa-print" aria-hidden="true"></i> Print</a>
             </div>
                 <hr>
+
+            <style>
+                table {
+                    width: 90%;
+                    border-collapse: collapse;
+                    margin: 50px auto;
+                }
+
+                tr:nth-of-type(odd) {
+                    background: #eee;
+                }
+
+                th {
+                    background: #3498db;
+                    color: white;
+                    font-weight: bold;
+                    height: fit-content;
+                }
+
+                td, th {
+                    padding: 10px;
+                    border: 1px solid #ccc;
+                    text-align: left;
+                    font-size: 15px;
+                }
+            .fee_container {
+        display: flex;
+        flex-direction: column;
+        padding: 10px 20px;
+        margin: 20px auto;
+        max-width: 98%;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-family: sans-serif;
+        font-size: 14px;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+    }
+
+    .info_item2 {
+        display: flex;
+        justify-content: space-between;
+        gap: 5px;
+        min-width: 120px;
+    }
+    </style>
+    <style>
+#fee_box {
+        border-radius: 10px;
+        border: 1px solid #ccc;
+        width: 100%;
+        position: relative;
+    }
+
+    #fee_box .fee_header {
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+        font-weight: 600;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        padding: 3px;
+        background-color: #e0efff;
+    }
+
+    #fee_box .fee_body {
+        width: 100%;
+    }
+
+    #fee_box .fee_student_detail_box {
+        border-bottom: 1px solid #ccc;
+        justify-content: space-evenly;
+    }
+</style>
+
+            <table>
+                <thead >
+                    <tr>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>UTR / Challan </th>
+                        <th>Bank / Cash</th>
+                        <th>Received By</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for t in received_cash_hostel_fee %}
+                    <tr>
+                        <td>{{ t.paid_date|date:'d-m-y' }}</td>
+                        <td>₹.{{ t.received_amount }}</td>
+                        <td>{{t.challan_number}}</td>
+                        <td>Cash</td>
+                        <td >
+                            {{t.added_by.name}}
+                        </td>
+
+                    </tr>
+                    {% endfor %}
+                    {% for t in received_bank_hostel_fee %}
+                    <tr>
+                        <td>{{ t.paid_date|date:'d-m-y' }}</td>
+                        <td>₹.{{ t.received_amount }}</td>
+                        <td>{{ t.utr_number }}</td>
+                        <td>{{ t.account.bank_name }}, {{ t.account.account_number }}</td>
+                        <td>
+                            {{t.added_by.name}}  {% if t.updated_by %} <h style="font-size: 12px;">(edited - {{t.updated_by.name}})</h> {% endif %}
+                        </td>
+
+
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                        <td colspan="6" style="text-align: start; font-weight: bold;">Total Received Fee: ₹.{{ paid_fee }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; ">
+                <div class="fee_container">
+                    <div class="info_item2">
+                        <div class="info_title">Total Fee</div>
+                        <div class="info_value">₹.{{ total_fee }}</div>
+                    </div>
+                    
+                    <div class="info_item2">
+                        <div class="info_title">Paid Fee</div>
+                        <div class="info_value text-success">₹.{{ paid_fee }}</div>
+                    </div>
+                    
+                    {% for sfd in student_fee_detail %}
+                    <div class="info_item2">
+                        <div class="info_title">{{ sfd.category.category_name }}</div>
+                        <div class="info_value text-danger">₹.{{ sfd.remaining_fee }}</div>
+                    </div>
+                    {% endfor %}
+                    
+                    <div class="info_item2 alert alert-danger alert-sm">
+                        <div class="info_title">Remaining Fee</div>
+                        <div class="info_value text-danger">₹.{{ remaining_fee }}</div>
+                    </div>
+                </div>
+                
+                        <div class="container" id="fee_box">
+                            <br><br>
+                            <div class="fee_header">
+                                <div class="fee_header_title">Fee Detail</div>
+                            </div>
+                            
+                            <div class="fee_body">
+                                {% if student_hostel_fee %}
+                                <div class="fee_student_detail_box">
+                                    <div>Hostel Fee, {{ student_hostel_fee.hostel_fee.installment_name }}, ₹.{{ student_hostel_fee.hostel_fee.amount }}</div>
+                                </div>
+                                {% endif %}
+                                {% for sf in student_fee %}
+                                <div class="fee_student_detail_box">
+                                    <div>₹.{{ sf.amount }}</div>
+                                    <div>{{ sf.credit_debit_category.category_name }}</div>
+                                </div>
+                                {% endfor %}
+                                <div class="fee_student_detail_box" style="font-weight: 700;">
+                                    <div>Total, ₹.{{ total_fee }}</div>
+                                </div>
+                            </div>
+                        </div>
+            </div>
+
+
+
+
+
+
     <div class="" style="display: flex;gap: 10px;">
         <!-- Store Student Approval Form -->
 <!-- Office Student Approval Form -->

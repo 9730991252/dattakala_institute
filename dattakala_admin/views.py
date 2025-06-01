@@ -78,7 +78,7 @@ def admin_student_detail(request, id):
         paid_fee = int(cash_fee.aggregate(Sum('received_amount'))['received_amount__sum'] or 0) + int(bank_fee.aggregate(Sum('received_amount'))['received_amount__sum'] or 0) +  int(received_cash_hostel_fee.aggregate(Sum('received_amount'))['received_amount__sum'] or 0) +  int(received_bank_hostel_fee.aggregate(Sum('received_amount'))['received_amount__sum'] or 0)
  
         context = {
-            'a': a,
+            'a': a, 
             'remaining_fee':int(total_fee)-int(paid_fee),
             'student':student,
             'colleges':College.objects.filter(batch=a.batch, status=1),

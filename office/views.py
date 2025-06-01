@@ -38,6 +38,7 @@ def add_employee(request):
             name = request.POST.get('name')
             mobile_number = request.POST.get('mobile')
             aadhar_number = request.POST.get('aadhar_number')
+            gender = request.POST.get('gender')
 
             if not aadhar_number.isdigit() or len(aadhar_number) != 12:
                 messages.error(request, 'Aadhar number should be 12 digits')
@@ -57,6 +58,7 @@ def add_employee(request):
                 aadhar_number=aadhar_number,
                 secret_pin=0,
                 category_id=category_id,
+                gender=gender,
                 batch=clerk.batch
             )
             messages.success(request, f'Employee {name} added successfully!')
@@ -68,6 +70,7 @@ def add_employee(request):
             mobile = request.POST.get('mobile')
             aadhar_number = request.POST.get('aadhar_number')
             category_id = request.POST.get('category')
+            gender = request.POST.get('gender')
 
             if not mobile.isdigit() or len(mobile) != 10:
                 messages.error(request, 'Mobile number should be 10 digits')
@@ -86,6 +89,7 @@ def add_employee(request):
             employee.mobile = mobile
             employee.aadhar_number = aadhar_number
             employee.category_id = category_id
+            employee.gender = gender
             employee.save()
 
             messages.success(request, f'Employee {name} updated successfully!')
@@ -499,6 +503,12 @@ def student_detail(request, id):
         total_fee = student_fee.objects.filter(student=student, batch=clerk.batch).aggregate(Sum('amount'))['amount__sum'] or 0
         if student_hostel_fee:
             total_fee += int(student_hostel_fee.hostel_fee.amount)
+        cash_fee = Student_received_Fee_Cash.objects.filter(student=student, added_by__batch=clerk.batch)
+        bank_fee = Student_received_Fee_Bank.objects.filter(student=student, added_by__batch=clerk.batch)
+        received_cash_hostel_fee = Student_Received_Fee_Cash_Hostel.objects.filter(student=student, added_by__batch=clerk.batch)
+        received_bank_hostel_fee = Student_received_Fee_Bank_hostel.objects.filter(student=student, added_by__batch=clerk.batch)
+        paid_fee = int(cash_fee.aggregate(Sum('received_amount'))['received_amount__sum'] or 0) + int(bank_fee.aggregate(Sum('received_amount'))['received_amount__sum'] or 0) +  int(received_cash_hostel_fee.aggregate(Sum('received_amount'))['received_amount__sum'] or 0) +  int(received_bank_hostel_fee.aggregate(Sum('received_amount'))['received_amount__sum'] or 0)
+
         context={
             'clerk':clerk,
             'student':student,
@@ -512,7 +522,13 @@ def student_detail(request, id):
             'district':District.objects.filter(status=1).order_by('name'),
             'cast_category':Cast_category.objects.filter(status=1),
             'admission_year':admission_year,
-            'total_fee':total_fee
+            'total_fee':total_fee,
+            'remaining_fee':int(total_fee)-int(paid_fee),
+            'total_fee':total_fee,
+            'paid_fee':paid_fee,
+            'received_cash_hostel_fee':received_cash_hostel_fee,
+            'received_bank_hostel_fee':received_bank_hostel_fee,
+
         }
         return render(request, 'student_detail.html', context)
     else:

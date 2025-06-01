@@ -252,7 +252,7 @@ def office_login(request):
         if a:
             request.session['admin_mobile'] = request.POST["mobile"]
             return redirect('admin_home')
-        c= Clerk.objects.filter(batch_id=batch_id,mobile=number,secret_pin=pin,status=1)
+        c= Employee.objects.filter(batch_id=batch_id,mobile=number,secret_pin=pin,status=1)
         if c:
             request.session['office_mobile'] = request.POST["mobile"]
             return redirect('office_home')

@@ -1,228 +1,169 @@
-{% extends 'base.html' %}
-{% block head %}
+<div style="height: 80vh;overflow-y: scroll;">
+<style>
+        .badge {
+            padding: 5px 12px;
+            margin: 4px;
+            border-radius: 25px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+            display: inline-block;
+        }
 
-{% endblock head %}
-{% block content %}
-{% load static %}
-{% include 'alert.html' %}
+        .male { background-color: #a0d2eb; color: #024e76; }
+        .female { background-color: #f9c6d0; color: #8a1c33; }
+        .total { background-color: #d2e3fc; color: #0b3d91; }
+        .total_amt { background-color: #fff3cd; color: #856404; }
+        .pending { background-color: #f8d7da; color: #721c24; }
+        .received { background-color: #d4edda; color: #155724; }
 
-<style media="print">
-      @page{
-        size: 8in 12in;
-        margin: 0in;
-        padding: 0in;
-        } 
-    .main_container{
-        width: 98%;
-        height: 11.5in;
-        border: 1px solid black;
-        position: relative;
-    }
-    .header{
-        width: 100%;
-        border-bottom: 1px solid black;
-        display: grid;
-        grid-template-columns: 1fr 3fr;
-    }
-    .logo_box{
-        height: 100px;
-        width: 100px;
-        img{
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        .district_branch_name_for_hostel {
+            margin: 20px auto 5px auto;
+            width: 95%;
+            background: #ffffffdd;
+            border-radius: 12px;
+            padding: 15px 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.95rem;
+            font-weight: 500;
+            /* box-shadow: 0 6px 16px rgba(0,0,0,0.12); */
+        }
+
+        .district_branch_name_for_hostel > div {
+            margin: 5px 10px;
+        }
+
+        .district_branch_name_for_hostel .district {
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: #1a237e;
+        }
+
+  
+
+        .taluka_box {
+            width: 310px;
+            background: linear-gradient(145deg, #ffffff, #f3f4f7);
+            border-radius: 12px;
+            padding: 15px;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+        }
+
+        .taluka_box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.2);
+        }
+
+        .taluka_box1 {
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .taluka_box2 {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.95rem;
+            margin: 6px 0;
+            padding: 0 5px;
+        }
+
+        .text-danger {
+            color: #c0392b;
+            font-weight: 600;
+        }
+
+        .text-success {
+            color: #27ae60;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .district_branch_name_for_hostel {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .taluka_main_box_for_hostel {
+                justify-content: center;
+            }
+
+            .taluka_box {
+                width: 95%;
+            }
+        }
+    </style>
+    <style>
+        .district_branch_name{
+            margin: 0 auto;
+            width: 95%;
+        background-color: #ffe9c8;
+        margin-top: 10px;
+        padding: 5px;
+        border-radius: 5px;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        .district{
+            font-weight: 700;
         }
     }
-    .header_heading{
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        text-align: center;
+    .taluka_main_box{
+        margin: 0 auto;
+        width: 95%;
+        background-color: #ffe9c8;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-evenly;
+        gap: 0px;
+        border-radius: 10px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        gap: 10px;
+        .taluka_box{
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 5px;
+            width: 300px;
+            background-color: white;
+            .taluka_box2{
+                display: flex;
+                justify-content: space-evenly;
+            }
+        }
     }
-    .college_name{
-        font-size: 20px;
-        font-weight: 700;
-    }
-    .body{
-        width: 100%;
-    }
-    .body_basic_details, .parent_details, .college_details{
-        width: 100%;
-    }
-    .basic_details_body, .parent_details_body, .college_details_body{
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-    }
+    
 </style>
-
-
-
-<div class="main_container">
-    <div class="header">
-        <div class="logo_box"><img src="{% static 'img/logo.jpg' %}" alt=""></div>
-        <div>
-            <br>
-            <div class="header_heading">
-                Dattakala Shikshan Sansth's
-            </div>
-            <div class="college_name">{{student_college_detail.college.name}}</div>
-            <div class="branch_name">Admission Form </div>
+{% for d in districts %}
+<div class="district_branch_name">
+    <div class="district">{{d.district.name}}</div>
+    <div>Male {{d.male_student}} </div>
+    <div>Female {{d.female_student}} </div>
+    <div><b>T{{d.total_student}}</b> </div>
+</div> 
+<div class="taluka_main_box">
+    {% for t in d.taluka %}
+    <div class="taluka_box">
+        <div class="taluka_box1">{{t.name}}</div>
+        <div class="taluka_box2">
+            <div>M  {{t.male_student}}</div>
+            <div>F  {{t.female_student}}</div>
+            <div>T  {{t.total_student}}</div>
         </div>
     </div>
-    <div class="body">
-        <div class="body_basic_details">
-            <div class="basic_Details_heading text-center">Basic Details</div>
-            <div class="basic_details_body">
-                <div>
-                    <div>Student Name (As per Aadhaar)</div>
-                    <div>{{student.name}}</div>
-                </div>
-                <div>
-                    <div>Student Name (As per SSC Mark Sheet )</div>
-                    <div>{{ student.student_name_as_per_ssc_marksheet }}</div>
-                </div>
-                <div>
-                    <div>Aadhaar Number</div>
-                    <div>{{ student.aadhaar_number }}</div>
-                </div>
-                <div>
-                    <div>PAN Number</div>
-                    <div>{{ student.pan_number }}</div>
-                </div>
-                <div>
-                    <div>Gender</div>
-                    <div>{{ student.gender }}</div>
-                </div>
-                <div>
-                    <div>Date of Birth</div>
-                    <div>{{ student.date_of_birth|date:"d-M-Y" }}</div>
-                </div>
-                <div>
-                    <div>Blood Group</div>
-                    <div>{{ student.blood_group }}</div>
-                </div>
-                <div>
-                    <div>Contact/Mobile No.</div>
-                    <div>{{ student.mobile }}</div>
-                </div>
-                <div>
-                    <div>Whatsapp Number</div>
-                    <div>{{ student.whatsapp_number }}</div>
-                </div>
-                <div>
-                    <div>Email</div>
-                    <div>{{ student.email }}</div>
-                </div>
-                <div>
-                    <div>Permanent Address</div>
-                    <div>{{ student.address }}</div>
-                </div>
-                <div>
-                    <div>Current Address</div>
-                    <div>{{ student.address }}</div>
-                </div>
-                <div>
-                    <div>District</div>
-                    <div>{{ student.district.name }}</div>
-                </div>
-                <div>
-                    <div>Taluka</div>
-                    <div>{{ student.taluka.name }}</div>
-                </div>
-                <div>
-                    <div>Pin Code</div>
-                    <div>{{ student.pin_code }}</div>
-                </div>
-                <div>
-                    <div>Category</div>
-                    <div>{{ student.cast_category.name }}</div>
-                </div>
-                <div>
-                    <div>Cast</div>
-                    <div>{{ student.cast }}</div>
-                </div>
-            </div>
-        </div>
-        <div class="parent_details">
-            <div class="parent_Details_heading text-center">Parent Details</div>
-            <div class="parent_details_body">
-                <div>
-                    <div>Is Father Alive</div>
-                    <div>{{ student.is_father_alive }}</div>
-                </div>
-                <div>
-                    <div>Father's/Parent Full Name</div>
-                    <div>{{ student.father_name }}</div>
-                </div>
-                <div>
-                    <div>Father Mobile</div>
-                    <div>{{ student.parent_mobile }}</div>
-                </div>
-                <div>
-                    <div>Mother Name</div>
-                    <div>{{ student.mother_name }}</div>
-                </div>
-                <div>
-                    <div>Mother Mobile</div>
-                    <div>{{ student.mother_mobile }}</div>
-                </div>
-            </div>
-        </div>
-        <div class="college_details">
-            <div class="college_Details_heading text-center">College Details</div>
-            <div class="college_details_body">
-                <div>
-                    <div>How to Arrive College</div>
-                    <div>{{ student_college_details.how_to_arrive_college }}</div>
-                </div>
-                <div>
-                    <div>College</div>
-                    <div>{{ student_college_details.college.name}}</div>
-                </div>
-                <div>
-                    <div>Admission Branch</div>
-                    <div>{{ student_college_details.branch.name }}</div>
-                </div>
-                <div>
-                    <div>Current Year</div>
-                    <div>{{ student_college_details.year.name }}</div>
-                </div>
-                <div>
-                    <div>Year of Admission (first Year / Direct Second Year)</div>
-                    <div>{{ student_college_details.admission_year }}</div>
-                </div>
-                <div>
-                    <div>Admission Quota</div>
-                    <div>{{ student_college_details.admission_quota }}</div>
-                </div>
-                <div>
-                    <div>Current Admission Type</div>
-                    <div>{{ student_college_details.current_admission_type }}</div>
-                </div>
-            </div>
-        </div>
-    </div>
-<div>
-    <div>
-        <div>Student Sign</div>
-        <div></div>
-    </div>
-    <div>
-        <div>Office Sign</div>
-        <div></div>
-    </div>
-    <div>
-        <div>Store Sign</div>
-        <div></div>
-    </div>
+    {% endfor %}
 </div>
+<br>
+{% endfor %}
 </div>
-<script>
-    window.onload = function () {
-        window.print();
-    }
-</script>
-
-
-{% endblock content %}

@@ -124,6 +124,7 @@
                 <div class="collapse" id="report" style="width: 90%;margin-left: auto;margin-right: 20px;">
                   <div class="card card-body">
                     <a href="/report/hostel/" class="btn href_btn {% if request.path == '/report/hostel/' %} at_page {% endif %}">Hostel</a>
+                    <a href="/report/student/" class="btn href_btn {% if request.path == '/report/student/' %} at_page {% endif %}">Student</a>
                   </div>
                 </div>
           </div>
@@ -140,8 +141,47 @@
             </div>
 
         </div>
+          <div>
+            <i class="fa-solid fa-circle-user"></i>
+            <button class="btn dropdown-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#employee" aria-expanded="false" aria-controls="collapseExample">Employee</button>
+            
+            <div class="collapse" id="employee" style="width: 90%;margin-left: auto;margin-right: 20px;">
+              <div class="card card-body">
+                <a href="/office/add_employee/" class="btn href_btn {% if request.path == '/office/add_employee/' %} at_page {% endif %}">Add & view Employee</a>
+              </div>
+            </div>
+          </div>
+
 
           <i class="fa-solid fa-address-card"></i> &nbsp; <a href="/office/profile/" class="btn {% if request.path == '/office/profile/' %} at_page {% endif %}">Profile</a></div>
-          <a href="/office_logout/" class="btn text-danger">LogOut</a></div>
+          <a href="/office_logout/" class="btn text-danger" style="position: relative;" >LogOut    <h class="text-dark" style="position: absolute;right: 10px;" id="timer"></h></div></a>
         </div>
       </div>
+
+      <script>
+    const totalSeconds = 180;
+    const timerElement = document.getElementById('timer');
+    let secondsRemaining = totalSeconds;
+    let interval;
+
+        function updateDisplay() {
+        const mins = Math.floor(secondsRemaining / 60).toString().padStart(2, '0');
+        const secs = (secondsRemaining % 60).toString().padStart(2, '0');
+        timerElement.textContent = `${mins}:${secs}`;
+    }
+
+    function countdown() {
+      updateDisplay();
+      if (secondsRemaining <= 0) {
+        clearInterval(interval);
+        location.href = '/'
+        return;
+      }
+      secondsRemaining--;
+    }
+
+
+    updateDisplay();
+    interval = setInterval(countdown, 1000);
+
+      </script>

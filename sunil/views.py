@@ -45,55 +45,27 @@ def sunil_home(request):
             batch.status = 1
             batch.save()
             return redirect('sunil_home')
-        
-        if 'Add_clerk' in request.POST:
-            batch_id = request.POST.get('batch_id')
-            mobile = request.POST.get('mobile')
-            aadhar_number = request.POST.get('aadhar_number')
-            
-            if Clerk.objects.filter(batch_id=batch_id,aadhar_number=aadhar_number).exists():
-                messages.error(request, 'Clerk with this aadhar number already exists in this batch')
-                return redirect('sunil_home')
+        if 'add_employee_category'in request.POST:
+            category_name = request.POST.get('name').upper()
+            category = Employee_category.objects.create(name=category_name)
+            category.save()
+            return redirect('sunil_home')
+        if 'edit_category'in request.POST:
+            category_id = request.POST.get('id')
+            category_name = request.POST.get('name').upper()
+            category = Employee_category.objects.get(id=category_id)
+            category.name = category_name
+            category.save()
+            return redirect('sunil_home')
+        if 'update_status'in request.POST:
+            category_id = request.POST.get('id')
+            category = Employee_category.objects.get(id=category_id)
+            if category.status == 1:
+                category.status = 0
             else:
-                Clerk(
-                    batch_id=batch_id,
-                    name=request.POST.get('name'),
-                    mobile=mobile,
-                    secret_pin=request.POST.get('secret_pin'),
-                    aadhar_number=aadhar_number
-                ).save()
+                category.status = 1
+            category.save()
             return redirect('sunil_home')
-        if 'edit_clerk' in request.POST:
-            clerk_id = request.POST.get('id')
-            batch_id = request.POST.get('batch_id')
-            aadhar_number = request.POST.get('aadhar_number')
-            mobile = request.POST.get('mobile')
-            
-            
-            if Clerk.objects.filter(aadhar_number=aadhar_number, batch_id=batch_id).exclude(id=clerk_id).exists():
-                messages.error(request, 'Clerk with this aadhar number already exists in this batch')
-                return redirect('sunil_home')
-            clerk = Clerk.objects.get(id=clerk_id)
-            clerk.name = request.POST.get('name')
-            clerk.mobile = mobile
-            clerk.secret_pin = request.POST.get('secret_pin')
-            clerk.batch_id = batch_id
-            clerk.aadhar_number = aadhar_number
-            clerk.save()
-            return redirect('sunil_home')
-        if 'clerk_active' in request.POST:
-            clerk_id = request.POST.get('id')
-            clerk = Clerk.objects.get(id=clerk_id)
-            clerk.status = 0
-            clerk.save()
-            return redirect('sunil_home')
-        if 'clerk_deactive' in request.POST:
-            clerk_id = request.POST.get('id')
-            clerk = Clerk.objects.get(id=clerk_id)
-            clerk.status = 1
-            clerk.save()
-            return redirect('sunil_home')
-      
         if 'Add_Admin' in request.POST:
             batch_id = request.POST.get('batch_id')
             mobile = request.POST.get('mobile')
@@ -107,6 +79,26 @@ def sunil_home(request):
                     mobile=mobile,
                     pin=request.POST.get('secret_pin')
                 ).save()
+            return redirect('sunil_home')
+        if 'Add_Employee' in request.POST:
+            batch_id = request.POST.get('batch_id')
+            category = request.POST.get('category')
+            name = request.POST.get('name')
+            aadhar_number = request.POST.get('aadhar_number')
+            mobile = request.POST.get('mobile')
+          
+            if Employee.objects.filter(batch_id=batch_id,aadhar_number=aadhar_number).exists():
+                return redirect('sunil_home')
+            else:
+                Employee(
+                    batch_id=batch_id,
+                    name=name,
+                    mobile=mobile,
+                    secret_pin=0,
+                    aadhar_number=aadhar_number,
+                    category_id=category
+                ).save()
+            messages.success(request, 'Employee Added Successfully')
             return redirect('sunil_home')
         if 'edit_admin' in request.POST:
             admin_id = request.POST.get('id')
@@ -138,8 +130,9 @@ def sunil_home(request):
             return redirect('sunil_home')
         context = {
             'batches': Batch.objects.all().order_by('name'),
-            'clerks': Clerk.objects.all().order_by('name'),
             'admins': Admin_detail.objects.all().order_by('name'),
+            'employee_category':Employee_category.objects.all(),
+            'employee':Employee.objects.all(),
         }
         return render(request, 'sunil_home.html', context)
     else:

@@ -25,12 +25,12 @@
           <div class="row g-3">
             <div class="col-md-5">
               <label class="form-label">Student Name (As per Aadhaar)</label>
-              <input type="text" class="form-control" name="name" value="{{ student.name }}" oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')" required>
+              <input type="text" class="form-control" name="name" value="{{ student.name }}" oninput="this.value = this.value.replace(/[^a-zA-Z ]/g, '')" required>
             </div>
 
             <div class="col-md-5">
               <label class="form-label">Student Name (As per SSC Mark Sheet )</label>
-              <input type="text" class="form-control" name="student_name_as_per_ssc_marksheet" value="{{ student.student_name_as_per_ssc_marksheet|default_if_none:'' }}" oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')" required>
+              <input type="text" class="form-control" name="student_name_as_per_ssc_marksheet" value="{{ student.student_name_as_per_ssc_marksheet|default_if_none:'' }}" oninput="this.value = this.value.replace(/[^a-zA-Z ]/g, '')" required>
             </div>
             
             <div class="col-md-5">

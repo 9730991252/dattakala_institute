@@ -13,4 +13,5 @@ urlpatterns = [
     path('download_qr_code/', views.download_qr_code, name='download_qr_code'),
     path('address/', views.address, name='address'),
     path('cast_category/', views.cast_category, name='cast_category'),
+    path('add_employee/', views.add_employee, name='add_employee'),
 ]

@@ -1,10 +1,11 @@
+import secrets
 from dattakala_institute.includes import *
 
 # Create your views here.
 def office_home(request):
     if request.session.has_key('office_mobile'):
         mobile = request.session['office_mobile']
-        clerk = Clerk.objects.filter(mobile=mobile).first()
+        clerk = Employee.objects.filter(mobile=mobile).first()
         if not clerk:
             return redirect('office_login')
         
@@ -17,10 +18,105 @@ def office_home(request):
     else:
         return redirect('office_login')
     
+
+@csrf_exempt
+def add_employee(request):
+    # Check if user is logged in
+    if not request.session.get('office_mobile'):
+        return redirect('office_login')
+
+    mobile = request.session['office_mobile']
+    clerk = Employee.objects.filter(mobile=mobile).first()
+
+    if not clerk:
+        return redirect('office_login')
+
+    # Handle form submissions
+    if request.method == "POST":
+        if 'add_employee' in request.POST:
+            category_id = request.POST.get('category_id')
+            name = request.POST.get('name')
+            mobile_number = request.POST.get('mobile')
+            aadhar_number = request.POST.get('aadhar_number')
+
+            if not aadhar_number.isdigit() or len(aadhar_number) != 12:
+                messages.error(request, 'Aadhar number should be 12 digits')
+                return redirect('add_employee')
+
+            if not mobile_number.isdigit() or len(mobile_number) != 10:
+                messages.error(request, 'Mobile number should be 10 digits')
+                return redirect('add_employee')
+
+            if Employee.objects.filter(aadhar_number=aadhar_number, batch=clerk.batch).exists():
+                messages.error(request, 'Employee already exists')
+                return redirect('add_employee')
+
+            Employee.objects.create(
+                name=name,
+                mobile=mobile_number,
+                aadhar_number=aadhar_number,
+                secret_pin=0,
+                category_id=category_id,
+                batch=clerk.batch
+            )
+            messages.success(request, f'Employee {name} added successfully!')
+            return redirect('add_employee')
+
+        elif 'edit_employee' in request.POST:
+            emp_id = request.POST.get('id')
+            name = request.POST.get('name')
+            mobile = request.POST.get('mobile')
+            aadhar_number = request.POST.get('aadhar_number')
+            category_id = request.POST.get('category')
+
+            if not mobile.isdigit() or len(mobile) != 10:
+                messages.error(request, 'Mobile number should be 10 digits')
+                return redirect('add_employee')
+
+            if not aadhar_number.isdigit() or len(aadhar_number) != 12:
+                messages.error(request, 'Aadhar number should be 12 digits')
+                return redirect('add_employee')
+
+            if Employee.objects.filter(aadhar_number=aadhar_number, batch=clerk.batch).exclude(id=emp_id).exists():
+                messages.error(request, 'Another employee with same Aadhar exists')
+                return redirect('add_employee')
+
+            employee = get_object_or_404(Employee, id=emp_id)
+            employee.name = name
+            employee.mobile = mobile
+            employee.aadhar_number = aadhar_number
+            employee.category_id = category_id
+            employee.save()
+
+            messages.success(request, f'Employee {name} updated successfully!')
+            return redirect('add_employee')
+
+        elif 'update_status' in request.POST:
+            emp_id = request.POST.get('id')
+            employee = Employee.objects.filter(id=emp_id).first()
+
+            if employee:
+                employee.status = 0 if employee.status == 1 else 1
+                employee.save()
+                messages.success(request, f'Status for {employee.name} updated successfully!')
+            else:
+                messages.error(request, 'Employee not found')
+            return redirect('add_employee')
+
+    # Render page
+    context = {
+        'clerk': clerk,
+        'employee': Employee.objects.all().order_by('-category_id'),
+        'posts': Employee_category.objects.all()
+    }
+    return render(request, 'add_employee.html', context)
+
+
+    
 def print_student_admission(request, id):
     if request.session.has_key('office_mobile'):
         mobile = request.session['office_mobile']
-        clerk = Clerk.objects.filter(mobile=mobile).first()
+        clerk = Employee.objects.filter(mobile=mobile).first()
         if not clerk:
             return redirect('office_login')
         
@@ -37,7 +133,7 @@ def print_student_admission(request, id):
 def cast_category(request):
     if request.session.has_key('office_mobile'):
         mobile = request.session['office_mobile']
-        clerk = Clerk.objects.filter(mobile=mobile).first()
+        clerk = Employee.objects.filter(mobile=mobile).first()
         if not clerk:
             return redirect('office_login')
         if 'add_cast_category'in request.POST:
@@ -80,7 +176,7 @@ def cast_category(request):
 def address(request):
     if request.session.has_key('office_mobile'):
         mobile = request.session['office_mobile']
-        clerk = Clerk.objects.filter(mobile=mobile).first()
+        clerk = Employee.objects.filter(mobile=mobile).first()
         if not clerk:
             return redirect('office_login')
         if 'add_district'in request.POST:
@@ -156,7 +252,7 @@ def address(request):
 def download_qr_code(request):
     if request.session.has_key('office_mobile'):
         mobile = request.session['office_mobile']
-        clerk = Clerk.objects.filter(mobile=mobile).first()
+        clerk = Employee.objects.filter(mobile=mobile).first()
         if not clerk:
             return redirect('office_login')
         
@@ -170,7 +266,7 @@ def download_qr_code(request):
 def profile(request):
     if request.session.has_key('office_mobile'):
         mobile = request.session['office_mobile']
-        clerk = Clerk.objects.filter(mobile=mobile).first()
+        clerk = Employee.objects.filter(mobile=mobile).first()
         if not clerk:
             return redirect('office_login')
         if 'change_profile'in request.POST:
@@ -192,7 +288,7 @@ def profile(request):
 def student_detail(request, id):
     if request.session.has_key('office_mobile'):
         mobile = request.session['office_mobile']
-        clerk = Clerk.objects.filter(mobile=mobile).first()
+        clerk = Employee.objects.filter(mobile=mobile).first()
         if not clerk:
             return redirect('office_login')
         student = Student.objects.filter(id=id).first()
@@ -425,7 +521,7 @@ def student_detail(request, id):
 def add_student(request):
     if request.session.has_key('office_mobile'):
         mobile = request.session['office_mobile']
-        clerk = Clerk.objects.filter(mobile=mobile).first()
+        clerk = Employee.objects.filter(mobile=mobile).first()
         if not clerk:
             return redirect('office_login')
         if 'add_student'in request.POST:
@@ -448,7 +544,7 @@ def add_student(request):
 def add_college(request):
     if request.session.has_key('office_mobile'):
         mobile = request.session['office_mobile']
-        clerk = Clerk.objects.filter(mobile=mobile).first()
+        clerk = Employee.objects.filter(mobile=mobile).first()
         if not clerk:
             return redirect('office_login')
         if 'add_college' in request.POST:
@@ -492,7 +588,7 @@ def add_college(request):
 def add_branch(request):
     if request.session.has_key('office_mobile'):
         mobile = request.session['office_mobile']
-        clerk = Clerk.objects.filter(mobile=mobile).first()
+        clerk = Employee.objects.filter(mobile=mobile).first()
         if not clerk:
             return redirect('office_login')
         if 'add_branch' in request.POST:
@@ -541,7 +637,7 @@ def add_branch(request):
 def add_year(request):
     if request.session.has_key('office_mobile'):
         mobile = request.session['office_mobile']
-        clerk = Clerk.objects.filter(mobile=mobile).first()
+        clerk = Employee.objects.filter(mobile=mobile).first()
         if not clerk:
             return redirect('office_login')
         if 'add_year' in request.POST:

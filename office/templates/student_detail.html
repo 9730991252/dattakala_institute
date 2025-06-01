@@ -250,7 +250,7 @@
                         </div>
                         <div class="details-item">
                             <span class="details-label">Aadhaar:</span>
-                            <span class="details-value">{{ student.aadhaar_number }}</span>
+                            <span class="details-value">{{ aadhaar_number|slice:'0:4' }}-{{ aadhaar_number|slice:'4:8' }}-{{ aadhaar_number|slice:'8:12' }}</span>
                         </div>
                         <div class="details-item">
                             <span class="details-label">Pan Number:</span>

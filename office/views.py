@@ -106,12 +106,22 @@ def add_employee(request):
             else:
                 messages.error(request, 'Employee not found')
             return redirect('add_employee')
-
+    posts = []
+    for p in Employee_category.objects.all():
+        total_employee = Employee.objects.filter(category_id=p.id).count()
+        male_employee = Employee.objects.filter(category_id=p.id, gender='Male').count()
+        female_employee = Employee.objects.filter(category_id=p.id, gender='Female').count()
+        posts.append({
+            'post':p,
+            'total_employee': total_employee,
+            'male_employee': male_employee,
+            'female_employee': female_employee,
+        })
     # Render page
     context = {
         'clerk': clerk,
         'employee': Employee.objects.all().order_by('-category_id'),
-        'posts': Employee_category.objects.all()
+        'posts':posts
     }
     return render(request, 'add_employee.html', context)
 
@@ -528,7 +538,7 @@ def student_detail(request, id):
             'paid_fee':paid_fee,
             'received_cash_hostel_fee':received_cash_hostel_fee,
             'received_bank_hostel_fee':received_bank_hostel_fee,
-
+            'aadhaar_number':str(student.aadhaar_number)
         }
         return render(request, 'student_detail.html', context)
     else:

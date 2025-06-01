@@ -123,7 +123,7 @@ def search_student_for_new_admission(request):
                     'id': s.id,
                     'name': s.name,
                     'mobile': s.mobile,
-                    'aadhaar_number': s.aadhaar_number,
+                    'aadhaar_number': str(s.aadhaar_number),
                     'secret_pin': s.secret_pin,
                     'gender': s.gender,
                     'added_by':s.added_by,

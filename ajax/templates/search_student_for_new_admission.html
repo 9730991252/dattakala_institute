@@ -109,8 +109,8 @@
                 <div class="name_mobile_box">
                     <div class="name">{{s.name}} </div>
                     <div class="mobile">📞 {{s.mobile}}</div>
-                    <div class="aadhaar_number">🆔 Aadhaar: {{s.aadhaar_number}}</div>
-                    <div class="gender">Added BY: {{s.added_by.name}} {% if s.updated_by %} <h style="font-size: 12px;">(edited - {{s.updated_by.name}})</h> {% endif %}</div>
+                    <div class="aadhaar_number">Aadhaar: {{ s.aadhaar_number|slice:'0:4' }}-{{ s.aadhaar_number|slice:'4:8' }}-{{ s.aadhaar_number|slice:'8:12' }}</div>
+                    <div class="gender">Added BY: {{s.added_by.name}} {% if s.updated_by %} <span style="font-size: 12px;">(edited - {{s.updated_by.name}})</span> {% endif %}</div>
             </div>
             <br><br><br><br><br><br><br><br><br><br>
             <div style="position: absolute;justify-content: space-evenly; bottom: 10px;left: 10px;right: 10px;display: flex;gap: 10px;">

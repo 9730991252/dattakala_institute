@@ -4,7 +4,7 @@ from dattakala_institute.includes import *
 def add_bank_account(request):
     if request.session.has_key('office_mobile'):
         mobile = request.session['office_mobile']
-        clerk = Clerk.objects.filter(mobile=mobile).first()
+        clerk = Employee.objects.filter(mobile=mobile).first()
         if not clerk:
             return redirect('office_login')
         if 'Add_Bank_Account' in request.POST:
@@ -51,7 +51,7 @@ def add_bank_account(request):
 def add_bank_opening_balance(request):
     if request.session.has_key('office_mobile'):
         mobile = request.session['office_mobile']
-        clerk = Clerk.objects.filter(mobile=mobile).first()
+        clerk = Employee.objects.filter(mobile=mobile).first()
         if not clerk:
             return redirect('office_login')
         if 'add_opening_balance' in request.POST:
@@ -79,7 +79,7 @@ def add_bank_opening_balance(request):
 def office_account_category(request):
     if request.session.has_key('office_mobile'):
         mobile = request.session['office_mobile']
-        clerk = Clerk.objects.filter(mobile=mobile).first()
+        clerk = Employee.objects.filter(mobile=mobile).first()
         if not clerk:
             return redirect('office_login')
         if 'add_category'in request.POST:
@@ -117,7 +117,7 @@ def office_account_category(request):
 def student_fees(request):
     if request.session.has_key('office_mobile'):
         mobile = request.session['office_mobile']
-        clerk = Clerk.objects.filter(mobile=mobile).first()
+        clerk = Employee.objects.filter(mobile=mobile).first()
         if not clerk:
             return redirect('office_login')
         context={
@@ -132,7 +132,7 @@ def student_fees(request):
 def student_fee_detail(request, id):
     if request.session.has_key('office_mobile'):
         mobile = request.session['office_mobile']
-        clerk = Clerk.objects.filter(mobile=mobile).first()
+        clerk = Employee.objects.filter(mobile=mobile).first()
         if not clerk:
             return redirect('office_login')
         student = get_object_or_404(Student, id=id)
@@ -261,7 +261,7 @@ def student_fee_detail(request, id):
 def office_expenses(request):
     if request.session.has_key('office_mobile'):
         mobile = request.session['office_mobile']
-        clerk = Clerk.objects.filter(mobile=mobile).first()
+        clerk = Employee.objects.filter(mobile=mobile).first()
         if not clerk:
             return redirect('office_login')
         if 'add_cash_expenses'in request.POST:
@@ -334,7 +334,7 @@ def office_expenses(request):
 def hostel_fee(request):
     if request.session.has_key('office_mobile'):
         mobile = request.session['office_mobile']
-        clerk = Clerk.objects.filter(mobile=mobile).first()
+        clerk = Employee.objects.filter(mobile=mobile).first()
         if not clerk:
             return redirect('office_login')
         if 'add_hostel_fee' in request.POST:

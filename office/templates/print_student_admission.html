@@ -110,8 +110,8 @@
         <div class="logo_box"><img src="{% static 'img/logo.jpg' %}" alt="College Logo"></div>
         <div>
             <div class="header_heading">Dattakala Shikshan Sanstha</div>
-            <div class="college_name">{{ student_college_detail.college.name }}</div>
-            <div class="branch_name">Admission Form</div>
+            <div class="branch_name">{{ student_college_details.college.name }}</div>
+            <!-- <div class="branch_name">Admission Form</div> -->
         </div>
         <div class="student_image"><img src="{% if student.image %} {{student.image.url}} {% else %} {% endif %} " alt=""></div>
     </div>

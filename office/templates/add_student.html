@@ -64,7 +64,24 @@
       </div>
       <div class="mb-4">
         <label for="aadhaar" class="block text-sm font-medium text-gray-700 mb-2">Aadhaar Number</label>
-        <input type="text"   oninput="this.value = this.value.replace(/[^0-9]/g, ''), check_aadhaar()"  maxlength="12" name="aadhaar"  id="aadhaar" class="form-control" placeholder="Enter Aadhaar number" required>
+        <input type="text"  oninput="this.value = this.value.replace(/[^0-9]/g, ''), show_aadhaar(), check_aadhaar()"   maxlength="14"  id="aadhaar" class="form-control" placeholder="Enter Aadhaar number" required>
+              <input type="hidden" oninput="this.value = this.value.replace(/[^0-9]/g, '')" name="aadhaar" id="aadhar_number_hidden" required>
+              <script>
+                function show_aadhaar() {
+                  var input_aadhaar = document.getElementById("aadhaar").value.replace(/[^0-9]/g, '');
+                  document.getElementById("aadhar_number_hidden").value = input_aadhaar;
+                  if (input_aadhaar.length > 0) {
+                    let formatted = input_aadhaar;
+                    if (input_aadhaar.length > 4)
+                      formatted = input_aadhaar.slice(0, 4) + "-" + input_aadhaar.slice(4, 8);
+                    if (input_aadhaar.length > 8)
+                      formatted = input_aadhaar.slice(0, 4) + "-" + input_aadhaar.slice(4, 8) + "-" + input_aadhaar.slice(8, 12);
+                    document.getElementById("aadhaar").value = formatted;
+                  } else {
+                    document.getElementById("aadhaar").value = "";
+                  }
+                }
+              </script>
       </div>
       <div class="text-center" id="add_student">
         <img src='{% static "img/loader.gif" %}' id="loader" style="display: none; width: 50px; margin: 0 auto;">
@@ -113,7 +130,8 @@
 
 
   function check_aadhaar(){
-    var aadhaar = document.getElementById("aadhaar").value;
+    var aadhaar = document.getElementById("aadhar_number_hidden").value;
+    console.log(aadhaar)
     var submitButton = document.querySelector("button[type='submit']");
     if (aadhaar.length == 12) {
       $.ajax({

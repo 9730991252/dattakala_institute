@@ -160,6 +160,9 @@ class Student_college_detail(models.Model):
     added_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True, null=True)
     updated_by = models.ForeignKey(Employee, on_delete=models.CASCADE, null=True, related_name='updated_by_Student_college_detail')
+    form_number = models.CharField(max_length=100, null=True)
+    form_issued_by = models.ForeignKey(Employee, on_delete=models.CASCADE, null=True, related_name='form_issued_by_Student_Collage')
+    form_issued_date = models.DateField(null=True)
 
 class Bank_Account(models.Model):
     added_by = models.ForeignKey(Employee, on_delete=models.CASCADE, null=True)

@@ -455,6 +455,19 @@ def student_detail(request, id):
                 student_college_detail.save()
             messages.success(request, 'College details added successfully!')
             return redirect('student_detail', id=student.id)
+        if 'submit_college_form_details' in request.POST:
+            form_number = request.POST.get('form_number')
+            student_college_detail = Student_college_detail.objects.filter(student=student, batch=clerk.batch).first()
+            if student_college_detail:
+                student_college_detail.form_number = form_number
+                student_college_detail.form_issued_by = clerk
+                student_college_detail.form_issued_date = date.today()  
+                student_college_detail.save()
+                messages.success(request, 'College form details updated successfully!')
+                return redirect('student_detail', id=student.id)
+            else:
+                messages.error(request, 'College details not found!')
+                return redirect('student_detail', id=student.id)
         if 'submit_hostel_fee_details' in request.POST:
             hostel_fee_id = request.POST.get('hostel_fee_id')
             form_number = request.POST.get('form_number')

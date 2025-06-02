@@ -518,6 +518,31 @@ def student_detail(request, id):
 
             messages.success(request, "Store approval status updated successfully!")
             return redirect('student_detail', id=student.id)
+        
+        if 'college_account_student_approval' in request.POST:
+            approve_status = int(request.POST.get('approve_status'))
+            reject_reason = request.POST.get('college_account_rejected_reason_input', '')
+
+            student_approval.college_account_approval_status = approve_status
+            student_approval.college_account_rejected_reason = reject_reason if approve_status == 2 else None
+            student_approval.college_account_approved_by = clerk
+            student_approval.college_account_approved_date = datetime.now()
+            student_approval.save()
+
+            messages.success(request, "Student College Account approval status updated successfully!")
+            return redirect('student_detail', id=student.id)
+        if 'travel_account_student_approval' in request.POST:
+            approve_status = int(request.POST.get('travel_approve_status'))
+            reject_reason = request.POST.get('travel_account_rejected_reason_input', '')
+
+            student_approval.travel_account_approval_status = approve_status
+            student_approval.travel_account_rejected_reason = reject_reason if approve_status == 2 else None
+            student_approval.travel_account_approved_by = clerk
+            student_approval.travel_account_approved_date = datetime.now()
+            student_approval.save()
+
+            messages.success(request, "Student Travel Account approval status updated successfully!")
+            return redirect('student_detail', id=student.id)
 
         # --- Handle Office Approval ---
         if 'submit_office_student_approval' in request.POST:

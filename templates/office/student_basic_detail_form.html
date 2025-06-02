@@ -20,7 +20,7 @@
       </style>
       <div class="container mt-5 mb-5 p-4 shadow rounded bg-light">
         <form method="POST">
-          {% csrf_token %}
+          {% csrf_token %} 
           <input type="hidden" name="s_id" value="{{student.id}}">
           <div class="row g-3">
             <div class="col-md-5">
@@ -35,7 +35,9 @@
             
             <div class="col-md-5">
               <label class="form-label">Aadhaar Number</label>
-              <input type="text" class="form-control" name="aadhaar_number" value="{{ student.aadhaar_number }}" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="12" required>
+              <input type="text"  oninput="this.value = this.value.replace(/[^0-9]/g, ''), show_aadhaar()" value="{{ aadhaar_number|slice:'0:4' }}-{{ aadhaar_number|slice:'4:8' }}-{{ aadhaar_number|slice:'8:12' }}"  maxlength="14"  id="aadhaar" class="form-control" placeholder="Enter Aadhaar number" required>
+              <input type="hidden" oninput="this.value = this.value.replace(/[^0-9]/g, '')" name="aadhaar_number" value="{{ student.aadhaar_number }}" id="aadhar_number_hidden" required>
+              
             </div>
             
             <div class="col-md-5">

@@ -145,6 +145,15 @@ class Student_approval(models.Model):
     office_rejected_reason = models.CharField(max_length=100, null=True)
     store_rejected_reason = models.CharField(max_length=100, null=True)
     account_rejected_reason = models.CharField(max_length=100, null=True)                                                                       
+    college_account_approval_status = models.IntegerField(default=0)  # 0 = pending, 1 = approved, 2 = rejected
+    travel_account_approval_status = models.IntegerField(default=0)  # 0 = pending, 1 = approved, 2 = rejected
+    college_account_approved_date = models.DateTimeField(null=True)
+    travel_account_approved_date = models.DateTimeField(null=True)
+    college_account_rejected_reason = models.CharField(max_length=100, null=True)                                                                       
+    travel_account_rejected_reason = models.CharField(max_length=100, null=True)                                                                       
+    college_account_approved_by = models.ForeignKey(Employee, on_delete=models.CASCADE, null=True, related_name='college_account_by_clerk')
+    travel_account_approved_by = models.ForeignKey(Employee, on_delete=models.CASCADE, null=True, related_name='travel_account_by_clerk')
+    
 
 class Student_college_detail(models.Model):
     batch = models.ForeignKey(Batch, on_delete=models.CASCADE)

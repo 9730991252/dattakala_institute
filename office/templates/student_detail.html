@@ -457,6 +457,33 @@
                             </span>
                         </div>
                     </div>
+                    <!-- College Account Approval Display -->
+<div class="details-item" style="grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 3fr;">
+    <span class="details-label">College Account Approval:</span>
+    <span class="details-value">
+        {% if student_approval.college_account_approval_status == 1 %}
+            Approved, &nbsp; By {{ student_approval.college_account_approved_by.name }},&nbsp;&nbsp;&nbsp; {{ student_approval.college_account_approved_date }}
+        {% elif student_approval.college_account_approval_status == 2 %}
+            Rejected,&nbsp; By {{ student_approval.college_account_approved_by.name }},&nbsp;&nbsp;&nbsp; {{ student_approval.college_account_approved_date }},&nbsp;&nbsp;&nbsp; {{ student_approval.college_account_rejected_reason }}
+        {% else %}
+            Pending
+        {% endif %}
+    </span>
+</div>
+
+<!-- Travel Account Approval Display -->
+<div class="details-item" style="grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 3fr;">
+    <span class="details-label">Travel Account Approval:</span>
+    <span class="details-value">
+        {% if student_approval.travel_account_approval_status == 1 %}
+            Approved, &nbsp; By {{ student_approval.travel_account_approved_by.name }},&nbsp;&nbsp;&nbsp; {{ student_approval.travel_account_approved_date }}
+        {% elif student_approval.travel_account_approval_status == 2 %}
+            Rejected,&nbsp; By {{ student_approval.travel_account_approved_by.name }},&nbsp;&nbsp;&nbsp; {{ student_approval.travel_account_approved_date }},&nbsp;&nbsp;&nbsp; {{ student_approval.travel_account_rejected_reason }}
+        {% else %}
+            Pending
+        {% endif %}
+    </span>
+</div>
                 </div>
             <div class="text-center">
                 <a href="/office/print_student_admission/{{student.id}}" class="btn btn-success"><i class="fa fa-print" aria-hidden="true"></i> Print</a>
@@ -665,7 +692,7 @@
 <form method="POST" class="approval-form">
     {% csrf_token %}
     <div class="mb-3">
-        <label for="approve_form_account" class="form-label">Account Student Approval</label>
+        <label for="approve_form_account" class="form-label">Hostel Account Student Approval</label>
         <select class="form-select" name="approve_status" id="approve_form_account"
                 onchange="toggleRejectReason(this.value, 'account')">
             <option value="0" class="text-warning" {% if student_approval.account_approval_status == 0 %}selected{% endif %}>Pending</option>
@@ -703,6 +730,68 @@
 
     <button type="submit" class="btn btn-primary" name="submit_store_student_approval">Submit</button>
 </form>
+
+<script>
+    function toggleRejectReason(value, section) {
+        const reasonDiv = document.getElementById(section + '_reject_reason');
+        const input = document.getElementById(section + '_rejected_reason_input');
+
+        if (value == 2) {
+            reasonDiv.style.display = 'block';
+            input.required = true;
+        } else {
+            reasonDiv.style.display = 'none';
+            input.required = false;
+        }
+    }
+</script>
+
+
+
+    </div>
+    <div class="" style="display: flex;gap: 10px;">
+        <!-- college Student Approval Form -->
+<!-- Office Student Approval Form -->
+<form method="POST" class="approval-form">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="approve_form_office" class="form-label">College account Student Approval</label>
+        <select class="form-select" name="approve_status" id="approve_form_office" onchange="toggleRejectReason(this.value, 'college_account')">
+            <option value="0" class="text-warning" {% if student_approval.college_account_approval_status == 0 %}selected{% endif %}>Pending</option>
+            <option value="1" class="text-success" {% if student_approval.college_account_approval_status == 1 %}selected{% endif %}>Approve</option>
+            <option value="2" class="text-danger" {% if student_approval.college_account_approval_status == 2 %}selected{% endif %}>Reject</option>
+        </select>
+
+        <div class="mt-3" id="college_account_reject_reason" {% if student_approval.college_account_approval_status != 2 %}style="display: none;"{% endif %}>
+            <label for="">Reject Reason</label>
+            <input style="width: 300px;" type="text" class="form-control" name="college_account_rejected_reason_input" id="college_account_rejected_reason_input" value="{{ student_approval.college_account_rejected_reason|default_if_none:'' }}">
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary" name="college_account_student_approval">Submit</button>
+</form>
+
+<form method="POST" class="approval-form">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="approve_form_travel" class="form-label">Travel Account Student Approval</label>
+        <select class="form-select" name="travel_approve_status" id="approve_form_travel" onchange="toggleRejectReason(this.value, 'travel_account')">
+            <option value="0" class="text-warning" {% if student_approval.travel_account_approval_status == 0 %}selected{% endif %}>Pending</option>
+            <option value="1" class="text-success" {% if student_approval.travel_account_approval_status == 1 %}selected{% endif %}>Approve</option>
+            <option value="2" class="text-danger" {% if student_approval.travel_account_approval_status == 2 %}selected{% endif %}>Reject</option>
+        </select>
+
+        <div class="mt-3" id="travel_account_reject_reason" {% if student_approval.travel_account_approval_status != 2 %}style="display: none;"{% endif %}>
+            <label for="">Reject Reason</label>
+            <input style="width: 300px;" type="text" class="form-control" name="travel_account_rejected_reason_input" id="travel_account_rejected_reason_input" value="{{ student_approval.travel_account_rejected_reason|default_if_none:'' }}">
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary" name="travel_account_student_approval">Submit</button>
+</form>
+
+
+
 
 <script>
     function toggleRejectReason(value, section) {
@@ -786,4 +875,20 @@
           });
         }
       </script>
+      <script>
+                function show_aadhaar() {
+                  var input_aadhaar = document.getElementById("aadhaar").value.replace(/[^0-9]/g, '');
+                  document.getElementById("aadhar_number_hidden").value = input_aadhaar;
+                  if (input_aadhaar.length > 0) {
+                    let formatted = input_aadhaar;
+                    if (input_aadhaar.length > 4)
+                      formatted = input_aadhaar.slice(0, 4) + "-" + input_aadhaar.slice(4, 8);
+                    if (input_aadhaar.length > 8)
+                      formatted = input_aadhaar.slice(0, 4) + "-" + input_aadhaar.slice(4, 8) + "-" + input_aadhaar.slice(8, 12);
+                    document.getElementById("aadhaar").value = formatted;
+                  } else {
+                    document.getElementById("aadhaar").value = "";
+                  }
+                }
+              </script>
 {% endblock content %}

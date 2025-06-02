@@ -133,8 +133,8 @@ def student_fees(request):
         return redirect('office_login')
     
     
-@check_employee_permissions
 @csrf_exempt
+@check_employee_permissions
 def student_fee_detail(request, id):
     if request.session.has_key('office_mobile'):
         mobile = request.session['office_mobile']

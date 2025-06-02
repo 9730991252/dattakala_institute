@@ -6,7 +6,7 @@ _______________________________________
 
 root
 cd dattakala_institute
-
+git pull
 source venv/bin/activate
 python3 manage.py makemigrations
 python3 manage.py migrate

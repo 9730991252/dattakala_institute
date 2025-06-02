@@ -1,6 +1,8 @@
 from dattakala_institute.includes import *
 import csv
+from office.views import check_employee_permissions
 # Create your views here.
+@check_employee_permissions
 def hostel(request):
     if request.session.has_key('office_mobile'):
         mobile = request.session['office_mobile']
@@ -53,6 +55,7 @@ def hostel(request):
     else:
         return redirect('office_login')
     
+@check_employee_permissions
 def student(request):
     if request.session.has_key('office_mobile'):
         mobile = request.session['office_mobile']
@@ -66,5 +69,18 @@ def student(request):
     else:
         return redirect('office_login')
     
+@check_employee_permissions
+def employee_report(request):
+    if request.session.has_key('office_mobile'):
+        mobile = request.session['office_mobile']
+        clerk = Employee.objects.filter(mobile=mobile).first()
+        if not clerk:
+            return redirect('office_login')        
+        context={
+            'clerk':clerk,
+        }
+        return render(request, 'report/employee_report.html', context)
+    else:
+        return redirect('office_login')
 
     

@@ -30,6 +30,14 @@ class Employee(models.Model):
     aadhar_number = models.IntegerField(null=True)
     gender = models.CharField(max_length=10, null=True, default='Male')
     
+class Tabs(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    
+class Tab_permissions(models.Model):
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='tab_permissions')
+    tab = models.ForeignKey(Tabs, on_delete=models.CASCADE, related_name='tab')
+    status = models.IntegerField(default=1)
+    
 class College(models.Model):
     batch = models.ForeignKey(Batch, on_delete=models.CASCADE, related_name='colleges')
     name = models.CharField(max_length=100, unique=True)
@@ -117,6 +125,8 @@ class Student(models.Model):
     mother_mobile = models.IntegerField(null=True)
     cast = models.CharField(max_length=100, null=True)
     is_father_alive = models.CharField(max_length=20, null=True)
+    nominee_name = models.CharField(max_length=100, null=True)
+    relation_with_nominee = models.CharField(max_length=100, null=True)
     whatsapp_number = models.IntegerField(null=True)
     pin_code = models.IntegerField(null=True)
 
@@ -278,4 +288,3 @@ class Student_received_Fee_Bank_hostel(models.Model):
     verify_date_clerk = models.DateTimeField(null=True, blank=True)
     batch = models.ForeignKey(Batch, on_delete=models.CASCADE, null=True,related_name='batch_student_received_fee_bank_hostel')
     utr_number = models.CharField(max_length=100, null=True, blank=True)
-

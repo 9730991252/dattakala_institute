@@ -1,0 +1,206 @@
+<style>
+    /* Global container styling */
+    .employee-list-wrapper {
+        height: 80vh;
+        overflow-y: auto;
+        background: linear-gradient(180deg, #f5f7fa 0%, #e8ecef 100%);
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        scrollbar-width: thin;
+        scrollbar-color: #6b7280 #e5e7eb;
+    }
+
+    /* Custom scrollbar */
+    .employee-list-wrapper::-webkit-scrollbar {
+        width: 8px;
+    }
+    .employee-list-wrapper::-webkit-scrollbar-track {
+        background: #e5e7eb;
+        border-radius: 4px;
+    }
+    .employee-list-wrapper::-webkit-scrollbar-thumb {
+        background: #6b7280;
+        border-radius: 4px;
+    }
+    .employee-list-wrapper::-webkit-scrollbar-thumb:hover {
+        background: #4b5563;
+    }
+
+    /* Sticky header */
+    .header-fixed {
+        position: sticky;
+        top: 0;
+        background: rgba(255, 255, 255, 0.98);
+        padding: 1.5rem;
+        text-align: center;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #1f2937;
+        border-bottom: 1px solid #d1d5db;
+        z-index: 10;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(8px);
+    }
+
+    /* Badge styling */
+    .stat-badge {
+        padding: 0.5rem 1rem;
+        margin: 0.25rem;
+        border-radius: 9999px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+    .stat-badge:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
+    .badge-male {
+        background: #60a5fa;
+        color: #1e3a8a;
+    }
+    .badge-female {
+        background: #f9a8d4;
+        color: #831843;
+    }
+    .badge-total {
+        background: #93c5fd;
+        color: #1e3a8a;
+    }
+    .badge-total-amt {
+        background: #fef3c7;
+        color: #92400e;
+    }
+    .badge-pending {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+    .badge-received {
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    /* Branch name container */
+    .branch-info {
+        margin: 1.5rem auto 0.5rem;
+        width: 95%;
+        background: #ffffff;
+        border-radius: 8px 8px 0 0;
+        padding: 1rem 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.95rem;
+        font-weight: 500;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    .branch-info .branch-title {
+        font-weight: 700;
+        font-size: 1.125rem;
+        color: #1e3a8a;
+    }
+
+    /* Category container */
+    .category-container {
+        margin: 0 auto 2rem;
+        width: 95%;
+        background: #eff6ff;
+        border-radius: 0 0 8px 8px;
+        padding: 1.5rem;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Category item */
+    .category-item {
+        width: 320px;
+        background: #ffffff;
+        border-radius: 8px;
+        padding: 1.25rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    .category-item:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+    .category-title {
+        font-weight: 700;
+        font-size: 1.125rem;
+        color: #1f2937;
+        text-align: center;
+        margin-bottom: 0.75rem;
+    }
+    .category-stats {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: #4b5563;
+        padding: 0.5rem;
+    }
+    .category-stats div {
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        background: #f3f4f6;
+    }
+
+    /* Status colors */
+    .status-error {
+        color: #dc2626;
+        font-weight: 600;
+    }
+    .status-success {
+        color: #16a34a;
+        font-weight: 600;
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+        .branch-info {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+        .category-container {
+            justify-content: center;
+        }
+        .category-item {
+            width: 100%;
+            max-width: 360px;
+        }
+        .header-fixed {
+            font-size: 1.1rem;
+            padding: 1rem;
+        }
+    }
+</style>
+
+<div class="employee-list-wrapper">
+    <!-- Sticky Header -->
+    <div class="header-fixed">
+        Employee Details
+        <span class="stat-badge badge-male">Male {{male}}</span>
+        <span class="stat-badge badge-female">Female {{female}}</span>
+        <span class="stat-badge badge-total">Total {{total}}</span>
+    </div>
+
+    <br>
+
+    <!-- Employee Categories -->
+    <div class="category-container">
+        {% for ec in employee_category %}
+        <div class="category-item">
+            <div class="category-title">{{ec.category.name}}</div>
+            <div class="category-stats">
+                <div>Male {{ec.male}}</div>
+                <div>Female {{ec.female}}</div>
+                <div>Total {{ec.total_employee}}</div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>

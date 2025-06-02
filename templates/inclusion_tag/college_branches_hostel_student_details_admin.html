@@ -8,8 +8,8 @@
         <span class="badge total">T {{total_student}}</span>
         &nbsp;&nbsp;&nbsp;
         <span class="badge total_amt">T ₹{{all_total_amount}}</span>
-        <span class="badge pending">P ₹{{all_pending}}</span>
         <span class="badge received">R ₹{{all_received}}</span>
+        <span class="badge pending">P ₹{{all_pending}}</span>
     </div>
 
     <style>
@@ -168,8 +168,8 @@
         </div>
         <div class="badge_group">
             <div class="badge total_amt">T ₹{{c.college_total_amount}}</div>
-            <div class="badge pending">P ₹{{c.college_pending_amount}}</div>
             <div class="badge received">R ₹{{c.college_received}}</div>
+            <div class="badge pending">P ₹{{c.college_pending_amount}}</div>
         </div>
     </div>
 {% endfor %}
@@ -188,8 +188,8 @@
             </div>
             <div>
                 <div class="badge total_amt">T ₹{{b.branch_total_amount}}</div>
-                <div class="badge pending">P ₹{{b.pending_amount}}</div>
                 <div class="badge received">R ₹{{b.branch_received}}</div>
+                <div class="badge pending">P ₹{{b.pending_amount}}</div>
             </div>
         </div>
         
@@ -204,8 +204,8 @@
                 </div>
                 <div class="year_box2">
                     <div>T ₹{{y.year_total_amount}}</div>
-                    <div class="text-danger">P ₹{{y.year_pending_amount}}</div>
                     <div class="text-success">R ₹{{y.year_received}}</div>
+                    <div class="text-danger">P ₹{{y.year_pending_amount}}</div>
                 </div>
             </div>
             {% endfor %}

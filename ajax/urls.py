@@ -8,4 +8,5 @@ urlpatterns = [
     path('get_taluka/', views.get_taluka, name='get_taluka'),
     path('search_student_for_admin/', views.search_student_for_admin, name='search_student_for_admin'),
     path('search_student_for_new_admission/', views.search_student_for_new_admission, name='search_student_for_new_admission'),
+    path('change_employee_permission_status/', views.change_employee_permission_status, name='change_employee_permission_status'),
 ]  

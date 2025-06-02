@@ -2,6 +2,21 @@ import secrets
 from dattakala_institute.includes import *
 
 # Create your views here.
+def check_employee_permissions(view_fun):
+    def check_tab(def_name):
+        if Tabs.objects.filter(name=def_name).exists():
+            return 'yes'
+        else:
+            Tabs.objects.create(name=def_name)
+            return 'Yes'
+    def inner(request, *args, **kwargs):
+        result = view_fun(request, *args, **kwargs)
+        def_name = view_fun.__name__
+        tab_checked = check_tab(def_name)
+        
+        return result
+    return inner
+
 def office_home(request):
     if request.session.has_key('office_mobile'):
         mobile = request.session['office_mobile']
@@ -19,6 +34,7 @@ def office_home(request):
         return redirect('office_login')
     
 
+@check_employee_permissions
 @csrf_exempt
 def add_employee(request):
     # Check if user is logged in
@@ -48,7 +64,7 @@ def add_employee(request):
                 messages.error(request, 'Mobile number should be 10 digits')
                 return redirect('add_employee')
 
-            if Employee.objects.filter(aadhar_number=aadhar_number, batch=clerk.batch).exists():
+            if Employee.objects.filter(aadhar_number=aadhar_number, batch=clerk.batch).exists() or Employee.objects.filter(mobile=mobile_number, batch=clerk.batch).exists():
                 messages.error(request, 'Employee already exists')
                 return redirect('add_employee')
 
@@ -127,7 +143,7 @@ def add_employee(request):
     return render(request, 'add_employee.html', context)
 
 
-    
+@check_employee_permissions
 def print_student_admission(request, id):
     if request.session.has_key('office_mobile'):
         mobile = request.session['office_mobile']
@@ -145,6 +161,7 @@ def print_student_admission(request, id):
     else:
         return redirect('office_login')
     
+@check_employee_permissions
 def cast_category(request):
     if request.session.has_key('office_mobile'):
         mobile = request.session['office_mobile']
@@ -187,7 +204,8 @@ def cast_category(request):
         return render(request, 'cast_category.html', context)
     else:
         return redirect('office_login')
-    
+ 
+@check_employee_permissions
 def address(request):
     if request.session.has_key('office_mobile'):
         mobile = request.session['office_mobile']
@@ -264,6 +282,7 @@ def address(request):
     else:
         return redirect('office_login')
     
+@check_employee_permissions
 def download_qr_code(request):
     if request.session.has_key('office_mobile'):
         mobile = request.session['office_mobile']
@@ -278,6 +297,7 @@ def download_qr_code(request):
     else:
         return redirect('office_login')
     
+@check_employee_permissions
 def profile(request):
     if request.session.has_key('office_mobile'):
         mobile = request.session['office_mobile']
@@ -299,6 +319,7 @@ def profile(request):
     else:
         return redirect('office_login')
     
+@check_employee_permissions
 @csrf_exempt
 def student_detail(request, id):
     if request.session.has_key('office_mobile'):
@@ -372,12 +393,16 @@ def student_detail(request, id):
             mother_name = request.POST.get('mother_name')
             mother_mobile = request.POST.get('mother_mobile')
             is_father_alive = request.POST.get('is_father_alive')
+            nominee_name = request.POST.get('nominee_name')
+            relation_with_nominee = request.POST.get('relation_with_nominee')
             if len(parent_mobile) < 10:
                 messages.error(request, 'Parent mobile number should be of 10 digits')
             elif len(mother_mobile) < 10:
                 messages.error(request, 'Mother mobile number should be of 10 digits')
             else:
                 student.parent_mobile = parent_mobile
+                student.nominee_name = nominee_name
+                student.relation_with_nominee = relation_with_nominee
                 student.father_name = father_name
                 student.mother_name = mother_name
                 student.mother_mobile = mother_mobile
@@ -544,7 +569,8 @@ def student_detail(request, id):
         return render(request, 'student_detail.html', context)
     else:
         return redirect('office_login')
-
+    
+@check_employee_permissions
 def add_student(request):
     if request.session.has_key('office_mobile'):
         mobile = request.session['office_mobile']
@@ -568,6 +594,7 @@ def add_student(request):
     else:
         return redirect('office_login')
     
+@check_employee_permissions
 def add_college(request):
     if request.session.has_key('office_mobile'):
         mobile = request.session['office_mobile']
@@ -612,6 +639,7 @@ def add_college(request):
     else:
         return redirect('office_login')
     
+@check_employee_permissions
 def add_branch(request):
     if request.session.has_key('office_mobile'):
         mobile = request.session['office_mobile']
@@ -661,6 +689,7 @@ def add_branch(request):
     else:
         return redirect('office_login')
     
+@check_employee_permissions
 def add_year(request):
     if request.session.has_key('office_mobile'):
         mobile = request.session['office_mobile']

@@ -105,6 +105,8 @@ def self_registration_student(request):
         cast = request.POST.get('cast')
         pin_code = request.POST.get('pin_code')
         is_father_alive = request.POST.get('is_father_alive')
+        nominee_name = request.POST.get('nominee_name')
+        relation_with_nominee = request.POST.get('relation_with_nominee')
         # Save in student end
         # Save in college detail start
         how_to_arrive_college = request.POST.get('come_to_college')
@@ -153,6 +155,8 @@ def self_registration_student(request):
                 student.email = email
                 student.current_address = current_address
                 student.pan_number = pan_number
+                student.nominee_name = nominee_name
+                student.relation_with_nominee = relation_with_nominee
                 student.district_id = district
                 student.taluka_id = taluka
                 student.cast_category_id = cast_category

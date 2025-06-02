@@ -285,6 +285,14 @@
               <label class="form-label">Mother's Full Name</label>
               <input type="text" class="form-control" name="mother_name" value="{{ student.mother_name|default_if_none:'' }}" oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')" required>
             </div>
+            <div class="col-md-6">
+              <label class="form-label">Nominee Name</label>
+              <input type="text" class="form-control" name="nominee_name" value="{{ student.nominee_name|default_if_none:'' }}" oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Relation With Nominee</label>
+              <input type="text" class="form-control" name="relation_with_nominee" value="{{ student.relation_with_nominee|default_if_none:'' }}" oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')" required>
+            </div>
             
             <div class="col-md-6">
               <label class="form-label">Mother Mobile No.</label>

@@ -52,8 +52,15 @@
               <label class="form-label">Mother Mobile No.</label>
               <input type="text" class="form-control" name="mother_mobile" value="{{ student.mother_mobile|default_if_none:'' }}" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="10" required>
             </div>
+            <div class="col-md-5">
+              <label class="form-label">Nominee Name</label>
+              <input type="text" class="form-control" name="nominee_name" value="{{ student.nominee_name }}" required>
+            </div>          
+            <div class="col-md-5">
+              <label class="form-label">Relation With Nominee</label>
+              <input type="text" class="form-control" name="relation_with_nominee" value="{{ student.relation_with_nominee }}" required>
+            </div>          
           </div>
-          
           <div class="text-center mt-4">
             <button type="submit" class="btn btn-primary px-5" name="submit_parent_details">Submit</button>
           </div>

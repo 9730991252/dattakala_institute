@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block head %}
+
+{% endblock head %}
+{% block content %}
+{% load static %}
+{% include 'office/office_navbar.html' %}
+{% include 'alert.html' %}
+{% load admin_tag %}
+<br>
+<div class="text-center"><b>Employee Report</b></div>
+<br>
+
+{% employee_detail_admin clerk.batch %}
+
+
+
+{% endblock content %}

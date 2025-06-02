@@ -234,3 +234,22 @@ def district_taluka_student_details_admin(batch_id):
     return{
         'districts':districts
     }
+    
+@register.inclusion_tag('inclusion_tag/employee_detail_admin.html')
+def employee_detail_admin(batch):
+    employee = Employee.objects.filter(batch=batch, status=1)
+    employee_post = Employee_category.objects.filter(status=1)
+    employee_category = []
+    for e in employee_post:
+        employee_category.append({
+            'category':e,
+            'total_employee':employee.filter(category=e).count(),
+            'male':employee.filter(category=e, gender='Male').count(),
+            'female':employee.filter(category=e, gender='Female').count(),
+        })
+    return {
+        'total':employee.count(),
+        'male':employee.filter(gender='Male').count(),
+        'female':employee.filter(gender='Female').count(),
+        'employee_category':employee_category
+    }

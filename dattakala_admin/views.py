@@ -45,6 +45,17 @@ def credit(request):
     else:
         return redirect('/')
     
+def admin_employee(request):
+    if request.session.has_key('admin_mobile'):
+        mobile = request.session['admin_mobile']
+        a = Admin_detail.objects.filter(mobile=mobile).first()
+        context={
+            'a':a,
+        }
+        return render(request, 'admin_employee.html', context)
+    else:
+        return redirect('/')
+    
 def admin_student_detail(request, id):
     if request.session.has_key('admin_mobile'):
         mobile = request.session['admin_mobile']

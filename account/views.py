@@ -1,6 +1,8 @@
 from dattakala_institute.includes import *
+from office.views import check_employee_permissions
 
 # Create your views here.
+@check_employee_permissions
 def add_bank_account(request):
     if request.session.has_key('office_mobile'):
         mobile = request.session['office_mobile']
@@ -48,6 +50,7 @@ def add_bank_account(request):
     else:
         return redirect('office_login')
     
+@check_employee_permissions
 def add_bank_opening_balance(request):
     if request.session.has_key('office_mobile'):
         mobile = request.session['office_mobile']
@@ -75,7 +78,8 @@ def add_bank_opening_balance(request):
         return render(request, 'add_bank_opening_balance.html', context)
     else:
         return redirect('office_login')
-
+    
+@check_employee_permissions
 def office_account_category(request):
     if request.session.has_key('office_mobile'):
         mobile = request.session['office_mobile']
@@ -114,6 +118,7 @@ def office_account_category(request):
     else:
         return redirect('office_login')
 
+@check_employee_permissions
 def student_fees(request):
     if request.session.has_key('office_mobile'):
         mobile = request.session['office_mobile']
@@ -128,6 +133,7 @@ def student_fees(request):
         return redirect('office_login')
     
     
+@check_employee_permissions
 @csrf_exempt
 def student_fee_detail(request, id):
     if request.session.has_key('office_mobile'):
@@ -258,6 +264,7 @@ def student_fee_detail(request, id):
         return redirect('office_login')
     
     
+@check_employee_permissions
 def office_expenses(request):
     if request.session.has_key('office_mobile'):
         mobile = request.session['office_mobile']
@@ -331,6 +338,7 @@ def office_expenses(request):
     else:
         return redirect('office_login')
     
+@check_employee_permissions
 def hostel_fee(request):
     if request.session.has_key('office_mobile'):
         mobile = request.session['office_mobile']

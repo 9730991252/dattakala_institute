@@ -315,8 +315,8 @@
                 <div class="details-section">
                     <div class="details-header">Parent Details</div>
                     <div class="details-body">
-                        <div class="details-item">
-                            <span class="details-label">Is Father Alive:</span>
+                        <div class="details-item" style="grid-column: 1 / -1;">
+                            <span class="details-label" >Is Father Alive:</span>
                             <span class="details-value">{{ student.is_father_alive }}</span>
                         </div>
                         <div class="details-item" style="display: unset;">
@@ -324,16 +324,24 @@
                             <span class="details-value">{{ student.father_name }}</span>
                         </div>
                         <div class="details-item">
-                            <span class="details-label">Father Mobile:</span>
-                            <span class="details-value">{{ student.parent_mobile }}</span>
-                        </div>
-                        <div class="details-item">
                             <span class="details-label">Mother Name:</span>
                             <span class="details-value">{{ student.mother_name }}</span>
                         </div>
                         <div class="details-item">
+                            <span class="details-label">Father Mobile:</span>
+                            <span class="details-value">{{ student.parent_mobile }}</span>
+                        </div>
+                        <div class="details-item">
                             <span class="details-label">Mother Mobile:</span>
                             <span class="details-value">{{ student.mother_mobile }}</span>
+                        </div>
+                        <div class="details-item">
+                            <span class="details-label">Nominee Name:</span>
+                            <span class="details-value">{{ student.nominee_name }}</span>
+                        </div>
+                        <div class="details-item" style="display: unset;">
+                            <span class="details-label">Relation With Nominee:</span><br>
+                            <span class="details-value">{{ student.relation_with_nominee }}</span>
                         </div>
                     </div>
                 </div>

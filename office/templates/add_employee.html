@@ -6,6 +6,7 @@
 {% load static %}
 {% include 'office/office_navbar.html' %}
 {% include 'alert.html' %}
+{% load office_tag %}
 
 <style>
   .modal {
@@ -126,10 +127,100 @@
               <button class="btn btn-success" type="submit" name="update_status">Active</button>
             {% else %}
               <button class="btn btn-danger" type="submit" name="update_status">Deactive</button>
-            {% endif %}
+            {% endif %} 
           </form>
+          {% if e.category.name == 'CLERK' %}
+          <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#user_permission{{e.id}}">
+            permission
+          </button>
+          {% endif %}
         </td>
       </tr>
+
+      <!-- Permission Modal -->
+      <div class="modal fade" id="user_permission{{e.id}}" tabindex="-1" aria-labelledby="user_permission{{e.id}}" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <form method="POST" onsubmit="document.getElementById('edit_btn{{ e.id }}').style.display='none'; document.getElementById('editSpinner{{ e.id }}').style.display='inline-block';">
+              {% csrf_token %}
+              <div class="modal-header">
+                <h5 class="modal-title">{{e.name}} Permission</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body" >
+                <style>
+                    .permissions-container {
+                      max-width: 600px;
+                      margin: 0 auto;
+                      background-color: #ffffff;
+                      border-radius: 12px;
+                      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+                      padding: 20px 30px;
+                      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                      margin-top: -10px;
+                    }
+
+                    .permission-item {
+                      display: flex;
+                      justify-content: space-between;
+                      align-items: center;
+                      border-bottom: 1px solid #e0e0e0;
+                      padding: 12px 0;
+                      transition: background 0.2s ease;
+                    }
+
+                    .permission-item:hover {
+                      background-color: #f9f9f9;
+                    }
+
+                    .permission-name {
+                      font-weight: 600;
+                      font-size: 16px;
+                      color: #333;
+                    }
+
+                    .permission-checkbox input[type="checkbox"] {
+                      width: 20px;
+                      height: 20px;
+                      accent-color: #007bff; /* blue checkboxes */
+                      cursor: pointer;
+                    }
+
+                    .permission-checkbox {
+                      display: flex;
+                      align-items: center;
+                    }
+
+                    /* Optional: Smooth fade-in animation */
+                    .permission-item {
+                      animation: fadeIn 0.3s ease-in;
+                    }
+
+                    @keyframes fadeIn {
+                      from { opacity: 0; transform: translateY(5px); }
+                      to { opacity: 1; transform: translateY(0); }
+                    }
+                  </style>
+
+                {% get_user_permission e.id as get_user_permission %}
+                <div class="permissions-container">
+                  {% for t in get_user_permission.tabs %}
+                    <div class="permission-item">
+                      <div class="permission-name">{{ t.name }}</div>
+                      <div class="permission-checkbox">
+                        <input type="checkbox" {% if t.user_permission == 1 %} checked {% endif %} onclick="change_status('{{t.id}}', '{{e.id}}')">
+                      </div>
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
 
       <!-- Edit Modal -->
       <div class="modal fade" id="Edit_employee{{ e.id }}" tabindex="-1" aria-labelledby="EditModalLabel{{ e.id }}" aria-hidden="true">
@@ -187,5 +278,21 @@
     </tbody>
   </table>
 </div>
+
+<script>
+  function change_status(tab_id, employee_id){
+    console.log(tab_id)
+    $.ajax({
+      url: "{% url 'change_employee_permission_status' %}",
+      method: "GET",
+      data: { 
+        tab_id: tab_id,
+        employee_id: employee_id
+       },
+      success: function (res) {
+      }
+    });
+  }
+</script>
 
 {% endblock content %}

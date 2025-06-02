@@ -35,6 +35,22 @@ def get_college_branch(request):
         t = render_to_string('get_college_branch.html', context)
     return JsonResponse({'t': t})
 
+def change_employee_permission_status(request):
+    if request.method == 'GET':
+        tab_id = request.GET['tab_id']
+        employee_id = request.GET['employee_id']
+        tp = Tab_permissions.objects.filter(employee_id=employee_id, tab_id=tab_id).first()
+        if tp:
+            if tp.status == 1:
+                tp.status = 0
+                tp.save()
+            else:
+                tp.status = 1
+                tp.save()
+        else:
+            Tab_permissions.objects.create(employee_id=employee_id, tab_id=tab_id, status=1)
+    return JsonResponse({'t': 't'})
+
 def get_taluka(request):
     if request.method == 'GET':
         c_id = request.GET['c_id']

@@ -126,6 +126,7 @@
                   <div class="card card-body">
                     <a href="/report/hostel/" class="btn href_btn {% if request.path == '/report/hostel/' %} at_page {% endif %}">Hostel</a>
                     <a href="/report/student/" class="btn href_btn {% if request.path == '/report/student/' %} at_page {% endif %} mt-2">Student</a>
+                    <a href="/report/employee_report/" class="btn href_btn {% if request.path == '/report/employee_report/' %} at_page {% endif %} mt-2">Employee Report</a>
                   </div>
                 </div>
           </div>
@@ -160,7 +161,7 @@
       </div>
 
       <script>
-    const totalSeconds = 180;
+    const totalSeconds = 600;
     const timerElement = document.getElementById('timer');
     let secondsRemaining = totalSeconds;
     let interval;

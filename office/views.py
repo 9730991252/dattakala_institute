@@ -150,12 +150,17 @@ def print_student_admission(request, id):
         clerk = Employee.objects.filter(mobile=mobile).first()
         if not clerk:
             return redirect('office_login')
-        
+        student = Student.objects.filter(id=id).first()
         context={
             'clerk':clerk,
             'student':Student.objects.filter(id=id).first(),
             'student_college_details':Student_college_detail.objects.filter(student=id, batch=clerk.batch).first(),
-            'date_today':date.today()
+            'date_today':date.today(),
+            'aadhaar_number': ( 
+                f'{str(student.aadhaar_number)[0:4]}-{str(student.aadhaar_number)[4:8]}-{str(student.aadhaar_number)[8:12]}'
+                if student and student.aadhaar_number and len(str(student.aadhaar_number)) >= 12
+                else ''
+            )
         }
         return render(request, 'print_student_admission.html', context)
     else:

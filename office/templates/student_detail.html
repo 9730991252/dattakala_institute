@@ -223,7 +223,7 @@
                 <button class="btn btn-details basic_details" onclick="fetch_basic_details()">Basic Details</button>
                 <button class="btn btn-details parent_details" onclick="fetch_parent_details()">Parent Details</button>
                 <button class="btn btn-details college_details" onclick="fetch_college_details()">College Details</button>
-                <button class="btn btn-details" onclick="fetch_fee_details()">Fee Details</button>
+                <button class="btn btn-details" onclick="fetch_fee_details()">Fee / Form Details</button>
             </div>
         </div>
         <div class="col-content">
@@ -724,6 +724,10 @@
     function fetch_parent_details() {
         document.getElementById('details_result').innerHTML = `{% include 'office/student_basic_parent_form.html' %}`;
     }
+    
+    function fetch_parent_details() {
+        document.getElementById('details_result').innerHTML = `{% include 'office/student_basic_parent_form.html' %}`;
+    }
 
     function fetch_college_details() {
         document.getElementById('details_result').innerHTML = `{% include 'office/student_college_detail_form.html' %}`;
@@ -731,6 +735,10 @@
 
     function fetch_fee_details() {
         document.getElementById('details_result').innerHTML = `{% include 'office/student_fee_detail_form.html' %}`;
+    }
+
+    function fetch_college_fee_details() {
+        document.getElementById('details_result').innerHTML = `{% include 'office/student_fee_detail_form_college.html' %}`;
     }
 
     function get_college_branch(id) {

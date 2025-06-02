@@ -34,8 +34,8 @@ def office_home(request):
         return redirect('office_login')
     
 
-@check_employee_permissions
 @csrf_exempt
+@check_employee_permissions
 def add_employee(request):
     # Check if user is logged in
     if not request.session.get('office_mobile'):
@@ -319,8 +319,8 @@ def profile(request):
     else:
         return redirect('office_login')
     
-@check_employee_permissions
 @csrf_exempt
+@check_employee_permissions
 def student_detail(request, id):
     if request.session.has_key('office_mobile'):
         mobile = request.session['office_mobile']

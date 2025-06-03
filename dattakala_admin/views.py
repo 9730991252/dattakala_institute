@@ -46,7 +46,7 @@ def todays_appointment(request):
             return redirect("todays_appointment")
         context={
             'a':a,
-            'todays_appointments':Appointment.objects.filter(book_date_time__date=date.today()).order_by('order_by').order_by('meeting_status')
+            'todays_appointments':Appointment.objects.filter(book_date_time__date=date.today(), meeting_status=0).order_by('order_by').order_by('meeting_status')
         }
         return render(request, 'todays_appointment.html', context)
     else:

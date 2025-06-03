@@ -225,6 +225,11 @@ a {
             <div class="summary-title" id="accepted-title">Accepted Forms</div>
             <div class="summary-value">{{ hostel_form_accepted_count }}</div>
         </div>
+
+        <a href="#account_rejected" class="summary-card bg-danger" aria-labelledby="accepted-title">
+            <div class="summary-title" id="accepted-title">Account Rejected Forms</div>
+            <div class="summary-value">{{ hostel_form_account_rejected_count }}</div>
+        </a>
     </div>
 
     <div class="container student_container">
@@ -261,4 +266,42 @@ a {
             </a>
         {% endfor %}
     </div>
+    <section id="account_rejected">
+        <br><br><br>
+        <div class="text-center text-danger"><b>Account Rejected</b></div>
+    <div class="container student_container">
+        {% for s in account_rejected_student %}
+            <a href="{% url 'student_detail' s.id %}">
+                <div class="student_box">
+                    <div class="img_box">
+                        {% if s.img %}
+                            <img src="{{ s.img.url }}">
+                        {% else %}
+                            <img src="https://cdn-icons-png.flaticon.com/512/201/201818.png" >
+                        {% endif %}
+
+                        <form method="POST" enctype="multipart/form-data" id="form{{ s.id }}">
+                            {% csrf_token %}
+                            <input type="hidden" name="id" value="{{ s.id }}">
+                            <input type="hidden" name="img" id="croppedImgInput{{ s.id }}">
+                            <button type="submit" name="add_image" id="add_btn{{ s.id }}" class="sr-only">Upload Image</button>
+                        </form>
+                    </div>
+
+                    <div class="name_mobile_box">
+                        <div class="name">{{ s.name }}</div>
+                        <div class="mobile">📞 {{ s.mobile }}</div>
+                        <div class="aadhaar_number">Aadhaar: {{ s.aadhaar_number|slice:'0:4' }}-{{ s.aadhaar_number|slice:'4:8' }}-{{ s.aadhaar_number|slice:'8:12' }}</div>
+                        <div class="gender">
+                            Added BY: {{ s.added_by.name }}
+                            {% if s.updated_by %}
+                                <span>(edited - {{ s.updated_by.name }})</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </section>
 {% endblock content %}

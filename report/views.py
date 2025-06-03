@@ -78,12 +78,16 @@ def hostel_form_summary(request):
             return redirect('office_login')        
         hostel_form_pending_count = 0
         hostel_form_accepted_count = 0
+        hostel_form_account_rejected_count = 0
         for s in Student_Hostel_Fee.objects.filter(batch=clerk.batch).exclude(form_number=None):
             if Student_approval.objects.filter(student=s.student, account_approval_status=0):
                 hostel_form_pending_count += 1
-            elif Student_approval.objects.filter(student=s.student, account_approval_status=1):
+            if Student_approval.objects.filter(student=s.student, account_approval_status=1):
                 hostel_form_accepted_count += 1
+            if Student_approval.objects.filter(student=s.student, account_approval_status=2):
+                hostel_form_account_rejected_count += 1
         st = []
+        account_rejected_student = []
         status = 1
         students = Student_Hostel_Fee.objects.filter(batch=clerk.batch).exclude(form_number=None)
 
@@ -101,12 +105,26 @@ def hostel_form_summary(request):
                     'updated_by':s.student.updated_by,
                     'img': s.student.image, 
                 })
+            if approval.account_approval_status == 2:
+                account_rejected_student.append({
+                    'id': s.student.id,
+                    'name': s.student.name,
+                    'mobile': s.student.mobile,
+                    'aadhaar_number': str(s.student.aadhaar_number),
+                    'secret_pin': s.student.secret_pin,
+                    'gender': s.student.gender,
+                    'added_by':s.student.added_by,
+                    'updated_by':s.student.updated_by,
+                    'img': s.student.image, 
+                })
         context={
             'clerk':clerk,
             'student_sell_form':Student_Hostel_Fee.objects.filter(batch=clerk.batch).exclude(form_number=None).count(),
             'hostel_form_pending_count':hostel_form_pending_count,
             'hostel_form_accepted_count':hostel_form_accepted_count,
-            'pending_student':st
+            'hostel_form_account_rejected_count':hostel_form_account_rejected_count,
+            'pending_student':st,
+            'account_rejected_student':account_rejected_student
         }
         return render(request, 'report/hostel_form_summary.html', context)
     else:

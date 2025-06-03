@@ -52,7 +52,10 @@ def peon_home(request):
         return redirect("peon_home")
     if 'update_status_running'in request.POST:
         appointment_id = request.POST.get('appointment_id')
-        Appointment.objects.filter(id=appointment_id).update(meeting_status=1)
+        Appointment.objects.filter(id=appointment_id).update(
+            meeting_status=1,
+            meeting_start_time=datetime.now()
+            )
         return redirect("peon_home")
     if 'update_status_cancelled'in request.POST:
         appointment_id = request.POST.get('appointment_id')
@@ -60,7 +63,10 @@ def peon_home(request):
         return redirect("peon_home")
     if 'update_status_completed'in request.POST:
         appointment_id = request.POST.get('appointment_id')
-        Appointment.objects.filter(id=appointment_id).update(meeting_status=2)
+        Appointment.objects.filter(id=appointment_id).update(
+            meeting_status=2,
+            meeting_end_time=datetime.now()
+            )
         return redirect("peon_home")
     context = {
         "employee": employee,

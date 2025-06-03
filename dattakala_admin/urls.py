@@ -7,5 +7,6 @@ urlpatterns = [
     path('credit/', views.credit, name='credit'),
     path('admin_student/', views.admin_student, name='admin_student'),
     path('admin_employee/', views.admin_employee, name='admin_employee'),
+    path('todays_appointment/', views.todays_appointment, name='todays_appointment'),
     path('admin_student_detail/<id>', views.admin_student_detail, name='admin_student_detail'),
 ]

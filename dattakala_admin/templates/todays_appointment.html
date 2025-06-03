@@ -1,0 +1,241 @@
+{% extends 'base.html' %}
+{% block head %}
+<style>
+  body {
+    background: linear-gradient(135deg, #f0f4f8, #e2e7ed);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    margin: 0;
+    color: #1a202c;
+  }
+
+  /* Container for appointments */
+  .container {
+    max-width: 1200px;
+    margin: 80px auto;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+  }
+
+  /* Appointment card */
+  .appointment-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .appointment-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  }
+
+  /* Card header */
+  .appointment-card h3 {
+    margin: 0 0 12px;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1a202c;
+  }
+
+  /* Card content */
+  .appointment-card p {
+    margin: 6px 0;
+    font-size: 0.95rem;
+    color: #4a5568;
+    line-height: 1.5;
+  }
+
+  /* Status badges */
+  .status-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .status-waiting {
+    background: #fefcbf;
+    color: #b7791f;
+  }
+
+  .status-running {
+    background: #bee3f8;
+    color: #2b6cb0;
+  }
+
+  .status-completed {
+    background: #c6f6d5;
+    color: #2f855a;
+  }
+
+  .status-cancelled {
+    background: #fed7d7;
+    color: #c53030;
+  }
+
+  /* Buttons */
+  .btn {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+
+  .btn-success {
+    background: #38a169;
+    color: #fff;
+  }
+
+  .btn-success:hover {
+    background: #2f855a;
+    transform: translateY(-1px);
+  }
+
+  .btn-danger {
+    background: #e53e3e;
+    color: #fff;
+  }
+
+  .btn-danger:hover {
+    background: #c53030;
+    transform: translateY(-1px);
+  }
+
+  /* Order input */
+  .order-input-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .order-input {
+    width: 60px;
+    padding: 8px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 0.9rem;
+    transition: border-color 0.2s ease;
+  }
+
+  .order-input:focus {
+    border-color: #3182ce;
+    outline: none;
+  }
+
+  .order-btn {
+    background: transparent;
+    color: #38a169;
+    font-size: 1.1rem;
+    padding: 4px;
+    display: none;
+  }
+
+  .order-btn:hover {
+    color: #2f855a;
+  }
+
+  /* Animations */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .appointment-card {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .container {
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 16px;
+      margin: 40px auto;
+    }
+
+    .appointment-card {
+      padding: 20px;
+    }
+
+    .appointment-card h3 {
+      font-size: 1.15rem;
+    }
+
+    .btn {
+      padding: 6px 12px;
+      font-size: 0.85rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .container {
+      grid-template-columns: 1fr;
+      padding: 0 16px;
+    }
+
+    .appointment-card {
+      padding: 16px;
+    }
+  }
+</style>
+{% endblock head %}
+{% block content %}
+{% load static %}
+{% include 'admin_navbar.html' %}
+{% include 'alert.html' %}
+{% load admin_tag %}
+
+{% todayes_appointment_status_summary request %}
+
+<div class="container" style="margin-top: 5px;">
+  {% for a in todays_appointments %}
+  <div class="appointment-card">
+    <h3>{{ a.visitor.visitor_name }}</h3>
+    <p><strong>Address:</strong> {{ a.visitor.visitor_address }}</p>
+    <p><strong>Mobile:</strong> {{ a.visitor.visitor_mobile }}</p>
+    <p><strong>Visit To:</strong> {{ a.meat_to }}</p>
+    <p><strong>Reason:</strong> {{ a.visit_reason }}</p>
+    <p>
+      {% if a.meeting_status == 0 %}
+      <span class="status-badge status-waiting">Waiting</span>
+      <form method="POST" style="margin-top: 12px;">
+        {% csrf_token %}
+        <input type="hidden" name="appointment_id" value="{{ a.id }}">
+        <button type="submit" name="update_status_running" class="btn btn-success">Start Meeting</button>
+        <button type="submit" name="update_status_cancelled" class="btn btn-danger">Cancel</button>
+      </form>
+      {% elif a.meeting_status == 1 %}
+      <span class="status-badge status-running">Running</span>
+      <form method="POST" style="margin-top: 12px;">
+        {% csrf_token %}
+        <input type="hidden" name="appointment_id" value="{{ a.id }}">
+        <button type="submit" name="update_status_completed" class="btn btn-success">Mark Completed</button>
+      </form>
+      {% elif a.meeting_status == 2 %}
+      <span class="status-badge status-completed">Completed</span>
+      {% elif a.meeting_status == 3 %}
+      <span class="status-badge status-cancelled">Cancelled</span>
+      {% endif %}
+    </p>
+  </div>
+  {% endfor %}
+</div>
+{% endblock content %}

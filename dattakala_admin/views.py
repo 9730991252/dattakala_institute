@@ -11,6 +11,36 @@ def admin_home(request):
     else:
         return redirect('/')
     
+def todays_appointment(request):
+    if request.session.has_key('admin_mobile'):
+        mobile = request.session['admin_mobile']
+        a = Admin_detail.objects.filter(mobile=mobile).first()
+        if 'update_status_running'in request.POST:
+            appointment_id = request.POST.get('appointment_id')
+            Appointment.objects.filter(id=appointment_id).update(
+                meeting_status=1,
+                meeting_start_time=datetime.now()
+                )
+            return redirect("todays_appointment")
+        if 'update_status_cancelled'in request.POST:
+            appointment_id = request.POST.get('appointment_id')
+            Appointment.objects.filter(id=appointment_id).update(meeting_status=3)
+            return redirect("todays_appointment")
+        if 'update_status_completed'in request.POST:
+            appointment_id = request.POST.get('appointment_id')
+            Appointment.objects.filter(id=appointment_id).update(
+                meeting_status=2,
+                meeting_end_time=datetime.now()
+                )
+            return redirect("todays_appointment")
+        context={
+            'a':a,
+            'todays_appointments':Appointment.objects.filter(book_date_time__date=date.today()).order_by('order_by').order_by('meeting_status')
+        }
+        return render(request, 'todays_appointment.html', context)
+    else:
+        return redirect('/')
+    
 def admin_student(request):
     if request.session.has_key('admin_mobile'):
         mobile = request.session['admin_mobile']

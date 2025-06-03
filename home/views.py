@@ -256,10 +256,15 @@ def office_login(request):
         if a:
             request.session['admin_mobile'] = request.POST["mobile"]
             return redirect('admin_home')
-        c= Employee.objects.filter(batch_id=batch_id,mobile=number,secret_pin=pin,status=1)
+        c= Employee.objects.filter(batch_id=batch_id,mobile=number,secret_pin=pin,status=1).first( )
         if c:
-            request.session['office_mobile'] = request.POST["mobile"]
-            return redirect('office_home')
+            if c.category.name == 'CLERK':
+                request.session['office_mobile'] = request.POST["mobile"]
+                return redirect('office_home')
+            if c.category.name == 'PEON':
+                request.session['peon_mobile'] = request.POST["mobile"]
+                return redirect('peon_home')
+                
         else:
             messages.error(request,f"Mobile Number or Secret Pin invalid.")
             return redirect('/office_login/')

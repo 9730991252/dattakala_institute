@@ -7,6 +7,7 @@ from datetime import datetime, date, time
 
 from sunil.models import *
 from office.models import * 
+from dattakala_admin.models import * 
 from num2words import num2words
 
 # from school_admin.models import *
@@ -252,4 +253,15 @@ def employee_detail_admin(batch):
         'male':employee.filter(gender='Male').count(),
         'female':employee.filter(gender='Female').count(),
         'employee_category':employee_category
+    }
+    
+@register.inclusion_tag('inclusion_tag/todayes_appointment_status_summary.html')
+def todayes_appointment_status_summary(request):
+    todayes_appointment = Appointment.objects.filter(book_date_time__date=date.today())
+    return{
+        'total_appointment':todayes_appointment.count(),
+        'waiting_appointment':todayes_appointment.filter(meeting_status=0).count(),
+        'Running_appointment':todayes_appointment.filter(meeting_status=1).count(),
+        'completed_appointment':todayes_appointment.filter(meeting_status=2).count(),
+        'cancelled_appointment':todayes_appointment.filter(meeting_status=3).count(),
     }

@@ -16,7 +16,7 @@ def check_employee_permissions(view_fun):
         
         mobile = request.session['office_mobile']
         
-        if not Tab_permissions.objects.filter(tab__name=def_name, employee__mobile=mobile).exists():
+        if not Tab_permissions.objects.filter(tab__name=def_name, employee__mobile=mobile, status=1).exists():
             messages.warning(request, 'You do not have permission to access this page')
             return redirect('/')
         

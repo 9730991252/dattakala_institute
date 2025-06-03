@@ -1,0 +1,73 @@
+<style>
+    .appointment-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        gap: 20px;
+        padding: 30px;
+        background-color: #f9f9f9;
+        border-radius: 16px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+        font-family: 'Segoe UI', sans-serif;
+        max-width: 1000px;
+        margin: auto;
+    }
+
+    .stat-card {
+        background-color: white;
+        border-left: 6px solid #ccc;
+        border-radius: 12px;
+        padding: 16px 20px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 22px rgba(0, 0, 0, 0.12);
+    }
+
+    .label {
+        font-size: 15px;
+        color: #555;
+        font-weight: 500;
+    }
+
+    .value {
+        font-size: 22px;
+        font-weight: 700;
+        color: #222;
+    }
+
+    /* Color coding */
+    .stat-card.total { border-color: #007bff; }
+    .stat-card.waiting { border-color: #ffc107; }
+    .stat-card.running { border-color: #6f42c1; }
+    .stat-card.completed { border-color: #28a745; }
+    .stat-card.cancelled { border-color: #dc3545; }
+</style>
+
+<div class="appointment-stats">
+    <div class="stat-card total">
+        <span class="label">Total</span>
+        <span class="value">{{ total_appointment }}</span>
+    </div>
+    <div class="stat-card waiting">
+        <span class="label">Waiting</span>
+        <span class="value">{{ waiting_appointment }}</span>
+    </div>
+    <div class="stat-card running">
+        <span class="label">Running</span>
+        <span class="value">{{ Running_appointment }}</span>
+    </div>
+    <div class="stat-card completed">
+        <span class="label">Completed</span>
+        <span class="value">{{ completed_appointment }}</span>
+    </div>
+    <div class="stat-card cancelled">
+        <span class="label">Cancelled</span>
+        <span class="value">{{ cancelled_appointment }}</span>
+    </div>
+</div>

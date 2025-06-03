@@ -93,9 +93,9 @@
             <div class="student_box" style="position: relative;">
                 <div class="img_box">
                     {% if s.img %}
-                        <img src="{{s.img.url}}" alt="{{s.name}}">
+                        <img src="{{s.img.url}}" alt="">
                     {% else %}
-                        <img src="https://cdn-icons-png.flaticon.com/512/201/201818.png" alt="No Image">
+                        <img src="https://cdn-icons-png.flaticon.com/512/201/201818.png" alt="">
                     {% endif %}
 
                     <form method="POST" enctype="multipart/form-data" id="form{{s.id}}">
@@ -113,7 +113,8 @@
                     <div class="gender">Added BY: {{s.added_by.name}} {% if s.updated_by %} <span style="font-size: 12px;">(edited - {{s.updated_by.name}})</span> {% endif %}</div>
             </div>
             <br><br><br><br><br><br><br><br><br><br>
-            <div style="position: absolute;justify-content: space-evenly; bottom: 10px;left: 10px;right: 10px;display: flex;gap: 10px;">
+            <br><br><br><br><br>
+            <div style="position: absolute;justify-content: space-evenly; bottom: 10px;left: 10px;right: 10px;display: flex;gap: 10px;flex-wrap: wrap;">
                 <div style="display: flex;flex-direction: column;gap: 5px;">
                     <div>Store</div>
                     <div>{% if s.approval.store_approval_status == 2 %} 
@@ -126,25 +127,52 @@
                 </div>
                 <div style="display: flex;flex-direction: column;gap: 5px;">
                     <div>Office</div>
-                        <div>{% if s.approval.office_approval_status == 2 %} 
+                        <div>
+                            {% if s.approval.office_approval_status == 2 %} 
                         <b class="bg-danger text-white" style="padding: 3px;border-radius: 4px;">Reject</b>
                         {% elif s.approval.office_approval_status == 1 %}
+                        <b class="bg-success text-white" style="padding: 3px;border-radius: 4px;">Approved</b>
+                        {% else %}
+                        <b class="bg-warning" style="padding: 3px;border-radius: 4px;">Pending</b>
+                        {% endif %}
+                    </div>
+                </div>
+                <div style="display: flex;flex-direction: column;gap: 5px;">
+                    <div>Hostel Account</div>
+                    <div>{% if s.approval.account_approval_status == 2 %} 
+                        <b class="bg-danger text-white" style="padding: 3px;border-radius: 4px;">Reject</b>
+                        {% elif s.approval.account_approval_status == 1 %}
+                        <b class="bg-success text-white" style="padding: 3px;border-radius: 4px;">Approved</b>
+                        {% elif s.approval.account_approval_status == 3 %}
+                        <b class="bg-primary text-white" style="padding: 3px;border-radius: 4px;">Not Required</b>
+                        {% else %}
+                        <b class="bg-warning" style="padding: 3px;border-radius: 4px;">Pending</b>
+                        {% endif %}</div>
+                </div>
+                <div style="display: flex;flex-direction: column;gap: 5px;">
+                    <div>College Account</div>
+                    <div>{% if s.approval.college_account_approval_status == 2 %} 
+                        <b class="bg-danger text-white" style="padding: 3px;border-radius: 4px;">Reject</b>
+                        {% elif s.approval.college_account_approval_status == 1 %}
                         <b class="bg-success text-white" style="padding: 3px;border-radius: 4px;">Approved</b>
                         {% else %}
                         <b class="bg-warning" style="padding: 3px;border-radius: 4px;">Pending</b>
                         {% endif %}</div>
                 </div>
                 <div style="display: flex;flex-direction: column;gap: 5px;">
-                    <div>Account</div>
-                    <div>{% if s.approval.account_approval_status == 2 %} 
+                    <div>Travel Account</div>
+                    <div>{% if s.approval.travel_account_approval_status == 2 %} 
                         <b class="bg-danger text-white" style="padding: 3px;border-radius: 4px;">Reject</b>
-                        {% elif s.approval.account_approval_status == 1 %}
+                        {% elif s.approval.travel_account_approval_status == 1 %}
                         <b class="bg-success text-white" style="padding: 3px;border-radius: 4px;">Approved</b>
+                        {% elif s.approval.travel_account_approval_status == 3 %}
+                        <b class="bg-primary text-white" style="padding: 3px;border-radius: 4px;">Not Required</b>
                         {% else %}
                         <b class="bg-warning" style="padding: 3px;border-radius: 4px;">Pending</b>
                         {% endif %}</div>
                 </div>
             </div>
+            
             </div>
         </a>
         {% endfor %}

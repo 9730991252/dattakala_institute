@@ -104,6 +104,7 @@
 }
 
 .todayes_appointment_box {
+  width: 280px;
   background: #fff;
   border: 1px solid #e7eaf0;
   border-radius: 16px;
@@ -205,7 +206,7 @@
       {% if a.meeting_status == 0 %}
       <p class="text-warning">
         Waiting     
-        <form method="POST">
+        <form method="POST" style="display: flex;justify-content: space-between;">
           <input type="hidden" name="appointment_id" value="{{ a.id }}">
           <button type="submit" name="update_status_running" class="btn btn-success btn-sm">Running</button>
           <button type="submit" name="update_status_cancelled" class="btn btn-danger btn-sm">Cancelled</button>
@@ -213,20 +214,22 @@
       </p>
       {% elif a.meeting_status == 1 %}
       <p class="">Running</p>
-              <form method="POST">
+        <form method="POST">
           <input type="hidden" name="appointment_id" value="{{ a.id }}">
           <button type="submit" name="update_status_completed" class="btn btn-success btn-sm">Completed</button>
         </form>
-      {% elif a.meeting_status == 2 %}
-      <p class="text-success">completed</p>
-      {% elif a.meeting_status == 3 %}
-      <p class="text-danger" >cancelled</p>
-      {% endif %} 
+          {% elif a.meeting_status == 2 %}
+          <p class="text-success">completed</p>
+          {% elif a.meeting_status == 3 %}
+          <p class="text-danger" >cancelled</p>
+          {% endif %} 
     </p>
+    <br>
     <div>
       <form method="POST">
         {% csrf_token %}
         <input type="hidden" name="appointment_id" value="{{ a.id }}">
+        Sequence
         <input type="number" name="order_by" oninput="if (this.value != Number('{{a.order_by}}')){document.getElementById('order_by_btn{{a.id}}').style.display = 'unset'}else{document.getElementById('order_by_btn{{a.id}}').style.display = 'none'}" style="border-radius: 5px;width: 70px;text-align: center;" value="{{a.order_by}}">
         <button type="submit" name="update_order_by" style="display: none;" id="order_by_btn{{a.id}}" class="text-success btn" ><i class="fa fa-check" aria-hidden="true"></i></button>
       </form>

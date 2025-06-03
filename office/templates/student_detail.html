@@ -698,6 +698,7 @@
             <option value="0" class="text-warning" {% if student_approval.account_approval_status == 0 %}selected{% endif %}>Pending</option>
             <option value="1" class="text-success" {% if student_approval.account_approval_status == 1 %}selected{% endif %}>Approve</option>
             <option value="2" class="text-danger" {% if student_approval.account_approval_status == 2 %}selected{% endif %}>Reject</option>
+            <option value="3" class="text-primary" {% if student_approval.account_approval_status == 3 %}selected{% endif %}>Not Required</option>
         </select>
 
         <div class="mt-3" id="account_reject_reason" {% if student_approval.account_approval_status != 2 %}style="display: none;"{% endif %}>
@@ -779,6 +780,7 @@
             <option value="0" class="text-warning" {% if student_approval.travel_account_approval_status == 0 %}selected{% endif %}>Pending</option>
             <option value="1" class="text-success" {% if student_approval.travel_account_approval_status == 1 %}selected{% endif %}>Approve</option>
             <option value="2" class="text-danger" {% if student_approval.travel_account_approval_status == 2 %}selected{% endif %}>Reject</option>
+            <option value="3" class="text-primary" {% if student_approval.travel_account_approval_status == 3 %}selected{% endif %}>Not Required</option>
         </select>
 
         <div class="mt-3" id="travel_account_reject_reason" {% if student_approval.travel_account_approval_status != 2 %}style="display: none;"{% endif %}>

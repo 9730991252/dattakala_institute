@@ -70,6 +70,6 @@ def peon_home(request):
         return redirect("peon_home")
     context = {
         "employee": employee,
-        "todays_appointments": Appointment.objects.filter(book_date_time__date=date.today()).order_by('-order_by')
+        "todays_appointments": Appointment.objects.filter(book_date_time__date=date.today()).exclude(meeting_status=3).exclude(meeting_status=2).order_by('-order_by')
         }
     return render(request, "peon_home.html", context)

@@ -44,9 +44,27 @@ def todays_appointment(request):
                 meeting_end_time=datetime.now()
                 )
             return redirect("todays_appointment")
+        todays_appointments = []
+        for t in Appointment.objects.filter(book_date_time__date=date.today(), meeting_status=0).order_by('order_by', 'meeting_status'):
+            waiting_from = t.book_date_time - datetime.now()
+            todays_appointments.append(
+                                       {
+                                        'id':t.id,
+                                        'visitor':t.visitor,
+                                        'added_by':t.added_by,
+                                        'visit_reason':t.visit_reason,
+                                        'book_date_time':t.book_date_time,
+                                        'meeting_start_time':t.meeting_start_time,
+                                        'meeting_end_time':t.meeting_end_time,
+                                        'order_by':t.order_by,
+                                        'meat_to':t.meat_to,
+                                        'meeting_status':t.meeting_status,
+                                        'waiting_from':waiting_from
+                                       } 
+                                       )
         context={
             'a':a,
-            'todays_appointments':Appointment.objects.filter(book_date_time__date=date.today(), meeting_status=0).order_by('order_by').order_by('meeting_status')
+            'todays_appointments':todays_appointments
         }
         return render(request, 'todays_appointment.html', context)
     else:

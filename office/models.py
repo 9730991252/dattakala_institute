@@ -135,7 +135,7 @@ class Student_approval(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     office_approval_status = models.IntegerField(default=0)  # 0 = pending, 1 = approved, 2 = rejected
     store_approval_status = models.IntegerField(default=0)  # 0 = pending, 1 = approved, 2 = rejected
-    account_approval_status = models.IntegerField(default=0)  # 0 = pending, 1 = approved, 2 = rejected
+    account_approval_status = models.IntegerField(default=0)  # 0 = pending, 1 = approved, 2 = rejected, 3 = not_required
     office_approved_by = models.ForeignKey(Employee, on_delete=models.CASCADE, null=True, related_name='office_by_clerk')
     store_approved_by = models.ForeignKey(Employee, on_delete=models.CASCADE, null=True, related_name='store_by_clerk')
     account_approved_by = models.ForeignKey(Employee, on_delete=models.CASCADE, null=True, related_name='account_by_clerk')
@@ -146,7 +146,7 @@ class Student_approval(models.Model):
     store_rejected_reason = models.CharField(max_length=100, null=True)
     account_rejected_reason = models.CharField(max_length=100, null=True)                                                                       
     college_account_approval_status = models.IntegerField(default=0)  # 0 = pending, 1 = approved, 2 = rejected
-    travel_account_approval_status = models.IntegerField(default=0)  # 0 = pending, 1 = approved, 2 = rejected
+    travel_account_approval_status = models.IntegerField(default=0)  # 0 = pending, 1 = approved, 2 = rejected, 3 = not_required
     college_account_approved_date = models.DateTimeField(null=True)
     travel_account_approved_date = models.DateTimeField(null=True)
     college_account_rejected_reason = models.CharField(max_length=100, null=True)                                                                       

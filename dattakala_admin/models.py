@@ -14,6 +14,6 @@ class Appointment(models.Model):
     book_date_time = models.DateTimeField()
     meeting_start_time = models.DateTimeField(null=True)
     meeting_end_time = models.DateTimeField(null=True)
-    order_by = models.IntegerField()
+    order_by = models.IntegerField(null=True)
     meat_to = models.CharField(max_length=100)
     meeting_status = models.IntegerField(default=0) #0 = waiting, 1 = Running ,2 = completed, 3 = cancelled,

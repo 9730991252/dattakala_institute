@@ -239,8 +239,8 @@
   {% endfor %}
 </div>
 <script>
-    setTimeout(function(){
-        location.reload()
-    }, 5000)
+    window.onload = function(e){ 
+        setTimeout("location.reload(true);", 6000);
+    }
 </script>
 {% endblock content %}

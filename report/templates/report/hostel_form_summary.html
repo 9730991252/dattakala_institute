@@ -1,0 +1,264 @@
+{% extends 'base.html' %}
+{% block head %}
+    {% load static %}
+    <style>
+        /* Global Variables */
+:root {
+    --primary-font: 'Segoe UI', sans-serif;
+    --bg-color: #f0f2f5;
+    --text-dark: #2c3e50;
+    --text-medium: #555;
+    --text-light: #888;
+    --card-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    --card-shadow-hover: 0 14px 28px rgba(0, 0, 0, 0.2);
+    --border-radius: 14px;
+    --transition: all 0.3s ease;
+}
+
+/* Reset and Base Styles */
+body {
+    background-color: var(--bg-color);
+    font-family: var(--primary-font);
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+/* Report Title */
+.report-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    text-align: center;
+    color: var(--text-dark);
+    margin: 2rem 0 1rem;
+}
+
+/* Summary Cards */
+.summary-container {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+    padding: 0 1rem;
+    margin: 0 auto;
+    max-width: 1200px;
+}
+
+.summary-card {
+    flex: 1 1 250px;
+    border-radius: var(--border-radius);
+    padding: 1.8rem;
+    text-align: center;
+    color: #fff;
+    transition: var(--transition);
+    box-shadow: var(--card-shadow);
+}
+
+.summary-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--card-shadow-hover);
+}
+
+.summary-title {
+    font-size: 1rem;
+    font-weight: 600;
+    opacity: 0.95;
+}
+
+.summary-value {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-top: 0.4rem;
+}
+
+/* Gradient Backgrounds */
+.bg-blue {
+    background: linear-gradient(135deg, #007bff, #00c6ff);
+}
+
+.bg-orange {
+    background: linear-gradient(135deg, #f57c00, #ff9800);
+}
+
+.bg-green {
+    background: linear-gradient(135deg, #43a047, #66bb6a);
+}
+
+/* Student Container */
+.student_container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+/* Links */
+a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+/* Student Box */
+.student_box {
+    display: flex;
+    align-items: center;
+    padding: 1.2rem;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    box-shadow: var(--card-shadow);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    transition: var(--transition);
+}
+
+.student_box:hover {
+    transform: translateY(-6px);
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: var(--card-shadow-hover);
+}
+
+.img_box {
+    flex-shrink: 0;
+}
+
+.img_box img {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    border: 3px solid #e0e0e0;
+    object-fit: cover;
+    transition: var(--transition);
+}
+
+.img_box img:hover {
+    transform: scale(1.1);
+}
+
+.name_mobile_box {
+    margin-left: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.mobile,
+.aadhaar_number,
+.gender {
+    font-size: 0.95rem;
+    color: var(--text-medium);
+    margin: 2px 0;
+}
+
+.gender span {
+    font-size: 0.8rem;
+    color: var(--text-light);
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .student_box {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .name_mobile_box {
+        margin: 12px 0 0;
+    }
+
+    .summary-card {
+        flex: 1 1 100%;
+    }
+
+    .report-title {
+        font-size: 1.8rem;
+    }
+}
+
+/* Accessibility Enhancements */
+.student_box:focus {
+    outline: 2px solid #007bff;
+    outline-offset: 2px;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+    </style>
+{% endblock head %}
+
+{% block content %}
+    {% include 'office/office_navbar.html' %}
+    {% include 'alert.html' %}
+    {% load admin_tag %}
+
+    <h1 class="report-title">Hostel Form Summary Report</h1>
+
+    <div class="container summary-container">
+        <div class="summary-card bg-blue" aria-labelledby="total-sold-title">
+            <div class="summary-title" id="total-sold-title">Total Sold Forms</div>
+            <div class="summary-value">{{ student_sell_form }}</div>
+        </div>
+
+        <div class="summary-card bg-orange" aria-labelledby="pending-title">
+            <div class="summary-title" id="pending-title">Pending Forms</div>
+            <div class="summary-value">{{ hostel_form_pending_count }}</div>
+        </div>
+
+        <div class="summary-card bg-green" aria-labelledby="accepted-title">
+            <div class="summary-title" id="accepted-title">Accepted Forms</div>
+            <div class="summary-value">{{ hostel_form_accepted_count }}</div>
+        </div>
+    </div>
+
+    <div class="container student_container">
+        {% for s in pending_student %}
+            <a href="{% url 'student_detail' s.id %}">
+                <div class="student_box">
+                    <div class="img_box">
+                        {% if s.img %}
+                            <img src="{{ s.img.url }}">
+                        {% else %}
+                            <img src="https://cdn-icons-png.flaticon.com/512/201/201818.png" >
+                        {% endif %}
+
+                        <form method="POST" enctype="multipart/form-data" id="form{{ s.id }}">
+                            {% csrf_token %}
+                            <input type="hidden" name="id" value="{{ s.id }}">
+                            <input type="hidden" name="img" id="croppedImgInput{{ s.id }}">
+                            <button type="submit" name="add_image" id="add_btn{{ s.id }}" class="sr-only">Upload Image</button>
+                        </form>
+                    </div>
+
+                    <div class="name_mobile_box">
+                        <div class="name">{{ s.name }}</div>
+                        <div class="mobile">📞 {{ s.mobile }}</div>
+                        <div class="aadhaar_number">Aadhaar: {{ s.aadhaar_number|slice:'0:4' }}-{{ s.aadhaar_number|slice:'4:8' }}-{{ s.aadhaar_number|slice:'8:12' }}</div>
+                        <div class="gender">
+                            Added BY: {{ s.added_by.name }}
+                            {% if s.updated_by %}
+                                <span>(edited - {{ s.updated_by.name }})</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+{% endblock content %}

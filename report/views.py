@@ -70,6 +70,49 @@ def student(request):
         return redirect('office_login')
     
 @check_employee_permissions
+def hostel_form_summary(request):
+    if request.session.has_key('office_mobile'):
+        mobile = request.session['office_mobile']
+        clerk = Employee.objects.filter(mobile=mobile).first()
+        if not clerk:
+            return redirect('office_login')        
+        hostel_form_pending_count = 0
+        hostel_form_accepted_count = 0
+        for s in Student_Hostel_Fee.objects.filter(batch=clerk.batch).exclude(form_number=None):
+            if Student_approval.objects.filter(student=s.student, account_approval_status=0):
+                hostel_form_pending_count += 1
+            elif Student_approval.objects.filter(student=s.student, account_approval_status=1):
+                hostel_form_accepted_count += 1
+        st = []
+        status = 1
+        students = Student_Hostel_Fee.objects.filter(batch=clerk.batch).exclude(form_number=None)
+
+        for s in students:
+            approval = Student_approval.objects.filter(student=s.student, batch=clerk.batch).first()
+            if approval.account_approval_status == 0:
+                st.append({
+                    'id': s.student.id,
+                    'name': s.student.name,
+                    'mobile': s.student.mobile,
+                    'aadhaar_number': str(s.student.aadhaar_number),
+                    'secret_pin': s.student.secret_pin,
+                    'gender': s.student.gender,
+                    'added_by':s.student.added_by,
+                    'updated_by':s.student.updated_by,
+                    'img': s.student.image, 
+                })
+        context={
+            'clerk':clerk,
+            'student_sell_form':Student_Hostel_Fee.objects.filter(batch=clerk.batch).exclude(form_number=None).count(),
+            'hostel_form_pending_count':hostel_form_pending_count,
+            'hostel_form_accepted_count':hostel_form_accepted_count,
+            'pending_student':st
+        }
+        return render(request, 'report/hostel_form_summary.html', context)
+    else:
+        return redirect('office_login')
+    
+@check_employee_permissions
 def employee_report(request):
     if request.session.has_key('office_mobile'):
         mobile = request.session['office_mobile']

@@ -67,9 +67,11 @@ def search_student_for_fees(request):
         words = request.GET['words']
         st = []
         if words:
-            student = list(Student.objects.filter(name__icontains=words))
-            student += Student.objects.filter(mobile__icontains=words)
-            student += Student.objects.filter(aadhaar_number__icontains=words)
+            student = Student.objects.filter(
+                Q(name__icontains=words) |
+                Q(mobile__icontains=words) |
+                Q(aadhaar_number__icontains=words)
+            ).order_by('name')
             for s in student:
                 st.append({
                     'id':s.id,
@@ -133,7 +135,7 @@ def search_student_for_new_admission(request):
                 Q(name__icontains=words) |
                 Q(mobile__icontains=words) |
                 Q(aadhaar_number__icontains=words)
-            ).distinct()
+            ).order_by('name')
 
             for s in students:
                 st.append({

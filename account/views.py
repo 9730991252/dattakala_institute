@@ -145,10 +145,10 @@ def student_fee_detail(request, id):
         if student:
             student_approval = Student_approval.objects.filter(student=student).first()
             if student_approval:
-                if student_approval.office_approval_status == 0 or student_approval.store_approval_status == 0 or student_approval.account_approval_status == 0:
+                if student_approval.office_approval_status == 0 or student_approval.store_approval_status == 0 or student_approval.account_approval_status == 0 or student_approval.college_account_approval_status == 0 or student_approval.travel_account_approval_status == 0:
                     messages.error(request, 'Please Approve the Student First')
                     return redirect('student_fees')
-                if student_approval.office_approval_status == 2 or student_approval.store_approval_status == 2 or student_approval.account_approval_status == 2:
+                if student_approval.office_approval_status == 2 or student_approval.store_approval_status == 2 or student_approval.account_approval_status == 2 or student_approval.college_account_approval_status == 2 or student_approval.travel_account_approval_status == 2:
                     messages.error(request, 'You Cant Open Rejected Student')
                     return redirect('student_fees')
             else:
@@ -156,11 +156,13 @@ def student_fee_detail(request, id):
                 return redirect('student_fees')
             
 
-        cash_fee = Student_received_Fee_Cash.objects.filter(student=student, added_by__batch=clerk.batch)
-        bank_fee = Student_received_Fee_Bank.objects.filter(student=student, added_by__batch=clerk.batch)
         received_cash_hostel_fee = Student_Received_Fee_Cash_Hostel.objects.filter(student=student, added_by__batch=clerk.batch)
         received_bank_hostel_fee = Student_received_Fee_Bank_hostel.objects.filter(student=student, added_by__batch=clerk.batch)
-        paid_fee = int(cash_fee.aggregate(Sum('received_amount'))['received_amount__sum'] or 0) + int(bank_fee.aggregate(Sum('received_amount'))['received_amount__sum'] or 0) +  int(received_cash_hostel_fee.aggregate(Sum('received_amount'))['received_amount__sum'] or 0) +  int(received_bank_hostel_fee.aggregate(Sum('received_amount'))['received_amount__sum'] or 0)
+        received_cash_college_fee = Student_college_fee_received_cash.objects.filter(student=student, added_by__batch=clerk.batch)
+        received_bank_college_fee = Student_college_fee_received_bank.objects.filter(student=student, added_by__batch=clerk.batch)
+        paid_fee = int(received_cash_college_fee.aggregate(Sum('received_amount'))['received_amount__sum'] or 0) + int(received_bank_college_fee.aggregate(Sum('received_amount'))['received_amount__sum'] or 0) +  int(received_cash_hostel_fee.aggregate(Sum('received_amount'))['received_amount__sum'] or 0) +  int(received_bank_hostel_fee.aggregate(Sum('received_amount'))['received_amount__sum'] or 0)
+        paid_fee_hostel = int(received_cash_hostel_fee.aggregate(Sum('received_amount'))['received_amount__sum'] or 0) +  int(received_bank_hostel_fee.aggregate(Sum('received_amount'))['received_amount__sum'] or 0)
+        paid_fee_college = int(received_cash_college_fee.aggregate(Sum('received_amount'))['received_amount__sum'] or 0) +  int(received_bank_college_fee.aggregate(Sum('received_amount'))['received_amount__sum'] or 0)
         student_hostel_fee = Student_Hostel_Fee.objects.filter(batch=clerk.batch, student=student).first()
         if 'save_cash_hostel_fee'in request.POST:
             received_amount = request.POST.get('received_amount')
@@ -222,16 +224,47 @@ def student_fee_detail(request, id):
             )
             messages.success(request, 'Cash Hostel updated Successfully!')
             return redirect('student_fee_detail', id=id)
+        if 'save_cash_fee_college' in request.POST:
+            received_cash_amount = request.POST.get('received_cash_amount')
+            received_date = request.POST.get('received_date')
+            challan_number = request.POST.get('college_cash_challan_number')
+            Student_college_fee_received_cash.objects.create(
+                student=student,
+                received_amount=received_cash_amount,
+                paid_date=received_date,
+                added_by=clerk,
+                challan_number=challan_number  
+                
+            )
+            messages.success(request, 'Cash College Fee received Successfully!')
+            return redirect('student_fee_detail', id=id)
+        if 'save_bank_fee_college' in request.POST:
+            print('yes')
+            received_amount = request.POST.get('received_amount')
+            received_date = request.POST.get('received_date')
+            bank_account = request.POST.get('bank')
+            utr_number = request.POST.get('utr_number')
+            Student_college_fee_received_bank.objects.create(
+                student=student,
+                received_amount=received_amount,
+                paid_date=received_date,
+                added_by=clerk,
+                bank_account_id=bank_account,  
+                utr_number=utr_number  
+                
+            )
+            messages.success(request, 'Bank College Fee received Successfully!')
+            return redirect('student_fee_detail', id=id)
 
-        total_fee = student_fee.objects.filter(student=student, batch=clerk.batch).aggregate(Sum('amount'))['amount__sum'] or 0
+        total_fee = 0
         if student_hostel_fee:
             total_fee += int(student_hostel_fee.hostel_fee.amount)
-        print('total_fee', total_fee)
+
         student_fee_detail = []
         for cdt in Credit_Debit_category.objects.filter(status=1):
-            detail_total_fee = student_fee.objects.filter(credit_debit_category=cdt, student=student).aggregate(Sum('amount'))['amount__sum'] or 0
-            detail_paid_fee = Student_received_Fee_Cash.objects.filter(credit_debit_category=cdt, student=student).aggregate(Sum('received_amount'))['received_amount__sum'] or 0
-            detail_paid_fee += Student_received_Fee_Bank.objects.filter(credit_debit_category=cdt, student=student).aggregate(Sum('received_amount'))['received_amount__sum'] or 0
+            detail_total_fee = 0
+            detail_paid_fee = Student_college_fee_received_cash.objects.filter(credit_debit_category=cdt, student=student).aggregate(Sum('received_amount'))['received_amount__sum'] or 0
+            detail_paid_fee += Student_college_fee_received_bank.objects.filter(credit_debit_category=cdt, student=student).aggregate(Sum('received_amount'))['received_amount__sum'] or 0
             if detail_total_fee >0:
                 student_fee_detail.append({
                     'category': cdt,
@@ -245,19 +278,20 @@ def student_fee_detail(request, id):
             'clerk': clerk,
             'student': student,
             'today_date':date.today(),
-            'cash_fee':cash_fee, 
-            'bank_fee':bank_fee,
             'paid_fee':paid_fee,
             'remaining_fee':int(total_fee)-int(paid_fee),
             'accounts':Bank_Account.objects.filter(status=1),
             'total_fee': total_fee,
             'credit_debit_category': Credit_Debit_category.objects.filter(status=1),
-            'student_fee': student_fee.objects.filter(student=student, batch=clerk.batch),
             'student_hostel_fee': student_hostel_fee,
             'student_college': Student_college_detail.objects.filter(student=student, batch=clerk.batch).first(),
             'received_cash_hostel_fee':received_cash_hostel_fee,
             'received_bank_hostel_fee':received_bank_hostel_fee,
-            'all_hostel_fee_installment':Hostel_Fee_installment.objects.filter(status=1, batch=clerk.batch)
+            'received_bank_college_fee':received_bank_college_fee,
+            'received_cash_college_fee':received_cash_college_fee,
+            'paid_fee_hostel':paid_fee_hostel,
+            'paid_fee_college':paid_fee_college,
+            'all_hostel_fee_installment':Hostel_Fee_installment.objects.filter(status=1, batch=clerk.batch),
         }
         return render(request, 'student_fee_detail.html', context)
     else:

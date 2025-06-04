@@ -585,11 +585,11 @@ def student_detail(request, id):
             admission_year.append({'year': f'{start_year} - {end_year_short}'})
             
         student_hostel_fee = Student_Hostel_Fee.objects.filter(batch=clerk.batch, student=student).first()
-        total_fee = student_fee.objects.filter(student=student, batch=clerk.batch).aggregate(Sum('amount'))['amount__sum'] or 0
+        total_fee = 0
         if student_hostel_fee:
             total_fee += int(student_hostel_fee.hostel_fee.amount)
-        cash_fee = Student_received_Fee_Cash.objects.filter(student=student, added_by__batch=clerk.batch)
-        bank_fee = Student_received_Fee_Bank.objects.filter(student=student, added_by__batch=clerk.batch)
+        cash_fee = Student_college_fee_received_cash.objects.filter(student=student, added_by__batch=clerk.batch)
+        bank_fee = Student_college_fee_received_bank.objects.filter(student=student, added_by__batch=clerk.batch)
         received_cash_hostel_fee = Student_Received_Fee_Cash_Hostel.objects.filter(student=student, added_by__batch=clerk.batch)
         received_bank_hostel_fee = Student_received_Fee_Bank_hostel.objects.filter(student=student, added_by__batch=clerk.batch)
         paid_fee = int(cash_fee.aggregate(Sum('received_amount'))['received_amount__sum'] or 0) + int(bank_fee.aggregate(Sum('received_amount'))['received_amount__sum'] or 0) +  int(received_cash_hostel_fee.aggregate(Sum('received_amount'))['received_amount__sum'] or 0) +  int(received_bank_hostel_fee.aggregate(Sum('received_amount'))['received_amount__sum'] or 0)

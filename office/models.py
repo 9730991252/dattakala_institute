@@ -195,45 +195,35 @@ class Credit_Debit_category(models.Model):
     status = models.IntegerField(default=1)
 
 
-class Student_received_Fee_Bank(models.Model):
-    credit_debit_category = models.ForeignKey(Credit_Debit_category, on_delete=models.CASCADE, null=True)
+class Student_college_fee_received_bank(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    received_amount = models.FloatField(default=0)
-    paid_date = models.DateField(null=True)
-    added_by = models.ForeignKey(Employee, on_delete=models.CASCADE, null=True, related_name='added_by_student_recived_fee')
-    added_date = models.DateTimeField(auto_now_add=True, null=True)
-    updated_date = models.DateTimeField(auto_now=True, null=True)
-    updated_by = models.ForeignKey(Employee, on_delete=models.CASCADE, null=True, related_name='updated_by_student_recived_fee')
-    account = models.ForeignKey(Bank_Account, on_delete=models.CASCADE, null=True, blank=True)
-    admin_verify_status = models.IntegerField(default=0) # 0 = not verify, 1 = verify
-    verify_date = models.DateTimeField(null=True, blank=True)
-    verify_by = models.ForeignKey(Admin_detail, on_delete=models.CASCADE, null=True)
-    verify_by_clerk = models.ForeignKey(Employee, on_delete=models.CASCADE, null=True,related_name='added_by_student_received_fee_verify' )
-    utr_number = models.CharField(max_length=100, null=True, blank=True)
-    
-class student_fee(models.Model):
-    credit_debit_category = models.ForeignKey(Credit_Debit_category, on_delete=models.CASCADE, null=True)
-    batch = models.ForeignKey(Batch, on_delete=models.CASCADE)
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    amount = models.FloatField(default=0)
-    added_date = models.DateTimeField(auto_now_add=True, null=True)
-    added_by = models.ForeignKey(Employee, on_delete=models.CASCADE, null=True, related_name='added_by_student_fee')
-    verify_date = models.DateTimeField(null=True, blank=True)
-    verify_by = models.ForeignKey(Admin_detail, on_delete=models.CASCADE, null=True, related_name='veryfy_by_student_fee')
-     
-    
-class Student_received_Fee_Cash(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    credit_debit_category = models.ForeignKey(Credit_Debit_category, on_delete=models.CASCADE, null=True)
     received_amount = models.FloatField(default=0)
     paid_date = models.DateField(null=True)
     added_by = models.ForeignKey(Employee, on_delete=models.CASCADE, null=True, related_name='added_by_student_received_fee')
     added_date = models.DateTimeField(auto_now_add=True, null=True)
     updated_date = models.DateTimeField(auto_now=True, null=True)
     updated_by = models.ForeignKey(Employee, on_delete=models.CASCADE, null=True, related_name='updated_by_student_received_fee')
-    admin_verify_status = models.IntegerField(default=0) # 0 = not verify, 1 = verify
-    verify_date = models.DateTimeField(null=True, blank=True)
-    verify_by = models.ForeignKey(Admin_detail, on_delete=models.CASCADE, null=True, related_name='veryfy_by_student_received_fee')
+    bank_account = models.ForeignKey(Bank_Account, on_delete=models.CASCADE, null=True, blank=True)
+    verify_by_admin = models.ForeignKey(Admin_detail, on_delete=models.CASCADE, null=True)
+    verify_admin_date = models.DateTimeField(null=True, blank=True)
+    verify_by_clerk = models.ForeignKey(Employee, on_delete=models.CASCADE, null=True,related_name='added_by_student_received_fee_verify' )
+    verify_clerk_date = models.DateTimeField(null=True, blank=True)
+    utr_number = models.CharField(max_length=100, null=True, blank=True)
+    
+class Student_college_fee_received_cash(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    received_amount = models.FloatField(default=0)
+    paid_date = models.DateField(null=True)
+    added_by = models.ForeignKey(Employee, on_delete=models.CASCADE, null=True, related_name='added_by_student_received_fee_cash')
+    added_date = models.DateTimeField(auto_now_add=True, null=True)
+    updated_date = models.DateTimeField(auto_now=True, null=True)
+    updated_by = models.ForeignKey(Employee, on_delete=models.CASCADE, null=True, related_name='updated_by_student_received_fee_cash')
+    verify_by_admin = models.ForeignKey(Admin_detail, on_delete=models.CASCADE, null=True)
+    verify_admin_date = models.DateTimeField(null=True, blank=True)
+    verify_by_clerk = models.ForeignKey(Employee, on_delete=models.CASCADE, null=True,related_name='added_by_student_received_fee_verify_cash' )
+    verify_clerk_date = models.DateTimeField(null=True, blank=True)
+    challan_number = models.CharField(max_length=100, null=True, blank=True)
+  
     
 class Expenses(models.Model):
     batch = models.ForeignKey(Batch, on_delete=models.CASCADE)

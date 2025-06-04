@@ -1,169 +1,721 @@
-<div style="height: 80vh;overflow-y: scroll;">
+{% extends 'base.html' %}
+{% block head %}{% endblock head %}
+
+{% block content %}
+{% load static %}
+{% include 'office/office_navbar.html' %}
+{% include 'alert.html' %}
+
 <style>
-        .badge {
-            padding: 5px 12px;
-            margin: 4px;
-            border-radius: 25px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.15);
-            display: inline-block;
-        }
-
-        .male { background-color: #a0d2eb; color: #024e76; }
-        .female { background-color: #f9c6d0; color: #8a1c33; }
-        .total { background-color: #d2e3fc; color: #0b3d91; }
-        .total_amt { background-color: #fff3cd; color: #856404; }
-        .pending { background-color: #f8d7da; color: #721c24; }
-        .received { background-color: #d4edda; color: #155724; }
-
-        .district_branch_name_for_hostel {
-            margin: 20px auto 5px auto;
-            width: 95%;
-            background: #ffffffdd;
-            border-radius: 12px;
-            padding: 15px 20px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.95rem;
-            font-weight: 500;
-            /* box-shadow: 0 6px 16px rgba(0,0,0,0.12); */
-        }
-
-        .district_branch_name_for_hostel > div {
-            margin: 5px 10px;
-        }
-
-        .district_branch_name_for_hostel .district {
-            font-weight: 700;
-            font-size: 1.05rem;
-            color: #1a237e;
-        }
-
-  
-
-        .taluka_box {
-            width: 310px;
-            background: linear-gradient(145deg, #ffffff, #f3f4f7);
-            border-radius: 12px;
-            padding: 15px;
-            transition: all 0.3s ease-in-out;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.18);
-        }
-
-        .taluka_box:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 28px rgba(0,0,0,0.2);
-        }
-
-        .taluka_box1 {
-            font-weight: 700;
-            font-size: 1.05rem;
-            color: #2c3e50;
-            text-align: center;
-            margin-bottom: 10px;
-        }
-
-        .taluka_box2 {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.95rem;
-            margin: 6px 0;
-            padding: 0 5px;
-        }
-
-        .text-danger {
-            color: #c0392b;
-            font-weight: 600;
-        }
-
-        .text-success {
-            color: #27ae60;
-            font-weight: 600;
-        }
-
-        @media (max-width: 768px) {
-            .district_branch_name_for_hostel {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .taluka_main_box_for_hostel {
-                justify-content: center;
-            }
-
-            .taluka_box {
-                width: 95%;
-            }
-        }
-    </style>
-    <style>
-        .district_branch_name{
-            margin: 0 auto;
-            width: 95%;
-        background-color: #ffe9c8;
-        margin-top: 10px;
-        padding: 5px;
-        border-radius: 5px;
+    .fee_container {
         display: flex;
-        justify-content: center;
-        gap: 10px;
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0;
-        .district{
-            font-weight: 700;
+        flex-direction: column;
+        padding: 10px 20px;
+        margin: 20px auto;
+        max-width: 98%;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-family: sans-serif;
+        font-size: 14px;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+    }
+
+    .info_item2 {
+        display: flex;
+        justify-content: space-between;
+        gap: 5px;
+        min-width: 120px;
+    }
+
+    @media (max-width: 768px) {
+        .student_container {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
         }
     }
-    .taluka_main_box{
+
+    .custom-btn {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        font-weight: 600;
+        border-radius: 6px;
+        transition: 0.3s ease;
+    }
+
+    .custom-btn:hover {
+        background-color: #0056b3;
+    }
+
+    .custom-modal {
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid #ccc;
+    }
+
+    .custom-modal-header {
+        background-color: #1e1e2f;
+        color: white;
+        padding: 16px;
+        border-bottom: 1px solid #333;
+    }
+
+    .custom_form {
+        padding: 20px;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .custom_form .form-group {
+        margin-bottom: 15px;
+    }
+
+    .custom_form label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .custom_form input {
+        width: 100%;
+        padding: 8px 12px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        transition: 0.2s;
+    }
+
+    .custom_form input:focus {
+        border-color: #007bff;
+        outline: none;
+    }
+
+    .custom-modal-footer {
+        display: flex;
+        justify-content: space-between;
+        padding: 16px;
+        background-color: #f1f1f1;
+    }
+
+    .submit-btn {
+        background-color: #28a745;
+        color: white;
+        padding: 8px 16px;
+        border: none;
+        font-weight: bold;
+        border-radius: 6px;
+    }
+
+    .submit-btn:hover {
+        background-color: #218838;
+    }
+
+    .cancel-btn {
+        background-color: #6c757d;
+        color: white;
+        padding: 8px 16px;
+        border: none;
+        font-weight: bold;
+        border-radius: 6px;
+    }
+
+    .cancel-btn:hover {
+        background-color: #5a6268;
+    }
+
+    #form-loader, #form-loader_cash, #form-loader_bank, #form-loader_fee {
+        display: none;
+        text-align: center;
+        padding: 20px;
+    }
+
+    .spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid #ccc;
+        border-top-color: #007bff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
         margin: 0 auto;
-        width: 95%;
-        background-color: #ffe9c8;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-evenly;
-        gap: 0px;
-        border-radius: 10px;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        border-top-left-radius: 0;
-        border-top-right-radius: 0;
-        gap: 10px;
-        .taluka_box{
-            text-align: center;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            padding: 5px;
-            width: 300px;
-            background-color: white;
-            .taluka_box2{
-                display: flex;
-                justify-content: space-evenly;
-            }
-        }
     }
-    
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    #form-loader p {
+        margin-top: 10px;
+        font-size: 14px;
+        color: #333;
+    }
 </style>
-{% for d in districts %}
-<div class="district_branch_name">
-    <div class="district">{{d.district.name}}</div>
-    <div>Male {{d.male_student}} </div>
-    <div>Female {{d.female_student}} </div>
-    <div><b>T{{d.total_student}}</b> </div>
-</div> 
-<div class="taluka_main_box">
-    {% for t in d.taluka %}
-    <div class="taluka_box">
-        <div class="taluka_box1">{{t.name}}</div>
-        <div class="taluka_box2">
-            <div>M  {{t.male_student}}</div>
-            <div>F  {{t.female_student}}</div>
-            <div>T  {{t.total_student}}</div>
+
+<style>
+    .student_container {
+        display: grid;
+        align-items: center;
+        grid-template-columns: 1fr 2fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+        gap: 10px;
+        padding: 10px 20px;
+        margin: 20px auto;
+        max-width: 98%;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-family: sans-serif;
+        font-size: 14px;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        width: 100%;
+        row-gap: 0px;
+    }
+
+    .student_image img {
+        width: 80px;
+        height: 80px;
+        border-radius: 8px;
+        object-fit: cover;
+        border: 1px solid #ccc;
+    }
+
+    .info_item {
+        display: flex;
+        flex-direction: column;
+        min-width: fit-content;
+    }
+</style>
+
+<div class="student_container">
+    <div class="student_image">
+        {% if student.image %}
+            <img src="{{ student.image.url }}" alt="Student Image">
+        {% else %}
+            <img src="https://cdn-icons-png.flaticon.com/512/201/201818.png" alt="No Image">
+        {% endif %}
+    </div>
+
+    <div class="info_item">
+        <div class="info_title">Name</div>
+        <div class="info_value">{{ student.name }}</div>
+    </div>
+
+    <div class="info_item">
+        <div class="info_title">Mobile</div>
+        <div class="info_value">{{ student.mobile }}</div>
+    </div>
+
+    <div class="info_item">
+        <div class="info_title">Aadhar</div>
+        <div class="info_value">{{ student.aadhaar_number }}</div>
+    </div>
+
+    <div class="info_item">
+        <div class="info_title">Gender</div>
+        <div class="info_value">{{ student.gender }}</div>
+    </div>
+
+    <div class="info_item">
+        <div class="info_title">DOB</div>
+        <div class="info_value">{{ student.date_of_birth }}</div>
+    </div>
+
+    <div class="info_item">
+        <div class="info_title">Address</div>
+        <div class="info_value">{{ student.address|slice:'10' }}</div>
+    </div>
+
+    <div class="info_item">
+        <div class="info_title">Added</div>
+        <div class="info_value">{{ student.added_date }}</div>
+    </div>
+
+    <div class="info_item">
+        <div class="info_title">Added By</div>
+        <div class="info_value">{{ student.added_by.name }}</div>
+    </div>
+
+    <div></div>
+
+    <div class="info_item" style="grid-column: span 2;">
+        <div class="info_title">College</div>
+        <div class="info_value">{{ student_college.college.name }}</div>
+    </div>
+
+    <div class="info_item">
+        <div class="info_title">Branch</div>
+        <div class="info_value">{{ student_college.branch.name }}</div>
+    </div>
+
+    <div class="info_item">
+        <div class="info_title">Year</div>
+        <div class="info_value">{{ student_college.year.name }}</div>
+    </div>
+</div>
+
+<style>
+    .fee_box {
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-top: none;
+        margin: 0 auto;
+        margin-top: -25px;
+        width: 98% !important;
+        background-color: #e0efff;
+    }
+</style>
+
+<br>
+
+<style>
+    .main_fee_box {
+        padding: 10px;
+        display: grid;
+        grid-template-columns: 1.5fr 2fr 4fr;
+    }
+
+    #fee_box {
+        border-radius: 10px;
+        border: 1px solid #ccc;
+        width: 100%;
+        position: relative;
+    }
+
+    #fee_box .fee_header {
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+        font-weight: 600;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        padding: 3px;
+        background-color: #e0efff;
+    }
+
+    #fee_box .fee_body {
+        width: 100%;
+    }
+
+    #fee_box .fee_student_detail_box {
+        border-bottom: 1px solid #ccc;
+        justify-content: space-evenly;
+    }
+</style>
+
+<div class="main_fee_box">
+    <div class="fee_container">
+        <div class="info_item2">
+            <div class="info_title">Total Fee</div>
+            <div class="info_value">₹.{{ total_fee }}</div>
+        </div>
+
+        <div class="info_item2">
+            <div class="info_title">Paid Fee</div>
+            <div class="info_value text-success">₹.{{ paid_fee }}</div>
+        </div>
+
+        {% for sfd in student_fee_detail %}
+        <div class="info_item2">
+            <div class="info_title">{{ sfd.category.category_name }}</div>
+            <div class="info_value text-danger">₹.{{ sfd.remaining_fee }}</div>
+        </div>
+        {% endfor %}
+
+        <div class="info_item2 alert alert-danger alert-sm">
+            <div class="info_title">Remaining Fee</div>
+            <div class="info_value text-danger">₹.{{ remaining_fee }}</div>
         </div>
     </div>
-    {% endfor %}
+
+    <div class="container" id="fee_box">
+        <br><br>
+        <div class="fee_header">
+            <div class="fee_header_title">Fee Detail</div>
+        </div>
+
+        <div class="fee_body">
+            {% if student_hostel_fee %}
+            <div class="fee_student_detail_box">
+                <div>Hostel Fee, {{ student_hostel_fee.hostel_fee.installment_name }}, ₹.{{ student_hostel_fee.hostel_fee.amount }}</div>
+            </div>
+            {% endif %}
+            {% for sf in student_fee %}
+            <div class="fee_student_detail_box">
+                <div>₹.{{ sf.amount }}</div>
+                <div>{{ sf.credit_debit_category.category_name }}</div>
+            </div>
+            {% endfor %}
+            <div class="fee_student_detail_box" style="font-weight: 700;">
+                <div>Total, ₹.{{ total_fee }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" id="recive_fee_box">
+        <div style="display: flex; gap: 10px; justify-content: center; margin-top: -50px; margin-bottom: -40px;">
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#cash">Received Cash fee</button>
+
+            <div class="modal fade" id="cash" style="margin-top: 50px;" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content custom-modal">
+                        <div class="modal-header custom-modal-header">
+                            <h5 class="modal-title">Credit Cash fee</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div style="display: flex; margin: 10px; margin-bottom: 5px; gap: 10px;">
+                            <button type="button" id="hostel_cash_btn" class="btn btn-outline-dark">Hostel Fee</button>
+                            <button type="button" id="college_cash_btn" class="btn btn-outline-dark" >College Fee</button>
+                            <script>
+                                document.getElementById('hostel_cash_btn').addEventListener('click', function() {
+                                    document.getElementById('hostel_cash_btn').classList = 'btn btn-warning';
+                                    document.getElementById('college_cash_btn').classList = 'btn btn-outline-dark';
+                                    document.querySelector('.college_form').style.display = 'none';
+                                    document.querySelector('.hostel_form').style.display = 'block';
+                                });
+                                document.getElementById('college_cash_btn').addEventListener('click', function() {
+                                    document.getElementById('college_cash_btn').classList = 'btn btn-warning';
+                                    document.getElementById('hostel_cash_btn').classList = 'btn btn-outline-dark';
+                                    document.querySelector('.hostel_form').style.display = 'none';
+                                    document.querySelector('.college_form').style.display = 'block';
+                                });
+                            </script>
+                        </div>
+                        <form method="POST" class="custom_form college_form" style="display: none;" id="cash-form">
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label>Cash Amount</label>
+                                    <input type="number" required name="received_cash_amount" step="any">
+                                </div>
+                                <div class="form-group">
+                                    <label>Date</label>
+                                    <input type="date" max="{{ today_date|date:'Y-m-d' }}" min="{{ clerk.batch.start_date|date:'Y-m-d' }}" required name="received_date">
+                                </div>
+                                                        <div class="form-group">
+                                    <label>Challan Number</label>
+                                    <input type="text" name="college_cash_challan_number">
+                                </div>
+                            </div>
+                            <div class="modal-footer custom-modal-footer">
+                                <button type="submit" class="submit-btn" id="save_cash_fee2" name="save_cash_fee_college">Receive College Cash Fee</button>
+                                <button type="button" class="cancel-btn" data-bs-dismiss="modal">Cancel</button>
+                            </div>
+                        </form>
+
+
+                        <form method="POST" class="custom_form hostel_form" style="display: none;" id="hostel-form">
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label>Cash Amount</label>
+                                    <input type="number" required name="received_amount" step="any">
+                                </div>
+                                <div class="form-group">
+                                    <label>Date</label>
+                                    <input type="date" max="{{ today_date|date:'Y-m-d' }}" min="{{ clerk.batch.start_date|date:'Y-m-d' }}" required name="date">
+                                </div>
+                                <div class="form-group">
+                                    <label>Challan Number</label>
+                                    <input type="text" name="challan_number">
+                                </div>
+                            </div>
+                            <div class="modal-footer custom-modal-footer">
+                                <button type="submit" class="submit-btn" id="save_cash_fee" name="save_cash_hostel_fee">Receive Hostel Cash Fee</button>
+                                <button type="button" class="cancel-btn" data-bs-dismiss="modal">Cancel</button>
+                            </div>
+                        </form>
+
+                        <div id="form-loader_cash" style="display: none;">
+                            <div class="spinner"></div>
+                            <p>Saving fee, please wait...</p>
+                        </div>
+                        <script>
+                            const cashform = document.getElementById('hostel-form');
+                            const cashloader = document.getElementById('form-loader_cash');
+                            const cashloader_btn = document.getElementById('save_cash_fee');
+                            cashform.addEventListener('submit', function () {
+                                cashloader.style.display = 'block';
+                                cashloader_btn.style.display = 'none';
+                            });
+                        </script>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#bank">Received Bank fee</button>
+
+            <div class="modal fade mt-5" id="bank" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content custom-modal">
+                        <div class="modal-header custom-modal-header">
+                            <h5 class="modal-title">Credit Bank fee</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+
+                        <div style="display: flex; margin: 10px; margin-bottom: 5px; gap: 10px;">
+                            <button type="button" id="hostel_bank_btn" class="btn btn-outline-dark">Hostel Fee</button>
+                            <button type="button" id="college_bank_btn" class="btn btn-outline-dark" disabled>College Fee</button>
+                            <script>
+                                document.getElementById('hostel_bank_btn').addEventListener('click', function() {
+                                    document.getElementById('hostel_bank_btn').classList = 'btn btn-warning';
+                                    document.getElementById('college_bank_btn').classList = 'btn btn-outline-dark';
+                                    document.querySelector('.college_form_bank').style.display = 'none';
+                                    document.querySelector('.hostel_form_bank').style.display = 'block';
+                                });
+                                document.getElementById('college_bank_btn').addEventListener('click', function() {
+                                    document.getElementById('college_bank_btn').classList = 'btn btn-warning';
+                                    document.getElementById('hostel_bank_btn').classList = 'btn btn-outline-dark';
+                                    document.querySelector('.hostel_form_bank').style.display = 'none';
+                                    document.querySelector('.college_form_bank').style.display = 'block';
+                                });
+                            </script>
+                        </div>
+
+                        <form method="POST" class="custom_form hostel_form_bank" id="bank-form_hostel" style="display: none;">
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label>Bank</label>
+                                    <select name="bank_id" class="form-select" required>
+                                        <option value="" selected>Select Bank</option>
+                                        {% for bank in accounts %}
+                                            <option value="{{ bank.id }}">{{ bank.bank_name }} - {{ bank.account_number }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Amount</label>
+                                    <input type="number" required name="received_amount" step="any">
+                                </div>
+                                <div class="form-group">
+                                    <label>Date</label>
+                                    <input type="date" max="{{ today_date|date:'Y-m-d' }}" min="{{ clerk.batch.start_date|date:'Y-m-d' }}" required name="date">
+                                </div>
+                                <div class="form-group">
+                                    <label>UTR Number</label>
+                                    <input type="text" required name="utr_number">
+                                </div>
+                            </div>
+                            <div class="modal-footer custom-modal-footer">
+                                <button type="submit" class="submit-btn" id="save_bank_fee_hostel" name="save_bank_fee_hostel">Add Bank</button>
+                                <button type="button" class="cancel-btn" data-bs-dismiss="modal">Cancel</button>
+                            </div>
+                        </form>
+                        <form method="POST" style="display: none;" class="custom_form college_form_bank" id="bank-form">
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label>Bank</label>
+                                    <select name="bank" class="form-select" required>
+                                        <option value="" selected>Select Bank</option>
+                                        {% for bank in accounts %}
+                                            <option value="{{ bank.id }}">{{ bank.bank_name }} - {{ bank.account_number }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <select class="form-select" name="credit_debit_category" required>
+                                        <option value="">Select Category</option>
+                                        {% for category in credit_debit_category %}
+                                            <option value="{{ category.id }}">{{ category.category_name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Amount</label>
+                                    <input type="number" required name="received_amount" step="any">
+                                </div>
+                                <div class="form-group">
+                                    <label>Date</label>
+                                    <input type="date" max="{{ today_date|date:'Y-m-d' }}" min="{{ clerk.batch.start_date|date:'Y-m-d' }}" required name="date">
+                                </div>
+                                <div class="form-group">
+                                    <label>UTR Number</label>
+                                    <input type="text" required name="utr_number">
+                                </div>
+                            </div>
+                            <div class="modal-footer custom-modal-footer">
+                                <button type="submit" class="submit-btn" id="save_bank_fee" name="save_bank_fee">Add Bank</button>
+                                <button type="button" class="cancel-btn" data-bs-dismiss="modal">Cancel</button>
+                            </div>
+                        </form>
+
+                        <div id="form-loader_bank_hostel" style="display: none;">
+                            <div class="spinner"></div>
+                            <p>Saving fee, please wait...</p>
+                        </div>
+                        <script>
+                            const bankform = document.getElementById('bank-form_hostel');
+                            const bankloader = document.getElementById('form-loader_bank_hostel');
+                            const bankloader_btn = document.getElementById('save_bank_fee_hostel');
+
+                            bankform.addEventListener('submit', function () {
+                                bankloader.style.display = 'unset';
+                                bankloader_btn.style.display = 'none';
+                            });
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <style>
+            table {
+                width: 110%;
+                border-collapse: collapse;
+                margin: 50px auto;
+                scale: 0.9;
+            }
+
+            tr:nth-of-type(odd) {
+                background: #eee;
+            }
+
+            th {
+                background: #3498db;
+                color: white;
+                font-weight: bold;
+                height: fit-content;
+            }
+
+            td, th {
+                padding: 10px;
+                border: 1px solid #ccc;
+                text-align: left;
+                font-size: 15px;
+            }
+        </style>
+
+        <table>
+            <thead >
+                <tr>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>UTR / Challan </th>
+                    <th>Bank / Cash</th>
+                    <th>Received By</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for t in received_cash_hostel_fee %}
+                <tr>
+                    <td>{{ t.paid_date|date:'d-m-y' }}</td>
+                    <td>₹.{{ t.received_amount }}</td>
+                    <td>{{t.challan_number}}</td>
+                    <td>Cash</td>
+                    <td >
+                        {{t.added_by.name}}
+                    </td>
+                    <td >
+                        <button class="btn btn-outline-dark btn-sm" data-bs-toggle="modal" data-bs-target="#edit_cash_t{{t.id}}"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+                        <button class="btn btn-outline-dark btn-sm"><i class="fa-solid fa-print"></i></button>
+                    </td>
+                </tr>
+                <!-- Modal -->
+                <div class="modal fade" style="margin-top: 50px;" id="edit_cash_t{{t.id}}"  tabindex="-1" aria-labelledby="edit_bank_t{{t.id}}Label" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Cash Transaction</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form method="POST" class="custom_form hostel_form" style="display: none;" id="hostel-form">
+                       <input type="text" name="transaction_id" value="{{t.id}}" hidden>
+                        <div class="modal-body">
+                            <div class="form-group mb-3">
+                                <label>Amount</label>
+                                <input type="number" class="form-control" required name="received_amount" value="{{t.received_amount}}" step="any">
+                            </div>
+                            <div class="form-group mb-3">
+                                <label>Date</label>
+                                <input type="date" class="form-control" max="{{ today_date|date:'Y-m-d' }}" min="{{ clerk.batch.start_date|date:'Y-m-d' }}" value="{{t.paid_date|date:'Y-m-d'}}" required name="date">                            </div>
+                            <div class="form-group mb-3">
+                                <label>Challan Number</label>
+                                <input type="text" class="form-control" name="challan_number" value="{{t.challan_number}}">
+                            </div>
+                        </div>
+                        <div class="modal-footer custom-modal-footer">
+                            <button type="submit" class="submit-btn"  name="Edit_cash_hostel_fee">Edit Cash Fee</button>
+                            <button type="button" class="cancel-btn" data-bs-dismiss="modal">Cancel</button>
+                        </div>
+                    </form>
+
+                    </div>
+                </div>
+                </div>
+
+                {% endfor %}
+                {% for t in received_bank_hostel_fee %}
+                <tr>
+                    <td>{{ t.paid_date|date:'d-m-y' }}</td>
+                    <td>₹.{{ t.received_amount }}</td>
+                    <td>{{ t.utr_number }}</td>
+                    <td>{{ t.account.bank_name }}, {{ t.account.account_number }}</td>
+                    <td>
+                        {{t.added_by.name}}  {% if t.updated_by %} <h style="font-size: 12px;">(edited - {{t.updated_by.name}})</h> {% endif %}
+                    </td>
+                    <td >
+                        <button class="btn btn-outline-dark btn-sm" data-bs-toggle="modal" data-bs-target="#edit_bank_t{{t.id}}"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+                        <button class="btn btn-outline-dark btn-sm"><i class="fa-solid fa-print"></i></button>
+                    </td>
+
+                </tr>
+
+                <!-- Modal -->
+                <div class="modal fade" style="margin-top: 50px;" id="edit_bank_t{{t.id}}"  tabindex="-1" aria-labelledby="edit_bank_t{{t.id}}Label" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Bank Transaction</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="POST">
+                            <input type="text" name="transaction_id" value="{{t.id}}" hidden>
+                            {% csrf_token %}
+                                <div class="form-group mb-3">
+                                    <label>Bank</label>
+                                    <select name="bank_id" class="form-select" required>
+                                        <option value="" selected>Select Bank</option>
+                                        {% for bank in accounts %}
+                                            <option value="{{ bank.id }}" {% if t.account == bank %} selected {% endif %}>{{ bank.bank_name }} - {{ bank.account_number }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label>Amount</label>
+                                    <input type="number" class="form-control" value="{{t.received_amount}}" required name="received_amount" step="any">
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label>Date</label>
+                                    <input type="date" class="form-control" value="{{t.paid_date|date:'Y-m-d'}}" max="{{ today_date|date:'Y-m-d' }}" min="{{ clerk.batch.start_date|date:'Y-m-d' }}" required name="date">
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label>UTR Number</label>
+                                    <input type="text" class="form-control" value="{{t.utr_number}}" required name="utr_number">
+                                </div>
+                                <button type="submit" class="btn btn-primary" name="edit_bank_transaction">Edit</button>                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                    </div>
+                </div>
+                </div>
+
+
+
+                {% endfor %}
+                <tr>
+                    <td colspan="6" style="text-align: start; font-weight: bold;">Total Received Fee: ₹.{{ paid_fee }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
-<br>
-{% endfor %}
-</div>
+
+{% endblock content %}

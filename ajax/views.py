@@ -75,7 +75,7 @@ def search_student_for_fees(request):
                     'id':s.id,
                     'name':s.name,
                     'mobile':s.mobile,
-                    'aadhaar_number':s.aadhaar_number,
+                    'aadhaar_number': str(s.aadhaar_number),
                     'updated_by':s.updated_by,
                     'secret_pin':s.secret_pin,
                     'gender':s.gender,
@@ -85,7 +85,7 @@ def search_student_for_fees(request):
                     
                 })
         context = {
-            'student':st
+            'student':st[:4]
         }
         t = render_to_string('search_student_for_fees.html', context)
     return JsonResponse({'t': t})
@@ -149,7 +149,7 @@ def search_student_for_new_admission(request):
                     'img': s.image, 
                 })
 
-        context = {'student': st}
+        context = {'student': st[:4]}
         t = render_to_string('search_student_for_new_admission.html', context)
 
     return JsonResponse({'t': t, 'status': status})

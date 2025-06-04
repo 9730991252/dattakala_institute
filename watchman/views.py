@@ -41,7 +41,7 @@ def watchman_home(request):
             book_date_time    = datetime.now()
         )
         messages.success(request, "Appointment Booked Successfully")
-        return redirect("peon_home")
+        return redirect("watchman_home")
     context = {
         "employee": employee,
         "todays_appointments": Appointment.objects.filter(book_date_time__date=date.today()).exclude(meeting_status=3).exclude(meeting_status=2).order_by('-order_by')

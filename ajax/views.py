@@ -75,10 +75,11 @@ def search_student_for_fees(request):
                     'id':s.id,
                     'name':s.name,
                     'mobile':s.mobile,
-                    'aadhar_number':s.aadhaar_number,
+                    'aadhaar_number':s.aadhaar_number,
+                    'updated_by':s.updated_by,
                     'secret_pin':s.secret_pin,
                     'gender':s.gender,
-                    'approval_status':s.approval_status,
+                    'added_by':s.added_by,
                     'img': s.image, 
                     'approval':Student_approval.objects.filter(student=s, batch=batch).first,
                     

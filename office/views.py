@@ -613,7 +613,8 @@ def student_detail(request, id):
             'paid_fee':paid_fee,
             'received_cash_hostel_fee':received_cash_hostel_fee,
             'received_bank_hostel_fee':received_bank_hostel_fee,
-            'aadhaar_number':str(student.aadhaar_number)
+            'aadhaar_number':str(student.aadhaar_number),
+            'student_documents':Student_document.objects.filter(student=student).first()
         }
         return render(request, 'student_detail.html', context)
     else:

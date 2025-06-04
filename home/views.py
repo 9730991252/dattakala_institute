@@ -49,7 +49,7 @@ def index(request):
 def self_registration_student(request):
     batch = Batch.objects.filter(start_date__year__lte=date.today().year, end_date__year__gte=date.today().year).first()
     student = ''
-    what_to_show_status = 'Form'
+    what_to_show_status = 'Basic_Form'
     if 'submit_student_detail'in request.POST:
         registration_qr_count = Self_registration_qr_count.objects.filter().first()
         if registration_qr_count:
@@ -80,6 +80,7 @@ def self_registration_student(request):
                     aadhaar_number=aadhaar_number,
                 )
                 student = Student.objects.filter(aadhaar_number=aadhaar_number).first()
+        what_to_show_status = 'Detail_Form'
     if 'submit_student_full_detail'in request.POST:
         # Save in student start
         s_id = request.POST.get('s_id')
@@ -192,8 +193,6 @@ def self_registration_student(request):
                     student_college_detail.save()
                 student = Student.objects.get(id=s_id)
                 what_to_show_status = 'Upload_Image'
-                messages.success(request, 'College Details Added Successfully. Now Add Your Image and Conform.')
-            
     if student:
         student_college_detail = Student_college_detail.objects.filter(batch=batch, student=student).first()
     else:
@@ -210,9 +209,96 @@ def self_registration_student(request):
         ext = format.split('/')[-1]
         data = ContentFile(base64.b64decode(imgstr), name=f'{id}.{ext}')
         student.image.save(f'{student.name}.webp', data, save=True)
+        what_to_show_status = 'Aadhaar_card_Front'
+        
+    if 'save_aadhaar_front' in request.POST:
+        student_id = request.POST.get('student_id')
+        student = Student.objects.get(id=student_id)
+        img_data = request.POST.get('aadhaar_cropped')  # base64 string
+        document, created_document = Student_document.objects.get_or_create(student=student)
+        if document.aadhaar_card_front:
+            old_image_path = document.aadhaar_card_front.path
+            if os.path.isfile(old_image_path):
+                os.remove(old_image_path)
+        format, imgstr = img_data.split(';base64,')
+        ext = format.split('/')[-1]
+        data = ContentFile(base64.b64decode(imgstr), name=f'{student_id}.{ext}')
+        document.aadhaar_card_front.save(f'front_aadhar{student.name}.webp', data, save=True)
+        what_to_show_status = 'Aadhaar_card_Back'
+    if 'save_aadhaar_back' in request.POST:
+        student_id = request.POST.get('student_id')
+        student = Student.objects.get(id=student_id)
+        img_data = request.POST.get('aadhaar_back_cropped')  # base64 string
+        document = Student_document.objects.get(student=student)
+        if document.aadhaar_card_back:
+            old_image_path = document.aadhaar_card_back.path
+            if os.path.isfile(old_image_path):
+                os.remove(old_image_path)
+        format, imgstr = img_data.split(';base64,')
+        ext = format.split('/')[-1]
+        data = ContentFile(base64.b64decode(imgstr), name=f'{student_id}.{ext}')
+        document.aadhaar_card_back.save(f'front_aadhar{student.name}.webp', data, save=True)
+        what_to_show_status = 'pan_card'
+    if 'next_to_student_pan_card'in request.POST:
+        s_id = request.POST.get('s_id')
+        what_to_show_status = 'pan_card'
+        student = Student.objects.get(id=s_id)
+        student_college_detail = Student_college_detail.objects.filter(batch=batch, student=student).first()
+    if 'back_to_student_detail_form'in request.POST:
+        s_id = request.POST.get('s_id')
+        what_to_show_status = 'Detail_Form'
+        student = Student.objects.get(id=s_id)
+        student_college_detail = Student_college_detail.objects.filter(batch=batch, student=student).first()
+    if 'save_pan_card' in request.POST:
+        student_id = request.POST.get('student_id')
+        student = Student.objects.get(id=student_id)
+        img_data = request.POST.get('pan_cropped')  # base64 string
+        document = Student_document.objects.get(student=student)
 
-        messages.success(request, 'Your Registration is Completed.')
-        return redirect('/')
+        # Remove old PAN card if exists
+        if document.pan_card:
+            old_image_path = document.pan_card.path
+            if os.path.isfile(old_image_path):
+                os.remove(old_image_path)
+
+        # Save new image
+        format, imgstr = img_data.split(';base64,')
+        ext = format.split('/')[-1]
+        data = ContentFile(base64.b64decode(imgstr), name=f'{student_id}.{ext}')
+        document.pan_card.save(f'pan_card_{student.name}.webp', data, save=True)
+
+        messages.success(request, 'Congratulation 🎉🎉! You Self Registration Form is Submitted Successfully')
+        # Move to next step
+        return redirect('/')  # or the next step you are handling
+
+    # NAVIGATION: BACK TO AADHAAR BACK
+    if 'back_to_student_aadhaar_back' in request.POST:
+        s_id = request.POST.get('s_id')
+        what_to_show_status = 'Aadhaar_card_Back'
+        student = Student.objects.get(id=s_id)
+        student_college_detail = Student_college_detail.objects.filter(batch=batch, student=student).first()
+    if 'back_to_student_image'in request.POST:
+        s_id = request.POST.get('s_id')
+        what_to_show_status = 'Upload_Image'
+        student = Student.objects.get(id=s_id)
+        student_college_detail = Student_college_detail.objects.filter(batch=batch, student=student).first()
+    if 'back_to_student_aadhaar_front'in request.POST:
+        s_id = request.POST.get('s_id')
+        what_to_show_status = 'Aadhaar_card_Front'
+        student = Student.objects.get(id=s_id)
+        student_college_detail = Student_college_detail.objects.filter(batch=batch, student=student).first()
+    if 'next_to_student_aadhaar_back_form'in request.POST:
+        s_id = request.POST.get('s_id')
+        what_to_show_status = 'Aadhaar_card_Back'
+        student = Student.objects.get(id=s_id)
+        student_college_detail = Student_college_detail.objects.filter(batch=batch, student=student).first()
+    
+
+    if 'next_to_student_aadhaar_form'in request.POST:
+        s_id = request.POST.get('s_id')
+        what_to_show_status = 'Aadhaar_card_Front'
+        student = Student.objects.get(id=s_id)
+        student_college_detail = Student_college_detail.objects.filter(batch=batch, student=student).first()
     admission_year = []
     current_year = date.today().year
     for i in range(0, 11):
@@ -227,8 +313,8 @@ def self_registration_student(request):
         'admission_year':admission_year,
         'cast_category':Cast_category.objects.filter(status=1),
         'what_to_show_status':what_to_show_status,
-        'student_college_detail':student_college_detail
-        
+        'student_college_detail':student_college_detail,
+        'documents':Student_document.objects.filter(student=student).first() if student else None,
     }
     return render(request, 'self_registration_student.html', context)
 

@@ -130,6 +130,13 @@ class Student(models.Model):
     whatsapp_number = models.IntegerField(null=True)
     pin_code = models.IntegerField(null=True)
 
+class Student_document(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    aadhaar_card_front = models.ImageField(upload_to="student_aadhaar_card", default="", null=True, blank=True)
+    aadhaar_card_back = models.ImageField(upload_to="student_aadhaar_card", default="", null=True, blank=True)
+    pan_card = models.ImageField(upload_to="student_pan_card", default="", null=True, blank=True)
+    added_date = models.DateField(auto_now_add=True)
+
 class Student_approval(models.Model):
     batch = models.ForeignKey(Batch, on_delete=models.CASCADE, null=True)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)

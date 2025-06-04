@@ -67,10 +67,8 @@
     </style>
     {% include 'alert.html' %}
     <!-- navBar end -->
-    {% if what_to_show_status == 'Form' %}
+    {% if what_to_show_status == 'Basic_Form' %}
     <div id="form_box">
-      
-      {% if student == '' %}
       <!-- Student First Form -->
       <style>
         /* Custom styles to complement Tailwind */
@@ -155,7 +153,7 @@
           </form>
         </div>
       </div>
-      {% else %}
+      {% elif what_to_show_status == 'Detail_Form' %}
       <br><br>
       <style>
         .form-label {
@@ -431,165 +429,669 @@
           });
         }
       </script>
-      {% endif %}
     </div>
-    {% else %}
-
-    <style>
-.file_input{
-    height: 100px;
-    width: 100px;
-    border-radius: 50%;
-    border: 3px dashed #999;
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    i{
-        font-size: 24px;
-    }
-}
-.student_box{
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    padding: 10px;
-    display: flex;
-    justify-content: space-evenly;
-    gap: 30px;
-    width: 350px;
-    margin: 0 auto;
-}
-.name_mobile_box{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    .name{
-        font-size: 20px;
-        font-weight: bold;
-    }
-}
-.adhar_number_gender{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
-}
-</style>
-
-<br><br><br>
-
-    <div class="upload_image_box">
-      <!-- Cropper CSS/JS -->
-      <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
-
-      <p style="width: 350px;color: red;margin: 0 auto;text-align: center;"><b>Dear Student Upload Recently passport size and clearly visible photo for the purpose of printing identity card. </b></p>
-      <div class="student_box">
-          <div class="img_box">
-              {% if student.image %}
-              <img onclick="document.getElementById('image{{student.id}}').click()" src="{{student.image.url}}" style="width: 100px; border-radius: 10px;" alt="">
-              {% else %}
-                  <label class="file_input" for="image{{student.id}}">
-                      <i class="fa fa-upload" aria-hidden="true"></i> <b>Upload Image</b>
-                  </label>
-                  {% endif %}
-                  <input type="file" accept="image/*" style="display: none;" id="image{{student.id}}" onchange="openCropper(event, '{{student.id}}')">
-
-                  <form method="POST" enctype="multipart/form-data" id="form{{student.id}}">
-                      {% csrf_token %}
-                      <input type="hidden" name="id" value="{{student.id}}">
-                      <input type="hidden" name="img" id="croppedImgInput{{student.id}}">
-                      <button type="submit" name="add_image" id="add_btn{{student.id}}" style="display: none;"></button>
-                  </form>
-          </div>
-
-          <div class="name_mobile_box">
-              <div class="name">{{student.name}}</div>
-          </div>
-      </div>
-      <div class="text-center mt-2">
-        <a href="/self_registration_student/" class="btn-sm btn btn-danger">Skip & Confirm</a>
-      </div>
-      <br>
+    {% elif what_to_show_status == 'Upload_Image' %}
+    <div id="upload_image_box">
       <style>
-        #cropperModal{
-            display: none; 
-            position: fixed; 
-            height: 80%;
-            top: 10%; 
-            left: 50%; 
-            transform: translateX(-50%); 
-            z-index: 999; 
-            background: #fff; 
-            padding: 20px; 
-            border: 1px solid #ccc;
-        }
+  .file_input{
+      height: 100px;
+      width: 100px;
+      border-radius: 50%;
+      border: 3px dashed #999;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      i{
+          font-size: 24px;
+      }
+  }
+  .student_box{
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      padding: 10px;
+      display: flex;
+      justify-content: space-evenly;
+      gap: 30px;
+      width: 350px;
+      margin: 0 auto;
+  }
+  .name_mobile_box{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      .name{
+          font-size: 20px;
+          font-weight: bold;
+      }
+  }
+  .adhar_number_gender{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
 
-        </style>
-        <!-- Cropper Modal -->
-        <div id="cropperModal" >
-            <img id="cropperImage" style="width: 300px;">
-            <br>
-            <div style="position: absolute;bottom: 0;left: 10%;">
-              <button class="btn btn-success" onclick="cropAndUpload()">Crop & Confirm</button>
-              <button class="btn btn-danger" onclick="closeModal()">Cancel</button>
+  }
+      </style>
+      <div class="upload_image_box" style="background-color: #ffffff;">
+        <br><br><br>
+        <!-- Cropper CSS/JS -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+
+        <div style="width: 350px;margin: 0 auto;display: flex;">
+          <p style="width: 240px;color: red;margin: 0 auto;text-align: center;"><b>Dear Student Upload Recently passport size and clearly visible photo for the purpose of printing identity card. </b></p>
+          <div style="width: 100px;height: 100px;overflow: hidden;border-radius: 10px;">
+            <img src="{% static 'img/student_demo_image.jpg' %}" style="width: 100%;object-fit: cover;background: fixed;" alt="" loading="lazy">
+          </div>
+        </div>
+        <br>
+        <div class="student_box">
+            <div class="img_box">
+                {% if student.image %}
+                <img onclick="document.getElementById('image{{student.id}}').click()" src="{{student.image.url}}" style="width: 100px; border-radius: 10px;" alt="">
+                {% else %}
+                    <label class="file_input" for="image{{student.id}}">
+                        <i class="fa fa-upload" aria-hidden="true"></i> <b>Upload Image</b>
+                    </label>
+                    {% endif %}
+                    <input type="file" accept="image/*" style="display: none;" id="image{{student.id}}" onchange="openCropper(event, '{{student.id}}')">
+
+                    <form method="POST" enctype="multipart/form-data" id="form{{student.id}}">
+                        {% csrf_token %}
+                        <input type="hidden" name="id" value="{{student.id}}">
+                        <input type="hidden" name="img" id="croppedImgInput{{student.id}}">
+                        <button type="submit" name="add_image" id="add_btn{{student.id}}" style="display: none;"></button>
+                    </form>
+            </div>
+
+            <div class="name_mobile_box">
+                <div class="name">{{student.name}}</div>
             </div>
         </div>
+        <br>
+        <br>
+        <div class="text-center mt-2" style="display: flex;width: 350px;margin: 0 auto;justify-content: space-evenly;"> 
+          <form method="POST">
+            {% csrf_token %}
+            <input type="text " name="s_id" value="{{student.id}}" hidden>
+            <button type="submit" name="back_to_student_detail_form" class="btn btn-primary px-5"><i class="fa-solid fa-arrow-left"></i> Back</button>
+            {% if student.image %}
+              <button type="submit" name="next_to_student_aadhaar_form" class="btn btn-primary px-5">
+                  <i class="fa-solid fa-arrow-right"></i> Next
+              </button>
+            {% endif %}
+          </form>
+        </div>
+        <br>
+        <style>
+          #cropperModal{
+              display: none; 
+              position: fixed; 
+              height: 80%;
+              top: 10%; 
+              left: 50%; 
+              transform: translateX(-50%); 
+              z-index: 999; 
+              background: #fff; 
+              padding: 20px; 
+              border: 1px solid #ccc;
+          }
+
+          </style>
+          <!-- Cropper Modal -->
+          <div id="cropperModal" >
+              <img id="cropperImage" style="width: 300px;">
+              <br>
+              <div style="position: absolute;bottom: 0;left: 10%;">
+                <button class="btn btn-success" onclick="cropAndUpload()">Crop & Next <i class="fa-solid fa-arrow-right"></i></button>
+                <button class="btn btn-danger" onclick="closeModal()">Cancel</button>
+              </div>
+          </div>
 
 
-        <script>
-            let cropper;
-            let currentId;
+          <script>
+              let cropper;
+              let currentId;
 
-            function openCropper(event, id) {
-                const file = event.target.files[0];
-                if (!file) return;
+              function openCropper(event, id) {
+                  const file = event.target.files[0];
+                  if (!file) return;
 
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    const img = document.getElementById('cropperImage');
-                    img.src = e.target.result;
-                    document.getElementById('cropperModal').style.display = 'block';
+                  const reader = new FileReader();
+                  reader.onload = function (e) {
+                      const img = document.getElementById('cropperImage');
+                      img.src = e.target.result;
+                      document.getElementById('cropperModal').style.display = 'block';
 
-                    if (cropper) cropper.destroy();
-                    cropper = new Cropper(img, {
-                        aspectRatio: 1,
-                        viewMode: 1
-                    });
-                };
-                reader.readAsDataURL(file);
-                currentId = id;
-            }
+                      if (cropper) cropper.destroy();
+                      cropper = new Cropper(img, {
+                          aspectRatio: 1,
+                          viewMode: 1
+                      });
+                  };
+                  reader.readAsDataURL(file);
+                  currentId = id;
+              }
 
-            function cropAndUpload() {
-                cropper.getCroppedCanvas({
-                    width: 300,
-                    height: 300
-                }).toBlob(function (blob) {
-                    const reader = new FileReader();
-                    reader.onloadend = function () {
-                        const base64data = reader.result;
-                        document.getElementById(`croppedImgInput${currentId}`).value = base64data;
-                        document.getElementById(`add_btn${currentId}`).click();
-                        closeModal();
-                    };
-                    reader.readAsDataURL(blob);
-                }, 'image/webp');
-            }
+              function cropAndUpload() {
+                  cropper.getCroppedCanvas({
+                      width: 300,
+                      height: 300
+                  }).toBlob(function (blob) {
+                      const reader = new FileReader();
+                      reader.onloadend = function () {
+                          const base64data = reader.result;
+                          document.getElementById(`croppedImgInput${currentId}`).value = base64data;
+                          document.getElementById(`add_btn${currentId}`).click();
+                          closeModal();
+                      };
+                      reader.readAsDataURL(blob);
+                  }, 'image/webp');
+              }
 
-            function closeModal() {
-                document.getElementById('cropperModal').style.display = 'none';
-                if (cropper) cropper.destroy();
-            }
-        </script>
+              function closeModal() {
+                  document.getElementById('cropperModal').style.display = 'none';
+                  if (cropper) cropper.destroy();
+              }
+          </script>
 
 
+      </div>
     </div>
+
+   
+    {% elif what_to_show_status == 'Aadhaar_card_Front' %}
+<!-- ─────────────────── UPLOAD + CROPPER COMPONENT ─────────────────── -->
+<div id="upload_image_box">
+
+  <!-- ---------- Component-specific styles ---------- -->
+  <style>
+    .file_input{
+        height:100px;width:100px;border-radius:50%;
+        border:3px dashed #999;cursor:pointer;
+        display:flex;flex-direction:column;align-items:center;justify-content:center;
+        text-align:center;font-size:14px;
+    }
+    .file_input i{font-size:24px;margin-bottom:4px;}
+
+    .student_box{
+        border:1px solid #ccc;border-radius:8px;padding:10px;
+        display:flex;justify-content:space-evenly;gap:30px;width:350px;margin:0 auto;
+    }
+    .name_mobile_box{display:flex;flex-direction:column;justify-content:center;align-items:center;}
+    .name_mobile_box .name{font-size:20px;font-weight:700;}
+
+    /* Modal */
+    #aadhaar_cropperModal{
+        display:none;position:fixed;top:10%;left:50%;transform:translateX(-50%);
+        width:90%;max-width:400px;height:80%;z-index:999;
+        background:#fff;padding:20px;border:1px solid #ccc;border-radius:12px;
+        box-shadow:0 10px 30px rgba(0,0,0,.15);
+    }
+    #aadhaar_cropperModal img{max-width:100%;}
+    #aadhaar_cropperModal .modal-actions{
+        position:absolute;bottom:20px;left:50%;transform:translateX(-50%);
+        display:flex;gap:1rem;
+    }
+  </style>
+
+  <!-- ---------- CropperJS assets ---------- -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+  <!-- (Optional) Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <!-- ---------- Sample Aadhaar preview banner ---------- -->
+  <div style="width:350px;margin:0 auto;overflow:hidden;border-radius:10px">
+    <img src="{% static 'img/aadhaar_card_front.jpg' %}"
+         alt="Aadhaar front sample" style="width:100%;object-fit:cover"/>
+  </div>
+
+  <!-- ---------- Student-specific upload card ---------- -->
+  <div class="student_box">
+    <div class="img_box">
+      {% if documents.aadhaar_card_front %}
+        <!-- thumbnail-click opens file chooser again -->
+        <img src="{{ documents.aadhaar_card_front.url }}"
+             alt="Aadhaar thumb"
+             style="width:100px;border-radius:10px;cursor:pointer"
+             onclick="document.getElementById('aadhaar_input_{{student.id}}').click()"/>
+      {% else %}
+        <label class="file_input" for="aadhaar_input_{{student.id}}">
+          <i class="fa fa-upload"></i><b>Upload Aadhaar Front</b>
+        </label>
+      {% endif %}
+
+      <!-- hidden file input -->
+      <input type="file" accept="image/*" id="aadhaar_input_{{student.id}}"
+             style="display:none"
+             onchange="aadhaar_openCropper(event,'{{student.id}}')"/>
+
+      <!-- hidden submission form -->
+      <form method="POST" enctype="multipart/form-data" id="aadhaar_form_{{student.id}}">
+        {% csrf_token %}
+        <input type="hidden" name="student_id" value="{{student.id}}">
+        <input type="hidden" name="aadhaar_cropped" id="aadhaar_cropped_{{student.id}}">
+        <button type="submit" name="save_aadhaar_front" id="aadhaar_submit_{{student.id}}" style="display:none"></button>
+      </form>
+    </div>
+
+    <div class="name_mobile_box">
+      <div class="name">{{student.name}}</div>
+    </div>
+  </div>
+
+  <!-- ---------- Back button ---------- -->
+  <div class="text-center mt-2" style="display: flex;width: 350px;margin: 0 auto;justify-content: space-evenly;"> 
+    <form method="POST">
+      {% csrf_token %}
+      <input type="text " name="s_id" value="{{student.id}}" hidden>
+      <button type="submit" name="back_to_student_image" class="btn btn-primary px-5"><i class="fa-solid fa-arrow-left"></i> Back</button>
+      {% if documents.aadhaar_card_front %}
+        <button type="submit" name="next_to_student_aadhaar_back_form" class="btn btn-primary px-5">
+            <i class="fa-solid fa-arrow-right"></i> Next
+        </button>
+      {% endif %}
+    </form>
+  </div>
+
+  <!-- ---------- Cropper Modal ---------- -->
+  <div id="aadhaar_cropperModal">
+    <img id="aadhaar_cropperImage" alt="Crop preview"/>
+    <div class="modal-actions">
+      <button class="btn btn-success" onclick="aadhaar_cropAndUpload()">
+        Crop & Next <i class="fa-solid fa-arrow-right"></i>
+      </button>
+      <button class="btn btn-danger" onclick="aadhaar_closeModal()">Cancel</button>
+    </div>
+  </div>
+
+  <!-- ---------- Script ---------- -->
+  <script>
+    let aadhaar_cropper = null;
+    let aadhaar_currentId = null;
+
+    /* Open modal & initialise cropper */
+    function aadhaar_openCropper(event, id){
+      const file = event.target.files[0];
+      if(!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = document.getElementById('aadhaar_cropperImage');
+        img.src = e.target.result;
+        document.getElementById('aadhaar_cropperModal').style.display = 'block';
+
+        // destroy previous instance
+        if (aadhaar_cropper) aadhaar_cropper.destroy();
+        aadhaar_cropper = new Cropper(img, {
+          aspectRatio: 508/319,
+          viewMode: 1,
+          autoCropArea: 1,
+          background: false,
+        });
+      };
+      reader.readAsDataURL(file);
+      aadhaar_currentId = id;
+    }
+
+    /* Crop, base64-encode & submit hidden form */
+    function aadhaar_cropAndUpload(){
+      if(!aadhaar_cropper) return;
+      aadhaar_cropper.getCroppedCanvas({width:300,height:300})
+        .toBlob((blob)=>{
+          const fr = new FileReader();
+          fr.onloadend = () => {
+            document.getElementById(`aadhaar_cropped_${aadhaar_currentId}`).value = fr.result;
+            document.getElementById(`aadhaar_submit_${aadhaar_currentId}`).click();
+            aadhaar_closeModal();
+          };
+          fr.readAsDataURL(blob);
+        },'image/webp',0.9);
+    }
+
+    /* Close & clean up */
+    function aadhaar_closeModal(){
+      document.getElementById('aadhaar_cropperModal').style.display = 'none';
+      if(aadhaar_cropper){
+        aadhaar_cropper.destroy();
+        aadhaar_cropper = null;
+      }
+    }
+  </script>
+
+</div>
+<!-- ─────────────────── END COMPONENT ─────────────────── -->
+    {% elif what_to_show_status == 'Aadhaar_card_Back' %}
+
+<!-- ──────────────── AADHAAR-BACK UPLOAD COMPONENT ──────────────── -->
+<div id="upload_image_box">
+
+  <style>
+    .file_input{
+      height:100px;width:100px;border-radius:50%;
+      border:3px dashed #999;cursor:pointer;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      text-align:center;font-size:14px;
+    }
+    .file_input i{font-size:24px;margin-bottom:4px;}
+
+    .student_box{
+      border:1px solid #ccc;border-radius:8px;padding:10px;
+      display:flex;justify-content:space-evenly;gap:30px;
+      width:350px;margin:0 auto;
+    }
+    .name_mobile_box{display:flex;flex-direction:column;justify-content:center;align-items:center;}
+    .name_mobile_box .name{font-size:20px;font-weight:700;}
+
+    /* Modal */
+    #aadhaar_back_cropperModal{
+      display:none;position:fixed;top:10%;left:50%;transform:translateX(-50%);
+      width:90%;max-width:420px;height:80%;z-index:999;background:#fff;
+      padding:20px;border:1px solid #ccc;border-radius:12px;
+      box-shadow:0 10px 30px rgba(0,0,0,.15);
+    }
+    #aadhaar_back_cropperModal img{max-width:100%;}
+    #aadhaar_back_cropperModal .modal-actions{
+      position:absolute;bottom:20px;left:50%;transform:translateX(-50%);
+      display:flex;gap:1rem;
+    }
+  </style>
+
+  <!-- CropperJS + Font-Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <!-- Banner / sample -->
+  <div style="width:350px;margin:0 auto;overflow:hidden;border-radius:10px">
+    <img src="{% static 'img/aadhar_card_back_sample_image.jpg' %}" alt="Aadhaar back sample"
+         style="width:100%;object-fit:cover"/>
+  </div>
+
+  <!-- Student card -->
+  <div class="student_box">
+    <div class="img_box">
+      {% if documents.aadhaar_card_back %}
+        <img src="{{ documents.aadhaar_card_back.url }}" alt="Aadhaar back thumb"
+             style="width:100px;border-radius:10px;cursor:pointer"
+             onclick="document.getElementById('aadhaar_back_input_{{student.id}}').click()"/>
+      {% else %}
+        <label class="file_input" for="aadhaar_back_input_{{student.id}}">
+          <i class="fa fa-upload"></i><b>Upload Aadhaar Back</b>
+        </label>
+      {% endif %}
+
+      <!-- File input -->
+      <input type="file" accept="image/*" id="aadhaar_back_input_{{student.id}}"
+             style="display:none"
+             onchange="aadhaar_back_openCropper(event,'{{student.id}}')"/>
+
+      <!-- Hidden form -->
+      <form method="POST" enctype="multipart/form-data" id="aadhaar_back_form_{{student.id}}">
+        {% csrf_token %}
+        <input type="hidden" name="student_id" value="{{student.id}}">
+        <input type="hidden" name="aadhaar_back_cropped" id="aadhaar_back_cropped_{{student.id}}">
+        <button type="submit" name="save_aadhaar_back" id="aadhaar_back_submit_{{student.id}}" style="display:none"></button>
+      </form>
+    </div>
+
+    <div class="name_mobile_box">
+      <div class="name">{{student.name}}</div>
+    </div>
+  </div>
+
+  <!-- Nav buttons -->
+  <div class="text-center mt-2"
+       style="display:flex;width:350px;margin:0 auto;justify-content:space-evenly">
+    <form method="POST">
+      {% csrf_token %}
+      <input type="hidden" name="s_id" value="{{student.id}}">
+      <button type="submit" name="back_to_student_aadhaar_front"
+              class="btn btn-primary px-5">
+        <i class="fa-solid fa-arrow-left"></i> Back
+      </button>
+      {% if documents.aadhaar_card_back %}
+      <button type="submit" name="next_to_student_pan_card"
+              class="btn btn-primary px-5">
+        <i class="fa-solid fa-arrow-right"></i> Next
+      </button>
+      {% endif %}
+    </form>
+  </div>
+
+  <!-- Cropper modal -->
+  <div id="aadhaar_back_cropperModal">
+    <img id="aadhaar_back_cropperImage" alt="Crop preview"/>
+    <div class="modal-actions">
+      <button class="btn btn-success" onclick="aadhaar_back_cropAndUpload()">
+        Crop & Next <i class="fa-solid fa-arrow-right"></i>
+      </button>
+      <button class="btn btn-danger" onclick="aadhaar_back_closeModal()">Cancel</button>
+    </div>
+  </div>
+
+  <!-- JS logic -->
+  <script>
+    let aadhaar_back_cropper = null;
+    let aadhaar_back_currentId = null;
+
+    /* open modal + start cropper */
+    function aadhaar_back_openCropper(event, id){
+      const file = event.target.files[0];
+      if(!file) return;
+
+      const reader = new FileReader();
+      reader.onload = e=>{
+        const img = document.getElementById('aadhaar_back_cropperImage');
+        img.src = e.target.result;
+        document.getElementById('aadhaar_back_cropperModal').style.display='block';
+
+        if(aadhaar_back_cropper) aadhaar_back_cropper.destroy();
+        aadhaar_back_cropper = new Cropper(img,{
+          aspectRatio:508/319,   // Aadhaar back ratio
+          viewMode:1,
+          autoCropArea:1,
+          background:false
+        });
+      };
+      reader.readAsDataURL(file);
+      aadhaar_back_currentId = id;
+    }
+
+    /* crop + submit */
+    function aadhaar_back_cropAndUpload(){
+      if(!aadhaar_back_cropper) return;
+      aadhaar_back_cropper.getCroppedCanvas({width:508,height:319})
+        .toBlob(blob=>{
+          const fr = new FileReader();
+          fr.onloadend = ()=>{
+            document.getElementById(`aadhaar_back_cropped_${aadhaar_back_currentId}`).value=fr.result;
+            document.getElementById(`aadhaar_back_submit_${aadhaar_back_currentId}`).click();
+            aadhaar_back_closeModal();
+          };
+          fr.readAsDataURL(blob);
+        },'image/webp',0.9);
+    }
+
+    /* close modal */
+    function aadhaar_back_closeModal(){
+      document.getElementById('aadhaar_back_cropperModal').style.display='none';
+      if(aadhaar_back_cropper){
+        aadhaar_back_cropper.destroy();
+        aadhaar_back_cropper=null;
+      }
+    }
+  </script>
+
+</div>
+<!-- ──────────────── END COMPONENT ──────────────── -->
+    {% elif what_to_show_status == 'pan_card' %}
+{% load static %}
+
+<!-- ──────────────── PAN-CARD UPLOAD COMPONENT ──────────────── -->
+<div id="upload_pan_box">
+
+  <style>
+    .file_input{
+      height:100px;width:100px;border-radius:50%;
+      border:3px dashed #999;cursor:pointer;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      text-align:center;font-size:14px;
+    }
+    .file_input i{font-size:24px;margin-bottom:4px;}
+
+    .student_box{
+      border:1px solid #ccc;border-radius:8px;padding:10px;
+      display:flex;justify-content:space-evenly;gap:30px;width:350px;margin:0 auto;
+    }
+    .name_mobile_box{display:flex;flex-direction:column;justify-content:center;align-items:center;}
+    .name_mobile_box .name{font-size:20px;font-weight:700;}
+
+    /* Modal */
+    #pan_cropperModal{
+      display:none;position:fixed;top:10%;left:50%;transform:translateX(-50%);
+      width:90%;max-width:420px;height:80%;z-index:999;background:#fff;
+      padding:20px;border:1px solid #ccc;border-radius:12px;
+      box-shadow:0 10px 30px rgba(0,0,0,.15);
+    }
+    #pan_cropperModal img{max-width:100%;}
+    #pan_cropperModal .modal-actions{
+      position:absolute;bottom:20px;left:50%;transform:translateX(-50%);
+      display:flex;gap:1rem;
+    }
+  </style>
+
+  <!-- CropperJS & Font-Awesome (already included earlier, so you can omit if redundant) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<br>
+  <!-- Sample banner -->
+  <div style="width:350px;margin:0 auto;overflow:hidden;border-radius:10px">
+    <img src="{% static 'img/sample-pan-card.jpg' %}" alt="PAN sample"
+         style="width:100%;object-fit:cover"/>
+  </div>
+
+  <!-- Student card -->
+  <div class="student_box">
+    <div class="img_box">
+      {% if documents.pan_card %}
+        <img src="{{ documents.pan_card.url }}" alt="PAN thumb"
+             style="width:100px;border-radius:10px;cursor:pointer"
+             onclick="document.getElementById('pan_input_{{student.id}}').click()"/>
+      {% else %}
+        <label class="file_input" for="pan_input_{{student.id}}">
+          <i class="fa fa-upload"></i><b>Upload PAN</b>
+        </label>
+      {% endif %}
+
+      <!-- File input -->
+      <input type="file" accept="image/*" id="pan_input_{{student.id}}"
+             style="display:none"
+             onchange="pan_openCropper(event,'{{student.id}}')"/>
+
+      <!-- Hidden form -->
+      <form method="POST" enctype="multipart/form-data" id="pan_form_{{student.id}}">
+        {% csrf_token %}
+        <input type="hidden" name="student_id" value="{{student.id}}">
+        <input type="hidden" name="pan_cropped" id="pan_cropped_{{student.id}}">
+        <button type="submit" name="save_pan_card" id="pan_submit_{{student.id}}" style="display:none"></button>
+      </form>
+    </div>
+
+    <div class="name_mobile_box">
+      <div class="name">{{student.name}}</div>
+    </div>
+  </div>
+
+  <!-- Nav buttons -->
+  <div class="text-center mt-2"
+       style="display:flex;width:350px;margin:0 auto;justify-content:space-evenly">
+    <form method="POST">
+      {% csrf_token %}
+      <input type="hidden" name="s_id" value="{{student.id}}">
+      <button type="submit" name="back_to_student_aadhaar_back"
+              class="btn btn-primary px-5">
+        <i class="fa-solid fa-arrow-left"></i> Back
+      </button>
+    </form>
+  </div>
+
+  <!-- Cropper modal -->
+  <div id="pan_cropperModal">
+    <img id="pan_cropperImage" alt="Crop preview"/>
+    <div class="modal-actions">
+      <button class="btn btn-success" onclick="pan_cropAndUpload()">
+        Crop & Next <i class="fa-solid fa-arrow-right"></i>
+      </button>
+      <button class="btn btn-danger" onclick="pan_closeModal()">Cancel</button>
+    </div>
+  </div>
+
+  <!-- JS -->
+  <script>
+    let pan_cropper = null;
+    let pan_currentId = null;
+
+    // open modal + init cropper
+    function pan_openCropper(event,id){
+      const file = event.target.files[0];
+      if(!file) return;
+
+      const reader = new FileReader();
+      reader.onload = e=>{
+        const img = document.getElementById('pan_cropperImage');
+        img.src = e.target.result;
+        document.getElementById('pan_cropperModal').style.display='block';
+
+        if(pan_cropper) pan_cropper.destroy();
+        pan_cropper = new Cropper(img,{
+          aspectRatio:1.586,           // Standard PAN/credit-card ratio
+          viewMode:1,
+          autoCropArea:1,
+          background:false
+        });
+      };
+      reader.readAsDataURL(file);
+      pan_currentId = id;
+    }
+
+    // crop + submit
+    function pan_cropAndUpload(){
+      if(!pan_cropper) return;
+      // choose any target size that keeps the aspect ratio; here 480×303
+      pan_cropper.getCroppedCanvas({width:480,height:303})
+        .toBlob(blob=>{
+          const fr = new FileReader();
+          fr.onloadend = ()=>{
+            document.getElementById(`pan_cropped_${pan_currentId}`).value = fr.result;
+            document.getElementById(`pan_submit_${pan_currentId}`).click();
+            pan_closeModal();
+          };
+          fr.readAsDataURL(blob);
+        },'image/webp',0.9);
+    }
+
+    // close modal
+    function pan_closeModal(){
+      document.getElementById('pan_cropperModal').style.display='none';
+      if(pan_cropper){
+        pan_cropper.destroy();
+        pan_cropper=null;
+      }
+    }
+  </script>
+
+</div>
+<!-- ──────────────── END PAN-CARD COMPONENT ──────────────── -->
+
     {% endif %}
+
 
 </section>
 <br><br><br><br>

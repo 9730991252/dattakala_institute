@@ -227,6 +227,16 @@
             </div>
         </div>
         <div class="col-content">
+            {% if student_documents.aadhaar_card_front != None and student_documents.pan_card != None %}
+                <div style="display: grid;grid-template-columns: 300px 300px;">
+                    <div style="width: 300px;height: 180px; overflow: hidden;border-radius: 10px;">
+                        <img style="width: 100%;object-fit: cover;height: 180px;" src="{{student_documents.aadhaar_card_front.url}}" alt="">
+                    </div>
+                    <div style="width: 300px;height: 180px;overflow: hidden;border-radius: 10px;">
+                        <img style="width: 300px;height: 180px;object-fit: cover;" src="{{student_documents.pan_card.url}}" alt="">
+                    </div>
+                </div>
+            {% endif %}
             <h6 class="text-center" style="margin-bottom: 20px;">Student: <b>{{ student.name }}</b></h6>
             <div id="details_result">
                 <!-- Basic Details -->

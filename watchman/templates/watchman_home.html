@@ -1,0 +1,210 @@
+{% extends 'base.html' %}
+
+{% block head %}
+{% load static %}
+<style>
+  body {
+    background: linear-gradient(135deg, #e0ecf8, #f4f7fa);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  .form-container {
+    max-width: 700px;
+    margin: 60px auto;
+    background: #fff;
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+    animation: fadeIn 0.5s ease-in-out;
+  }
+
+  .form-container h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #222;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+
+  label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: block;
+    color: #333;
+  }
+
+  input[type="text"],
+  textarea,
+  select {
+    width: 100%;
+    padding: 14px;
+    margin-top: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    font-size: 15px;
+    background-color: #f9f9f9;
+    transition: all 0.3s ease;
+  }
+
+  input:focus,
+  textarea:focus,
+  select:focus {
+    border-color: #007bff;
+    background-color: #fff;
+    outline: none;
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.15);
+  }
+
+  .btn-primary {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+
+  .btn-primary:hover {
+    background: linear-gradient(135deg, #0056b3, #003d80);
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .form-container {
+      padding: 25px;
+    }
+
+    .form-container h2 {
+      font-size: 24px;
+    }
+  }
+  /* === TODAY’S APPOINTMENTS ====================================== */
+.container {
+  max-width: 1000px;               /* keeps the grid from stretching edge-to-edge */
+  margin: 50px auto;               /* center & add breathing room */
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;                       /* space between cards */
+}
+
+.todayes_appointment_box {
+  width: 280px;
+  background: #fff;
+  border: 1px solid #e7eaf0;
+  border-radius: 16px;
+  padding: 24px 28px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  animation: fadeIn 0.4s ease;     /* re-use your fade-in */
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.todayes_appointment_box:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+}
+
+/* Title + text tweaks */
+.todayes_appointment_box h3 {
+  margin: 0 0 12px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #222;
+}
+
+.todayes_appointment_box p {
+  margin: 4px 0;
+  font-size: 15px;
+  color: #555;
+  line-height: 1.45;
+  word-break: break-word;          /* long addresses wrap nicely */
+}
+
+/* Responsive touch-ups */
+@media (max-width: 600px) {
+  .container    { gap: 16px; }
+  .todayes_appointment_box {
+    padding: 20px;
+    border-radius: 12px;
+  }
+}
+
+</style>
+{% endblock head %}
+
+{% block content %}
+{% load admin_tag %}
+{% include 'peon_navbar.html' %}
+{% include 'alert.html' %}
+
+{% todayes_appointment_status_summary request %}
+
+
+<div class="form-container">
+  <h2>Book Appointment</h2>
+  <form method="POST">
+    {% csrf_token %}
+
+    <div class="mb-3">
+      <label for="visitor_name">Visitor Name</label>
+      <input type="text" name="visitor_name" oninput="this.value = this.value.replace(/[^a-zA-Z ]/g, '')" id="visitor_name" placeholder="Enter full name" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="visitor_mobile">Visitor Mobile</label>
+      <input type="text" oninput="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="10" name="visitor_mobile" id="visitor_mobile" placeholder="10-digit mobile number" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="visitor_address">Visitor Address</label>
+      <textarea name="visitor_address" id="visitor_address" rows="3" placeholder="Complete address" required></textarea>
+    </div>
+
+    <div class="mb-3">
+      <label for="visit_to">Visit To</label>
+      <select name="meat_to" id="visit_to" required>
+        <option value="" disabled selected>Select Person</option>
+        <option value="Zol_Sir">Zol Sir</option>
+        <option value="Zol_Madam">Zol Madam</option>
+        <option value="Both">Both</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label for="visit_reason">Visit Reason</label>
+      <textarea name="visit_reason" id="visit_reason" rows="3" placeholder="Mention purpose of visit" required></textarea>
+    </div>
+
+    <button type="submit" name="book_appointment" class="btn btn-primary">Book Appointment</button>
+  </form>
+</div>
+
+<div class="container">
+  {% for a in todays_appointments %}
+  <div class="todayes_appointment_box">
+    <h3>{{ a.visitor.visitor_name }}</h3>
+    <p>{{ a.visitor.visitor_address }}</p>
+    <p>{{ a.visitor.visitor_mobile }}</p>
+    <p>{{ a.visit_to }}</p>
+    <p>{{ a.visit_reason }}</p>
+    <br>
+  </div>
+  {% endfor %}
+</div>
+
+{% endblock content %}

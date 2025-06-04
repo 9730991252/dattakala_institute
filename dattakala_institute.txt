@@ -12,7 +12,6 @@ python3 manage.py makemigrations
 python3 manage.py migrate
 systemctl daemon-reload
 systemctl restart dattakala_institute.com.gunicorn
-systemctl restart dattakala_institute.com.gunicorn
 exit
  
 root

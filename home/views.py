@@ -264,6 +264,9 @@ def office_login(request):
             if c.category.name == 'PEON':
                 request.session['peon_mobile'] = request.POST["mobile"]
                 return redirect('peon_home')
+            if c.category.name == 'WATCHMAN':
+                request.session['watchman_mobile'] = request.POST["mobile"]
+                return redirect('watchman_home')
                 
         else:
             messages.error(request,f"Mobile Number or Secret Pin invalid.")

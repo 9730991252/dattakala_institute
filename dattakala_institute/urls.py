@@ -11,4 +11,5 @@ urlpatterns = [
     path('report/', include('report.urls')),
     path('peon/', include('peon.urls')),
     path('dattakala_admin/', include('dattakala_admin.urls')),
+    path('watchman/', include('watchman.urls')),
 ]+ static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

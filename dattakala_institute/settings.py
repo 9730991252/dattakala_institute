@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'account',
     'dattakala_admin',
     'report',
-    'peon'
+    'peon',
+    'watchman'
 ]
 
 MIDDLEWARE = [

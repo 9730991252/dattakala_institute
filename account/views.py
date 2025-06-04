@@ -145,7 +145,7 @@ def student_fee_detail(request, id):
         if student:
             student_approval = Student_approval.objects.filter(student=student).first()
             if student_approval:
-                if student_approval.office_approval_status == 0 or student_approval.store_approval_status == 0 or student_approval.college_account_approval_status == 0:
+                if student_approval.office_approval_status == 0 or student_approval.store_approval_status == 0:
                     messages.error(request, 'Please Approve the Student First')
                     return redirect('student_fees')
                 if student_approval.office_approval_status == 2 or student_approval.store_approval_status == 2 or student_approval.account_approval_status == 2 or student_approval.college_account_approval_status == 2 or student_approval.travel_account_approval_status == 2:

@@ -42,7 +42,6 @@ from django.core.files.base import ContentFile
 
 
 def index(request):
-    Employee.objects.filter(id=58).delete()
     context = {
     }
     return render(request, 'index.html', context)

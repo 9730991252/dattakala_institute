@@ -46,54 +46,120 @@ register = template.Library()
 #         'received_amount': sum([c['received_amount'] for c in credit_debit_category]),
 #         'pending_amount': sum([c['pending_amount'] for c in credit_debit_category]),
 #         }
-    
+from collections import defaultdict
+
+# This inclusion tag will be used in a Django template to show student counts by branch and year
+# It will display: number of male, female, and total students in each branch and year
+# It excludes already approved students and those without a form number
+
 @register.inclusion_tag('inclusion_tag/college_branches_student_details_admin.html')
 def college_branches_student_details_admin(batch_id):
-    branches = []
-    for b in Branch.objects.filter(batch_id=batch_id).order_by('college'):
-        year = []
-        for y in Year.objects.filter(added_by__batch_id=batch_id):
-            male = Student_college_detail.objects.filter(branch=b, year=y, student__gender='Male').count()
-            female = Student_college_detail.objects.filter(branch=b, year=y, student__gender='Female' ).count()
-            total = Student_college_detail.objects.filter(branch=b, year=y).count()
-            year.append({
-                'id': y.id,
-                'name': y.name,
-                'male': male,
-                'female': female,
-                'total': total,
+    # Step 1: Get all student records for the given batch
+    # - We exclude students without a form number
+    # - We include related student, branch, and year objects for faster access
+    student_details = Student_college_detail.objects.filter(
+        batch_id=batch_id
+    ).exclude(form_number=None).select_related('student', 'branch', 'year')
+
+    # Step 2: Get the IDs of students who are fully approved (by office, account, and store)
+    # - These students will be excluded from our count
+    approved_ids = set(Student_approval.objects.filter(
+        batch_id=batch_id,
+        office_approval_status=2,
+        account_approval_status=2,
+        store_approval_status=2
+    ).values_list('student_id', flat=True))
+
+    # Step 3: Prepare two dictionaries to keep track of counts
+    year_counts = {}     # Counts by (branch, year)
+    branch_counts = {}   # Total counts by branch only
+
+    # Step 4: Loop through each student detail and count based on gender
+    for detail in student_details:
+        student = detail.student
+        if not student or student.id in approved_ids:
+            continue  # Skip this student if missing or already approved
+
+        branch = detail.branch
+        year = detail.year
+        gender = student.gender
+
+        # Get IDs for easy use
+        b_id = branch.id
+        y_id = year.id if year else None
+
+        # Initialize branch totals if not already done
+        branch_counts.setdefault(b_id, {'male': 0, 'female': 0, 'total': 0})
+
+        # Initialize year totals if year is present
+        if y_id:
+            year_counts.setdefault((b_id, y_id), {'male': 0, 'female': 0, 'total': 0})
+
+        # Count based on gender for branch
+        branch_counts[b_id]['total'] += 1
+        if gender == 'Male':
+            branch_counts[b_id]['male'] += 1
+            if y_id:
+                year_counts[(b_id, y_id)]['male'] += 1
+        elif gender == 'Female':
+            branch_counts[b_id]['female'] += 1
+            if y_id:
+                year_counts[(b_id, y_id)]['female'] += 1
+
+        # Always increase total count for year if year exists
+        if y_id:
+            year_counts[(b_id, y_id)]['total'] += 1
+
+    # Step 5: Get the list of all branches and years for the current batch
+    branches = Branch.objects.filter(batch_id=batch_id).order_by('college')
+    years = Year.objects.filter(added_by__batch_id=batch_id)
+
+    # Step 6: Now prepare a clean structure (list of dictionaries) to send to the template
+    branches_data = []
+    for branch in branches:
+        year_data = []
+        for year in years:
+            # Get the count for this branch and year combination
+            stats = year_counts.get((branch.id, year.id), {'male': 0, 'female': 0, 'total': 0})
+            
+            if int(stats['total']) != 0:
+                year_data.append({
+                    'id': year.id,
+                    'name': year.name,
+                    'male': stats['male'],
+                    'female': stats['female'],
+                    'total': stats['total'],
+                })
+
+        # Get the overall total for this branch
+        total_stats = branch_counts.get(branch.id, {'male': 0, 'female': 0, 'total': 0})
+        if int(total_stats['total']) != 0:
+            # Add the final branch data
+            branches_data.append({
+                'id': branch.id,
+                'name': branch.name,
+                'college': branch.college,
+                'years': year_data,
+                'male': total_stats['male'],
+                'female': total_stats['female'],
+                'total': total_stats['total'],
             })
-        branches.append({
-            'id': b.id,
-            'name': b.name,
-            'college':b.college,
-            'years':year,
-            'male':Student_college_detail.objects.filter(branch=b, student__gender='Male').count(),
-            'female':Student_college_detail.objects.filter(branch=b, student__gender='Female').count(),
-            'total':Student_college_detail.objects.filter(branch=b).count(),
-        })
 
-    total = Student_college_detail.objects.filter(batch_id=batch_id).exclude(student__approval_status=2).count()
-    male = Student_college_detail.objects.filter(batch_id=batch_id, student__gender='Male').exclude(student__approval_status=2).count()
-    female = Student_college_detail.objects.filter(batch_id=batch_id, student__gender='Female').exclude(student__approval_status=2).count()
+    # Step 7: Calculate the total number of male, female, and all students in the batch
+    total_male = sum(branch['male'] for branch in branch_counts.values())
+    total_female = sum(branch['female'] for branch in branch_counts.values())
+    total_students = sum(branch['total'] for branch in branch_counts.values())
     
-    student_id = []
-    for s in Student_college_detail.objects.filter(batch_id=batch_id):
-        if s.student is not None:
-            student_id.append(s.student.id)
-    
-    if student_id:
-        total -= Student_approval.objects.filter(batch_id=batch_id, student__id__in=student_id, office_approval_status=2, account_approval_status=2, store_approval_status=2).count()
-        male -= Student_approval.objects.filter(batch_id=batch_id,student__gender='Male', student__id__in=student_id, office_approval_status = 2, account_approval_status = 2, store_approval_status = 2).count()
-        female -= Student_approval.objects.filter(batch_id=batch_id,student__gender='Female', student__id__in=student_id, office_approval_status = 2, account_approval_status = 2, store_approval_status = 2).count()
 
-    return { 
-            'branches': branches,
-            'total':total,
-            'male':male,
-            'female':female,
-            'batch_id':batch_id,
+    # Step 8: Return all the data to the Django template
+    return {
+        'branches': branches_data,     # List of all branches with year-wise and gender-wise counts
+        'total': total_students,       # Total number of students (excluding approved ones)
+        'male': total_male,            # Total male students
+        'female': total_female,        # Total female students
+        'batch_id': batch_id,          # Current batch ID (can be used in template logic)
     }
+
     
 @register.inclusion_tag('inclusion_tag/college_branches_hostel_student_details_admin.html')
 def college_branches_hostel_student_details_admin(batch_id):
@@ -197,44 +263,107 @@ def hostel_summary_admin(batch_id):
         'word_all_received':num2words(all_received, lang='en_IN').replace(',', ''),
         'word_all_pending':num2words(p, lang='en_IN').replace(',', '')
     }
+    
 @register.inclusion_tag('inclusion_tag/district_taluka_student_details_admin.html')
 def district_taluka_student_details_admin(batch_id):
-    print(batch_id)
+    from operator import itemgetter
+
     districts = []
-    for d in District.objects.all().order_by('name'):
-        total_student = Student.objects.filter(district=d).count()
-        total_student -= Student_approval.objects.filter(batch_id=batch_id, student__district=d, office_approval_status = 2, account_approval_status = 2, store_approval_status = 2).count()
-        male_student = Student.objects.filter(district=d, gender='Male').count()
-        male_student -= Student_approval.objects.filter(batch_id=batch_id,student__gender='Male', student__district=d, office_approval_status = 2, account_approval_status = 2, store_approval_status = 2).count()
-        female_student = Student.objects.filter(district=d, gender='Female').count()
-        female_student -= Student_approval.objects.filter(batch_id=batch_id,student__gender='Female', student__district=d, office_approval_status = 2, account_approval_status = 2, store_approval_status = 2).count()
+
+    # Loop through each district
+    for d in District.objects.all():
+        # Total students (excluding fully approved ones)
+        total_student = Student_college_detail.objects.filter(student__district=d).exclude(form_number=None).count()
+        total_student -= Student_approval.objects.filter(
+            batch_id=batch_id,
+            student__district=d,
+            office_approval_status=2,
+            account_approval_status=2,
+            store_approval_status=2
+        ).count()
+
+        male_student = Student_college_detail.objects.filter(student__district=d, student__gender='Male').exclude(form_number=None).count()
+        male_student -= Student_approval.objects.filter(
+            batch_id=batch_id,
+            student__gender='Male',
+            student__district=d,
+            office_approval_status=2,
+            account_approval_status=2,
+            store_approval_status=2
+        ).count()
+
+        female_student = Student_college_detail.objects.filter(student__district=d, student__gender='Female').exclude(form_number=None).count()
+        female_student -= Student_approval.objects.filter(
+            batch_id=batch_id,
+            student__gender='Female',
+            student__district=d,
+            office_approval_status=2,
+            account_approval_status=2,
+            store_approval_status=2
+        ).count()
+
         if total_student > 0:
-            taluka = []
-            for t in Taluka.objects.filter(district=d).order_by('name'):
-                taluka_total_student = Student.objects.filter(taluka=t).count()
-                taluka_total_student -= Student_approval.objects.filter(batch_id=batch_id, student__taluka=t, office_approval_status = 2, account_approval_status = 2, store_approval_status = 2).count()
-                taluka_male_student = Student.objects.filter(taluka=t, gender='Male').count()
-                taluka_male_student -= Student_approval.objects.filter(batch_id=batch_id,student__gender='Male', student__taluka=t, office_approval_status = 2, account_approval_status = 2, store_approval_status = 2).count()
-                taluka_female_student = Student.objects.filter(taluka=t, gender='Female').count()
-                taluka_female_student -= Student_approval.objects.filter(batch_id=batch_id,student__gender='Female', student__taluka=t, office_approval_status = 2, account_approval_status = 2, store_approval_status = 2).count()
+            taluka_list = []
+
+            # Loop through each taluka under this district
+            for t in Taluka.objects.filter(district=d):
+                taluka_total_student = Student_college_detail.objects.filter(student__taluka=t).exclude(form_number=None).count()
+                taluka_total_student -= Student_approval.objects.filter(
+                    batch_id=batch_id,
+                    student__taluka=t,
+                    office_approval_status=2,
+                    account_approval_status=2,
+                    store_approval_status=2
+                ).count()
+
+                taluka_male_student = Student_college_detail.objects.filter(student__taluka=t, student__gender='Male').exclude(form_number=None).count()
+                taluka_male_student -= Student_approval.objects.filter(
+                    batch_id=batch_id,
+                    student__gender='Male',
+                    student__taluka=t,
+                    office_approval_status=2,
+                    account_approval_status=2,
+                    store_approval_status=2
+                ).count()
+
+                taluka_female_student = Student_college_detail.objects.filter(student__taluka=t, student__gender='Female').exclude(form_number=None).count()
+                taluka_female_student -= Student_approval.objects.filter(
+                    batch_id=batch_id,
+                    student__gender='Female',
+                    student__taluka=t,
+                    office_approval_status=2,
+                    account_approval_status=2,
+                    store_approval_status=2
+                ).count()
+
+                # Only include taluka if it has students
                 if taluka_total_student > 0:
-                    taluka.append({
-                        'name':t.name,
-                        'total_student':taluka_total_student,
-                        'male_student':taluka_male_student,
-                        'female_student':taluka_female_student,
+                    taluka_list.append({
+                        'name': t.name,
+                        'total_student': taluka_total_student,
+                        'male_student': taluka_male_student,
+                        'female_student': taluka_female_student,
                     })
+
+            # Sort taluka list by highest total_student
+            taluka_list = sorted(taluka_list, key=itemgetter('total_student'), reverse=True)
+
+            # Append district with its sorted talukas
             districts.append({
-                'district':d,
-                'taluka':taluka,
-                'total_student':total_student,
-                'male_student':male_student,
-                'female_student':female_student,
+                'district': d,
+                'taluka': taluka_list,
+                'total_student': total_student,
+                'male_student': male_student,
+                'female_student': female_student,
             })
 
-    return{
-        'districts':districts
+    # Sort district list by highest total_student
+    districts = sorted(districts, key=itemgetter('total_student'), reverse=True)
+
+    return {
+        'districts': districts
     }
+
     
 @register.inclusion_tag('inclusion_tag/employee_detail_admin.html')
 def employee_detail_admin(batch):

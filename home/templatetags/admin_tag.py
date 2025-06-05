@@ -18,6 +18,30 @@ def get_rejected_student_ides(batch_id):
             rejected_student_ides.append(i.student.id)
     return rejected_student_ides
 
+@register.inclusion_tag('inclusion_tag/hostel_summary_college_admin.html')
+def hostel_summary_college_admin(batch_id):
+    rejected_student_ides = get_rejected_student_ides(batch_id)
+    colleges = []
+    student_ides = []
+    for h in Student_Hostel_Fee.objects.filter(batch_id=batch_id).exclude(student_id__in=rejected_student_ides, form_number=None):
+        student_ides.append(h.student_id)
+    for c in College.objects.filter(status=1, batch=batch_id):
+        college_detail = Student_college_detail.objects.filter(college=c, student_id__in=student_ides)
+        male_students = college_detail.filter(student__gender='Male').count()
+        female_students = college_detail.filter(student__gender='Female').count()
+        total_students = male_students + female_students
+        if total_students != 0:
+            colleges.append({
+                'college':c,
+                'total_students':total_students,
+                'male_students':male_students,
+                'female_students':female_students,
+            })
+    return{
+        'colleges':colleges,
+        'batch_id':batch_id,
+    }
+    
 @register.inclusion_tag('inclusion_tag/college_branches_student_details_admin.html')
 def college_branches_student_details_admin(batch_id):
     student_details = Student_college_detail.objects.filter(

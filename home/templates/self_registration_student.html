@@ -1,12 +1,13 @@
 {% extends 'base.html' %}
 {% block head %}
 {% load static %}
-    <link rel="shortcut icon" type="jpg" href="{% static 'img/logo.jpg' %}" class="profile-image" >
+<link rel="shortcut icon" type="jpg" href="{% static 'img/logo.jpg' %}" class="profile-image" >
 
     <meta property="og:type" content="website" />
     <meta property=og:url content= "https://dattakala.com" />  <!-- your  url -->
     <meta property="og:image:width" content="50"/>
     <meta property="og:image:height" content="50"/>
+
 {% endblock head %}
 {% block content %}
 <!-- header start -->
@@ -66,6 +67,42 @@
       }
     </style>
     {% include 'alert.html' %}
+    
+
+    <style>
+      #loader{
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        z-index: +231111111111111111111111111111111111111111111111111;
+        background-color: rgb(255, 255, 255);
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        display: none;
+        p{
+          margin-top: -50px;
+        }
+      }
+    </style>
+ 
+    {% load static %}
+
+    <div id="loader">
+      <img src="{% static 'img/loader.gif' %}" alt="">
+      <p>Loading Please Wait...</p>
+    </div>
+
+
+
+
+
+
     <!-- navBar end -->
     {% if what_to_show_status == 'Basic_Form' %}
     <div id="form_box">
@@ -585,8 +622,10 @@
                       const reader = new FileReader();
                       reader.onloadend = function () {
                           const base64data = reader.result;
-                          document.getElementById(`croppedImgInput${currentId}`).value = base64data;
-                          document.getElementById(`add_btn${currentId}`).click();
+                            document.getElementById('loader').style.display = 'flex'
+
+                            document.getElementById(`croppedImgInput${currentId}`).value = base64data;
+                            document.getElementById(`add_btn${currentId}`).click();
                           closeModal();
                       };
                       reader.readAsDataURL(blob);
@@ -746,8 +785,11 @@
         .toBlob((blob)=>{
           const fr = new FileReader();
           fr.onloadend = () => {
-            document.getElementById(`aadhaar_cropped_${aadhaar_currentId}`).value = fr.result;
-            document.getElementById(`aadhaar_submit_${aadhaar_currentId}`).click();
+              document.getElementById('loader').style.display = 'flex'
+              
+              
+                document.getElementById(`aadhaar_cropped_${aadhaar_currentId}`).value = fr.result;
+                document.getElementById(`aadhaar_submit_${aadhaar_currentId}`).click();
             aadhaar_closeModal();
           };
           fr.readAsDataURL(blob);
@@ -910,6 +952,8 @@
         .toBlob(blob=>{
           const fr = new FileReader();
           fr.onloadend = ()=>{
+              document.getElementById('loader').style.display = 'flex'
+
             document.getElementById(`aadhaar_back_cropped_${aadhaar_back_currentId}`).value=fr.result;
             document.getElementById(`aadhaar_back_submit_${aadhaar_back_currentId}`).click();
             aadhaar_back_closeModal();
@@ -1072,6 +1116,7 @@
         .toBlob(blob=>{
           const fr = new FileReader();
           fr.onloadend = ()=>{
+              document.getElementById('loader').style.display = 'flex'
             document.getElementById(`pan_cropped_${pan_currentId}`).value = fr.result;
             document.getElementById(`pan_submit_${pan_currentId}`).click();
             pan_closeModal();

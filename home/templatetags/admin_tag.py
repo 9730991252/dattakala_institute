@@ -6,63 +6,23 @@ import datetime
 from datetime import datetime, date, time
 
 from sunil.models import *
-from office.models import * 
-from dattakala_admin.models import * 
+from office.models import *
+from dattakala_admin.models import *
 from num2words import num2words
-
-# from school_admin.models import *
 register = template.Library()
 
-# @register.simple_tag()
-# def customer_selected_item_count(category_id):
-#     return selected_item_category.objects.filter(category_id=category_id,status = 1).count()
-
-
-
-# @register.inclusion_tag('inclusion_tag/home/customer_qr_code_cart_orders.html')
-# def customer_qr_code_cart_orders(hotel_id):
-#     return{'customer_cart':Customer_cart.objects.filter(table__hotel_id=hotel_id)}
-
-# @register.inclusion_tag('inclusion_tag/expenses_details.html')
-# def expenses_details(batch_id):
-#     print("batch_id", batch_id)
-#     credit_debit_category = []
-#     for c in Credit_Debit_category.objects.filter(added_by__batch_id=batch_id):
-#         total_amount = student_fee.objects.filter(credit_debit_category=c, batch_id=batch_id, student__status=1).aggregate(Sum('amount'))['amount__sum'] or 0
-#         received_amount = Student_received_Fee_Bank.objects.filter(credit_debit_category=c, added_by__batch_id=batch_id, student__status=1).aggregate(Sum('received_amount'))['received_amount__sum'] or 0
-#         received_amount += Student_received_Fee_Cash.objects.filter(credit_debit_category=c, added_by__batch_id=batch_id, student__status=1).aggregate(Sum('received_amount'))['received_amount__sum'] or 0
-#         credit_debit_category.append({
-#             'id': c.id, 
-#             'name': c.category_name,
-#             'total_amount': total_amount,
-#             'received_amount': received_amount,
-#             'pending_amount': total_amount - received_amount,
-            
-#         })    
-    
-#     return {
-#         'credit_debit_category': credit_debit_category,
-#         'total_amount': sum([c['total_amount'] for c in credit_debit_category]),
-#         'received_amount': sum([c['received_amount'] for c in credit_debit_category]),
-#         'pending_amount': sum([c['pending_amount'] for c in credit_debit_category]),
-#         }
-from collections import defaultdict
-
-# This inclusion tag will be used in a Django template to show student counts by branch and year
-# It will display: number of male, female, and total students in each branch and year
-# It excludes already approved students and those without a form number
+def get_rejected_student_ides(batch_id):
+    rejected_student_ides = []
+    for i in Student_approval.objects.filter(batch_id=batch_id):
+        if i.account_approval_status==2 or i.office_approval_status == 2 or i.store_approval_status == 2 or i.college_account_approval_status == 2 or i.travel_account_approval_status == 2:
+            rejected_student_ides.append(i.student.id)
+    return rejected_student_ides
 
 @register.inclusion_tag('inclusion_tag/college_branches_student_details_admin.html')
 def college_branches_student_details_admin(batch_id):
-    # Step 1: Get all student records for the given batch
-    # - We exclude students without a form number
-    # - We include related student, branch, and year objects for faster access
     student_details = Student_college_detail.objects.filter(
         batch_id=batch_id
     ).exclude(form_number=None).select_related('student', 'branch', 'year')
-
-    # Step 2: Get the IDs of students who are fully approved (by office, account, and store)
-    # - These students will be excluded from our count
     approved_ids = set(Student_approval.objects.filter(
         batch_id=batch_id,
         office_approval_status=2,
@@ -70,11 +30,9 @@ def college_branches_student_details_admin(batch_id):
         store_approval_status=2
     ).values_list('student_id', flat=True))
 
-    # Step 3: Prepare two dictionaries to keep track of counts
     year_counts = {}     # Counts by (branch, year)
     branch_counts = {}   # Total counts by branch only
 
-    # Step 4: Loop through each student detail and count based on gender
     for detail in student_details:
         student = detail.student
         if not student or student.id in approved_ids:
@@ -121,7 +79,7 @@ def college_branches_student_details_admin(batch_id):
         for year in years:
             # Get the count for this branch and year combination
             stats = year_counts.get((branch.id, year.id), {'male': 0, 'female': 0, 'total': 0})
-            
+
             if int(stats['total']) != 0:
                 year_data.append({
                     'id': year.id,
@@ -149,7 +107,7 @@ def college_branches_student_details_admin(batch_id):
     total_male = sum(branch['male'] for branch in branch_counts.values())
     total_female = sum(branch['female'] for branch in branch_counts.values())
     total_students = sum(branch['total'] for branch in branch_counts.values())
-    
+
 
     # Step 8: Return all the data to the Django template
     return {
@@ -160,107 +118,14 @@ def college_branches_student_details_admin(batch_id):
         'batch_id': batch_id,          # Current batch ID (can be used in template logic)
     }
 
-    
-@register.inclusion_tag('inclusion_tag/college_branches_hostel_student_details_admin.html')
-def college_branches_hostel_student_details_admin(batch_id):
-    branches = []
-    for b in Branch.objects.filter(batch_id=batch_id).order_by('college'):
-        year = []
-        branch_total_amount = 0
-        branch_received = 0
-        for y in Year.objects.filter(added_by__batch_id=batch_id):
-            male = Student_college_detail.objects.filter(branch=b, year=y, student__gender='Male').count()
-            female = Student_college_detail.objects.filter(branch=b, year=y, student__gender='Female' ).count()
-            total = Student_college_detail.objects.filter(branch=b, year=y).count()
-
-            s_id = []
-            for s in Student_college_detail.objects.filter(branch=b, year=y):
-                s_id.append(s.student.id)
-                # print(s.student.id, s.student.name)
-            year_total_amount = Student_Hostel_Fee.objects.filter(student__id__in=s_id, batch_id=batch_id).aggregate(Sum('hostel_fee__amount'))['hostel_fee__amount__sum'] or 0
-            # print(branch_total_amount)
-            year_received = Student_received_Fee_Bank_hostel.objects.filter(student__id__in=s_id, batch_id=batch_id).aggregate(Sum('received_amount'))['received_amount__sum'] or 0
-            year_received += Student_Received_Fee_Cash_Hostel.objects.filter(student__id__in=s_id, batch_id=batch_id).aggregate(Sum('received_amount'))['received_amount__sum'] or 0
-            branch_total_amount += year_total_amount
-            branch_received += year_received
-            year.append({
-                'id': y.id,
-                'name': y.name,
-                'male': male,
-                'female': female,
-                'total': total,
-                'year_total_amount': year_total_amount,
-                'year_received': year_received,
-                'year_pending_amount': year_total_amount - year_received,
-            })
-        branches.append({
-            'id': b.id,
-            'name': b.name,
-            'college':b.college,
-            'years':year,
-            'male':Student_college_detail.objects.filter(branch=b, student__gender='Male').count(),
-            'female':Student_college_detail.objects.filter(branch=b, student__gender='Female').count(),
-            'total':Student_college_detail.objects.filter(branch=b).count(),
-            'branch_total_amount':branch_total_amount,
-            'branch_received':branch_received,
-            'pending_amount':branch_total_amount-branch_received,
-        })
-
-    all_total_amount = Student_Hostel_Fee.objects.filter(batch_id=batch_id).aggregate(Sum('hostel_fee__amount'))['hostel_fee__amount__sum'] or 0
-    all_received = Student_received_Fee_Bank_hostel.objects.filter(batch_id=batch_id).aggregate(Sum('received_amount'))['received_amount__sum'] or 0
-    all_received += Student_Received_Fee_Cash_Hostel.objects.filter(batch_id=batch_id).aggregate(Sum('received_amount'))['received_amount__sum'] or 0
-
-    college = []
-    for c in College.objects.filter(batch_id=batch_id):
-        s_id = []
-        for s in Student_college_detail.objects.filter(college=c):
-            s_id.append(s.student.id)
-        college_total_amount = Student_Hostel_Fee.objects.filter(student__id__in=s_id, batch_id=batch_id).aggregate(Sum('hostel_fee__amount'))['hostel_fee__amount__sum'] or 0
-        all_received_college = Student_received_Fee_Bank_hostel.objects.filter(student_id__in=s_id,batch_id=batch_id).aggregate(Sum('received_amount'))['received_amount__sum'] or 0
-        all_received_college += Student_Received_Fee_Cash_Hostel.objects.filter(student_id__in=s_id,batch_id=batch_id).aggregate(Sum('received_amount'))['received_amount__sum'] or 0
-        college.append({
-            'id': c.id,
-            'name': c.name,
-            'male':Student_college_detail.objects.filter(college=c, student__gender='Male').count(),
-            'female':Student_college_detail.objects.filter(college=c, student__gender='Female').count(),
-            'total':Student_college_detail.objects.filter(college=c).count(),
-            'college_total_amount':college_total_amount,
-            'college_received':all_received_college,
-            'college_pending_amount':college_total_amount-all_received_college,
-        'batch_id':batch_id,
-            
-        })
-
-
-    return {
-        'all_total_amount':all_total_amount,
-        'all_received':all_received,
-        'all_pending':all_total_amount-all_received,
-        'branches':branches,
-        'total_student':Student_Hostel_Fee.objects.filter(batch_id=batch_id).exclude(student__approval_status=2).count(),
-        'male_student':Student_Hostel_Fee.objects.filter(batch_id=batch_id, student__gender='Male').exclude(student__approval_status=2).count(),
-        'female_student':Student_Hostel_Fee.objects.filter(batch_id=batch_id, student__gender='Female').exclude(student__approval_status=2).count(),
-        'college':college,
-        'batch_id':batch_id,
-    } 
-    
-
-# This inclusion tag is used in a Django template to display student gender counts per college
-# It shows: total number of male, female, and overall students in each college
-# It excludes students who are already fully approved (office, account, store)
-# It also excludes students who do not have a valid form number
-
 @register.inclusion_tag('inclusion_tag/college_admission_student_detail.html')
 def college_admission_student_detail(batch_id):
-    # Step 1: Get all student records for the given batch
-    # - Only include students who have filled their form
-    # - Use select_related to reduce database hits when accessing related models
+
     student_details = Student_college_detail.objects.filter(
         batch_id=batch_id
     ).exclude(form_number=None).select_related('student', 'branch', 'year')
 
     # Step 2: Fetch all student IDs that have been approved by all departments
-    # These students should be excluded from our counting
     approved_ids = set(Student_approval.objects.filter(
         batch_id=batch_id,
         office_approval_status=2,
@@ -315,110 +180,34 @@ def college_admission_student_detail(batch_id):
         'college': college_data  # List of colleges with their male/female/total student counts
     }
 
-    
-@register.inclusion_tag('inclusion_tag/college_branches_hostel_student_details_admin.html')
-def college_branches_hostel_student_details_admin(batch_id):
-    branches = []
-    for b in Branch.objects.filter(batch_id=batch_id).order_by('college'):
-        year = []
-        branch_total_amount = 0
-        branch_received = 0
-        for y in Year.objects.filter(added_by__batch_id=batch_id):
-            male = Student_college_detail.objects.filter(branch=b, year=y, student__gender='Male').count()
-            female = Student_college_detail.objects.filter(branch=b, year=y, student__gender='Female' ).count()
-            total = Student_college_detail.objects.filter(branch=b, year=y).count()
-
-            s_id = []
-            for s in Student_college_detail.objects.filter(branch=b, year=y):
-                s_id.append(s.student.id)
-                # print(s.student.id, s.student.name)
-            year_total_amount = Student_Hostel_Fee.objects.filter(student__id__in=s_id, batch_id=batch_id).aggregate(Sum('hostel_fee__amount'))['hostel_fee__amount__sum'] or 0
-            # print(branch_total_amount)
-            year_received = Student_received_Fee_Bank_hostel.objects.filter(student__id__in=s_id, batch_id=batch_id).aggregate(Sum('received_amount'))['received_amount__sum'] or 0
-            year_received += Student_Received_Fee_Cash_Hostel.objects.filter(student__id__in=s_id, batch_id=batch_id).aggregate(Sum('received_amount'))['received_amount__sum'] or 0
-            branch_total_amount += year_total_amount
-            branch_received += year_received
-            year.append({
-                'id': y.id,
-                'name': y.name,
-                'male': male,
-                'female': female,
-                'total': total,
-                'year_total_amount': year_total_amount,
-                'year_received': year_received,
-                'year_pending_amount': year_total_amount - year_received,
-            })
-        branches.append({
-            'id': b.id,
-            'name': b.name,
-            'college':b.college,
-            'years':year,
-            'male':Student_college_detail.objects.filter(branch=b, student__gender='Male').count(),
-            'female':Student_college_detail.objects.filter(branch=b, student__gender='Female').count(),
-            'total':Student_college_detail.objects.filter(branch=b).count(),
-            'branch_total_amount':branch_total_amount,
-            'branch_received':branch_received,
-            'pending_amount':branch_total_amount-branch_received,
-        })
-
-    all_total_amount = Student_Hostel_Fee.objects.filter(batch_id=batch_id).aggregate(Sum('hostel_fee__amount'))['hostel_fee__amount__sum'] or 0
-    all_received = Student_received_Fee_Bank_hostel.objects.filter(batch_id=batch_id).aggregate(Sum('received_amount'))['received_amount__sum'] or 0
-    all_received += Student_Received_Fee_Cash_Hostel.objects.filter(batch_id=batch_id).aggregate(Sum('received_amount'))['received_amount__sum'] or 0
-
-    college = []
-    for c in College.objects.filter(batch_id=batch_id):
-        s_id = []
-        for s in Student_college_detail.objects.filter(college=c):
-            s_id.append(s.student.id)
-        college_total_amount = Student_Hostel_Fee.objects.filter(student__id__in=s_id, batch_id=batch_id).aggregate(Sum('hostel_fee__amount'))['hostel_fee__amount__sum'] or 0
-        all_received_college = Student_received_Fee_Bank_hostel.objects.filter(student_id__in=s_id,batch_id=batch_id).aggregate(Sum('received_amount'))['received_amount__sum'] or 0
-        all_received_college += Student_Received_Fee_Cash_Hostel.objects.filter(student_id__in=s_id,batch_id=batch_id).aggregate(Sum('received_amount'))['received_amount__sum'] or 0
-        college.append({
-            'id': c.id,
-            'name': c.name,
-            'male':Student_college_detail.objects.filter(college=c, student__gender='Male').count(),
-            'female':Student_college_detail.objects.filter(college=c, student__gender='Female').count(),
-            'total':Student_college_detail.objects.filter(college=c).count(),
-            'college_total_amount':college_total_amount,
-            'college_received':all_received_college,
-            'college_pending_amount':college_total_amount-all_received_college,
-        'batch_id':batch_id,
-            
-        })
 
 
-    return {
-        'all_total_amount':all_total_amount,
-        'all_received':all_received,
-        'all_pending':all_total_amount-all_received,
-        'branches':branches,
-        'total_student':Student_Hostel_Fee.objects.filter(batch_id=batch_id).exclude(student__approval_status=2).count(),
-        'male_student':Student_Hostel_Fee.objects.filter(batch_id=batch_id, student__gender='Male').exclude(student__approval_status=2).count(),
-        'female_student':Student_Hostel_Fee.objects.filter(batch_id=batch_id, student__gender='Female').exclude(student__approval_status=2).count(),
-        'college':college,
-        'batch_id':batch_id,
-    } 
-    
 @register.inclusion_tag('inclusion_tag/hostel_summary_admin.html')
 def hostel_summary_admin(batch_id):
-    all_total_amount = Student_Hostel_Fee.objects.filter(batch_id=batch_id).aggregate(Sum('hostel_fee__amount'))['hostel_fee__amount__sum'] or 0
-    all_received = Student_received_Fee_Bank_hostel.objects.filter(batch_id=batch_id).aggregate(Sum('received_amount'))['received_amount__sum'] or 0
-    all_received += Student_Received_Fee_Cash_Hostel.objects.filter(batch_id=batch_id).aggregate(Sum('received_amount'))['received_amount__sum'] or 0
+    rejected_student_ides = get_rejected_student_ides(batch_id)
+    all_total_amount = Student_Hostel_Fee.objects.filter(batch_id=batch_id).exclude(student_id__in=rejected_student_ides).aggregate(Sum('hostel_fee__amount'))['hostel_fee__amount__sum'] or 0
+    all_received = Student_received_Fee_Bank_hostel.objects.filter(batch_id=batch_id).exclude(student_id__in=rejected_student_ides).aggregate(Sum('received_amount'))['received_amount__sum'] or 0
+    all_received += Student_Received_Fee_Cash_Hostel.objects.filter(batch_id=batch_id).exclude(student_id__in=rejected_student_ides).aggregate(Sum('received_amount'))['received_amount__sum'] or 0
     word_total_amount = num2words(all_total_amount, lang='en_IN').replace(',', '')
     p = all_total_amount-all_received
-    
+
+    student_hostel_fee = Student_Hostel_Fee.objects.filter(batch_id=batch_id).exclude(form_number=None, student_id__in=rejected_student_ides)
+
+    male_student = student_hostel_fee.filter(student__gender='Male').count()
+    female_student = student_hostel_fee.filter(student__gender='Female').count()
+    total_student = male_student + female_student
     return {
         'all_total_amount': f'{all_total_amount:,}',
         'all_received': f'{all_received:,}',
         'all_pending': f'{all_total_amount-all_received:,}',
-        'total_student':Student_Hostel_Fee.objects.filter(batch_id=batch_id).count(),
-        'male_student':Student_Hostel_Fee.objects.filter(batch_id=batch_id, student__gender='Male').count(),
-        'female_student':Student_Hostel_Fee.objects.filter(batch_id=batch_id, student__gender='Female').count(),
+        'total_student':total_student,
+        'male_student':male_student,
+        'female_student':female_student,
         'word_total_amount':word_total_amount,
         'word_all_received':num2words(all_received, lang='en_IN').replace(',', ''),
         'word_all_pending':num2words(p, lang='en_IN').replace(',', '')
     }
-    
+
 @register.inclusion_tag('inclusion_tag/district_taluka_student_details_admin.html')
 def district_taluka_student_details_admin(batch_id):
     from operator import itemgetter
@@ -519,7 +308,7 @@ def district_taluka_student_details_admin(batch_id):
         'districts': districts
     }
 
-    
+
 @register.inclusion_tag('inclusion_tag/employee_detail_admin.html')
 def employee_detail_admin(batch):
     employee = Employee.objects.filter(batch=batch, status=1)
@@ -538,7 +327,7 @@ def employee_detail_admin(batch):
         'female':employee.filter(gender='Female').count(),
         'employee_category':employee_category
     }
-    
+
 @register.inclusion_tag('inclusion_tag/todayes_appointment_status_summary.html')
 def todayes_appointment_status_summary(request):
     todayes_appointment = Appointment.objects.filter(book_date_time__date=date.today())

@@ -1,9 +1,10 @@
 <style>
-  .container {
+  .college_box_container {
     max-width: 80%;
     margin: 0px auto;
     padding: 20px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin-top: -50px;
   }
 
   .college_box {
@@ -47,7 +48,7 @@
   }
 </style>
 
-<div class="container">
+<div class="college_box_container">
   {% for c in colleges %}
     <div class="college_box">
       <div class="college_name">{{ c.college.name }}</div>

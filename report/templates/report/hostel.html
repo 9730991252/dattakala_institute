@@ -11,7 +11,7 @@
 
 <div class="text-center"><b>Hostel Report</b></div>
 <br>
-<div class="container" style="display: flex;gap: 10px;">
+<div class="container" style="display: flex;gap: 10px;margin-top: -50px;margin-bottom: -50px;">
     <Form method="POST">
         {% csrf_token %}
         <button class="btn btn-success" type="submit" name="download_excel"><i class="fa fa-download" aria-hidden="true"></i> Pending Excel</button>
@@ -21,6 +21,8 @@
 <br><br>
 
 {% hostel_summary_admin clerk.batch_id %}
+{% hostel_summary_college_admin clerk.batch_id %}
+{% hostel_summary_college_branch_admin clerk.batch_id %}
 
 
 {% endblock content %}

@@ -42,6 +42,29 @@ def hostel_summary_college_admin(batch_id):
         'batch_id':batch_id,
     }
     
+
+def hostel_summary_college_branch_year_admin(batch_id, branch_id):
+    rejected_student_ides = get_rejected_student_ides(batch_id)
+    year = []
+    student_ides = []
+    for h in Student_Hostel_Fee.objects.filter(batch_id=batch_id).exclude(student_id__in=rejected_student_ides, form_number=None):
+        student_ides.append(h.student_id)
+    for y in Year.objects.filter(status=1).order_by('name'):
+        college_detail = Student_college_detail.objects.filter(branch_id=branch_id,year=y, student_id__in=student_ides)
+        male_students = college_detail.filter(student__gender='Male').count()
+        female_students = college_detail.filter(student__gender='Female').count()
+        total_students = male_students + female_students
+        if total_students != 0: 
+            year.append({
+                'year':y,
+                'total_students':total_students,
+                'male_students':male_students,
+                'female_students':female_students,
+            })
+    return year
+    
+
+
 @register.inclusion_tag('inclusion_tag/hostel_summary_college_branch_admin.html')
 def hostel_summary_college_branch_admin(batch_id):
     rejected_student_ides = get_rejected_student_ides(batch_id)
@@ -57,6 +80,7 @@ def hostel_summary_college_branch_admin(batch_id):
         if total_students != 0:
             branch.append({
                 'branch':b,
+                'years':hostel_summary_college_branch_year_admin(batch_id, b.id),
                 'total_students':total_students,
                 'male_students':male_students,
                 'female_students':female_students,

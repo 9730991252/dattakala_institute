@@ -1,3 +1,66 @@
+{% load static %}
+<style>
+/* NavBar Start */
+    .navbar{
+        position: sticky;
+        top: 0;
+        left: 0;
+        right: 0;
+        background-color: rgb(255, 255, 255) !important;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+        z-index: +6423212333121323211321345613223346542456465564456465456546666665456132496;
+    }
+/* NavBar End */
+</style>
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+        <img src="{% static 'img/logo.jpg' %}" width="40px" style="border-radius: 50%;" alt="">
+      <a class="navbar-brand" style="font-weight: 700;" href="/#home"> &nbsp; Dattakala</a>
+      <div></div>
+    </div>
+  </nav>
+
+
+
+  <style>
+    .menu {
+        display: flex;
+        overflow-x: auto;
+        gap: 10px;
+        padding: 10px;
+        background: #f8f9fa;
+        white-space: nowrap;
+    }
+    .menu a, .menu button {
+        flex: 0 0 auto;
+        padding: 8px 16px;
+        text-decoration: none;
+        font-weight: 600;
+        border-radius: 8px;
+        text-align: center;
+    }
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 40px;
+        font-size: 14px;
+    }
+    /* Hide scrollbar on mobile */
+    .menu::-webkit-scrollbar {
+        display: none;
+    }
+</style>
+<div class="menu">
+  <a  href="/dattakala_admin/admin_home/" class="my-1 {% if request.path == '/dattakala_admin/admin_home/' %}btn btn-warning{% else %}btn btn-primary{% endif %}">Home</a>
+  <a  href="/dattakala_admin/todays_appointment/" class="my-1 {% if request.path == '/dattakala_admin/todays_appointment/' %}btn btn-warning{% else %}btn btn-primary{% endif %}">Todays Appointment</a>
+  <a  href="/dattakala_admin/admin_student/" class="my-1 {% if request.path == '/dattakala_admin/admin_student/' %}btn btn-warning{% else %}btn btn-primary{% endif %}">Student & Admission</a>
+  <a  href="/dattakala_admin/admin_student_hostel/" class="my-1 {% if request.path == '/dattakala_admin/admin_student_hostel/' %}btn btn-warning{% else %}btn btn-primary{% endif %}">Student & Hostel</a>
+  <a  href="/dattakala_admin/admin_employee/" class="my-1 {% if request.path == '/dattakala_admin/admin_employee/' %}btn btn-warning{% else %}btn btn-primary{% endif %}">Employee</a>
+  <a  href="/dattakala_admin/admin_account/" class="my-1 {% if request.path == '/dattakala_admin/admin_account/' or request.path == '/dattakala_admin/credit/' %}btn btn-warning{% else %}btn btn-primary{% endif %}">Account</a>
+  <a  href="/dattakala_admin/admin_home/" class="my-1 {% if request.path == '/dattakala_admin/admin_report/' %}btn btn-warning{% else %}btn btn-primary{% endif %}">Report</a>
+  <a  href="/logout/" class="my-1 btn btn-danger">LogOut</a>
+
+</div>
+
 <p>welcome.{{employee.name}}</p>
-
-

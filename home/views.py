@@ -270,6 +270,9 @@ def self_registration_student(request):
         messages.success(request, 'Congratulation 🎉🎉! You Self Registration Form is Submitted Successfully')
         # Move to next step
         return redirect('/')  # or the next step you are handling
+    if 'skip_pan_card_and_submit' in request.POST:
+        messages.success(request, 'Congratulation 🎉🎉! You Self Registration Form is Submitted Successfully')
+        return redirect('/')
 
     # NAVIGATION: BACK TO AADHAAR BACK
     if 'back_to_student_aadhaar_back' in request.POST:

@@ -1003,23 +1003,26 @@
         <button type="submit" name="save_pan_card" id="pan_submit_{{student.id}}" style="display:none"></button>
       </form>
     </div>
-
+    
     <div class="name_mobile_box">
       <div class="name">{{student.name}}</div>
     </div>
   </div>
-
+  
   <!-- Nav buttons -->
   <div class="text-center mt-2"
-       style="display:flex;width:350px;margin:0 auto;justify-content:space-evenly">
-    <form method="POST">
-      {% csrf_token %}
-      <input type="hidden" name="s_id" value="{{student.id}}">
-      <button type="submit" name="back_to_student_aadhaar_back"
-              class="btn btn-primary px-5">
-        <i class="fa-solid fa-arrow-left"></i> Back
-      </button>
-    </form>
+  >
+  <form method="POST" style="display:flex;width:350px;margin:0 auto;justify-content:space-evenly ; gap: 10px;">
+    {% csrf_token %}
+    <input type="hidden" name="s_id" value="{{student.id}}">
+    <button type="submit" name="back_to_student_aadhaar_back"  class="btn btn-primary px-5">
+      <i class="fa-solid fa-arrow-left"></i> Back
+    </button>
+
+    <button type="submit" name="skip_pan_card_and_submit"  class="btn btn-danger btn-sm">
+      Skip & Submit
+    </button>
+  </form>
   </div>
 
   <!-- Cropper modal -->

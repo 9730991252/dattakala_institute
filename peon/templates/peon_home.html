@@ -6,45 +6,47 @@
   body {
     background: linear-gradient(135deg, #e0ecf8, #f4f7fa);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
   }
 
   .form-container {
-    max-width: 700px;
+    max-width: 720px;
     margin: 60px auto;
-    background: #fff;
-    border-radius: 16px;
-    padding: 40px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
-    animation: fadeIn 0.5s ease-in-out;
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 40px 50px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.6s ease-in-out;
   }
 
   .form-container h2 {
     text-align: center;
     margin-bottom: 30px;
-    color: #222;
-    font-size: 28px;
-    font-weight: 700;
-    letter-spacing: 1px;
+    color: #002147;
+    font-size: 30px;
+    font-weight: 800;
   }
 
   label {
     font-weight: 600;
     margin-bottom: 6px;
     display: block;
-    color: #333;
+    color: #002147;
+    letter-spacing: 0.3px;
   }
 
   input[type="text"],
   textarea,
   select {
     width: 100%;
-    padding: 14px;
+    padding: 14px 16px;
     margin-top: 8px;
-    margin-bottom: 20px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
+    margin-bottom: 22px;
+    border: 1px solid #d3d9df;
+    border-radius: 12px;
     font-size: 15px;
-    background-color: #f9f9f9;
+    background-color: #f5f7fb;
     transition: all 0.3s ease;
   }
 
@@ -54,30 +56,115 @@
     border-color: #007bff;
     background-color: #fff;
     outline: none;
-    box-shadow: 0 0 10px rgba(0, 123, 255, 0.15);
+    box-shadow: 0 0 12px rgba(0, 123, 255, 0.2);
   }
 
   .btn-primary {
     width: 100%;
     padding: 14px;
     border: none;
-    border-radius: 10px;
-    background: linear-gradient(135deg, #007bff, #0056b3);
+    border-radius: 12px;
+    background: linear-gradient(135deg, #1e90ff, #007bff);
     color: #fff;
-    font-size: 16px;
+    font-size: 17px;
     font-weight: bold;
     cursor: pointer;
-    transition: background 0.3s ease;
+    transition: transform 0.3s ease, background 0.3s ease;
   }
 
   .btn-primary:hover {
     background: linear-gradient(135deg, #0056b3, #003d80);
+    transform: scale(1.02);
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 50px auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+    gap: 26px;
+    padding: 0 20px;
+  }
+
+  .todayes_appointment_box {
+    background: #fff;
+    border: 1px solid #e4eaf2;
+    border-radius: 18px;
+    padding: 22px 26px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    animation: fadeIn 0.5s ease;
+  }
+
+  .todayes_appointment_box:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 30px rgba(0, 0, 0, 0.1);
+  }
+
+  .todayes_appointment_box h3 {
+    font-size: 21px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #222;
+  }
+
+  .todayes_appointment_box p {
+    font-size: 15px;
+    color: #444;
+    margin: 6px 0;
+  }
+
+  .text-warning {
+    background: #fff3cd;
+    color: #856404;
+    padding: 6px 12px;
+    border-radius: 8px;
+    display: inline-block;
+    font-weight: 600;
+  }
+
+  .text-success {
+    background: #d4edda;
+    color: #155724;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-weight: 600;
+  }
+
+  .text-danger {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-weight: 600;
+  }
+
+  .btn-sm {
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-right: 8px;
+  }
+
+  input[type="number"] {
+    padding: 6px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    width: 80px;
+    text-align: center;
+  }
+
+  .fa-check {
+    color: green;
+    font-size: 16px;
   }
 
   @keyframes fadeIn {
     from {
       opacity: 0;
-      transform: translateY(40px);
+      transform: translateY(30px);
     }
     to {
       opacity: 1;
@@ -85,7 +172,7 @@
     }
   }
 
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
     .form-container {
       padding: 25px;
     }
@@ -93,57 +180,11 @@
     .form-container h2 {
       font-size: 24px;
     }
+
+    .container {
+      grid-template-columns: 1fr;
+    }
   }
-  /* === TODAY’S APPOINTMENTS ====================================== */
-.container {
-  max-width: 1000px;               /* keeps the grid from stretching edge-to-edge */
-  margin: 50px auto;               /* center & add breathing room */
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 24px;                       /* space between cards */
-}
-
-.todayes_appointment_box {
-  width: 280px;
-  background: #fff;
-  border: 1px solid #e7eaf0;
-  border-radius: 16px;
-  padding: 24px 28px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-  animation: fadeIn 0.4s ease;     /* re-use your fade-in */
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-.todayes_appointment_box:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
-}
-
-/* Title + text tweaks */
-.todayes_appointment_box h3 {
-  margin: 0 0 12px;
-  font-size: 20px;
-  font-weight: 700;
-  color: #222;
-}
-
-.todayes_appointment_box p {
-  margin: 4px 0;
-  font-size: 15px;
-  color: #555;
-  line-height: 1.45;
-  word-break: break-word;          /* long addresses wrap nicely */
-}
-
-/* Responsive touch-ups */
-@media (max-width: 600px) {
-  .container    { gap: 16px; }
-  .todayes_appointment_box {
-    padding: 20px;
-    border-radius: 12px;
-  }
-}
-
 </style>
 {% endblock head %}
 
@@ -153,7 +194,6 @@
 {% include 'alert.html' %}
 
 {% todayes_appointment_status_summary request %}
-
 
 <div class="form-container">
   <h2>Book Appointment</h2>

@@ -1,14 +1,4 @@
-{% load admin_tag %}
-
-<div style="height: 80vh;overflow-y: scroll;">
-    <!-- Sticky Header -->
-    <div style="position: sticky; top: 0; background: rgba(255,255,255,0.95); padding: 20px; text-align: center; font-size: 1.1rem; font-weight: 700; border-bottom: 1px solid #ccc; z-index: 10; box-shadow: 0 8px 20px rgba(0,0,0,0.15);">
-        Student Admission Details &nbsp;&nbsp;
-        <span class="badge male">Male {{male}}</span>
-        <span class="badge female">Female {{female}}</span>
-        <span class="badge total">Total {{total}}</span>
-    </div>
-<style>
+    <style>
         .badge {
             padding: 5px 12px;
             margin: 4px;
@@ -115,74 +105,59 @@
             }
         }
     </style>
-    <style>
-        .college_branch_name{
-            margin: 0 auto;
-            width: 95%;
-        background-color: #c8e4ff;
-        margin-top: 10px;
-        padding: 5px;
-        border-radius: 5px;
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0;
-        .college{
-            font-weight: 700;
-        }
-    }
-    .years_main_box{
-        margin: 0 auto;
+
+<style>
+    .college_grid_card {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1.5fr;
+        gap: 15px;
+        background: #f8f9fa;
+        border-radius: 14px;
+        padding: 18px 22px;
+        margin: 18px auto;
         width: 95%;
-        background-color: #c8e4ff;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+        align-items: center;
+    }
+
+    .college_grid_card .college_title {
+        font-weight: 700;
+        font-size: 1.15rem;
+        color: #2d2d91;
+    }
+
+    .college_grid_card .badge_group {
         display: flex;
-        justify-content: space-evenly;
-        gap: 0px;
-        border-radius: 10px;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        border-top-left-radius: 0;
-        border-top-right-radius: 0;
-        .year_box{
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    @media (max-width: 768px) {
+        .college_grid_card {
+            grid-template-columns: 1fr;
             text-align: center;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            padding: 5px;
-            width: 300px;
-            background-color: white;
-            .year_box2{
-                display: flex;
-                justify-content: space-evenly;
-            }
+        }
+
+        .college_grid_card .badge_group {
+            justify-content: center;
         }
     }
-    
 </style>
-  {% district_taluka_student_details_admin batch_id %}
 
-  {% college_admission_student_detail batch_id %}
+{% for c in college %}
+    <div class="college_grid_card">
+        <!-- College Name -->
+        <div class="college_title">{{ c.name }}</div>
 
-{% for b in branches %}
-<div class="college_branch_name">
-    <div class="college">{{b.college.name}}</div>
-    <div class="branch">({{b.name}})</div>
-    <div>M {{b.male}} </div>
-    <div>F {{b.female}} </div>
-    <div><b>T{{b.total}}</b> </div>
-</div> 
-<div class="years_main_box">
-    {% for y in b.years %}
-    <div class="year_box">
-        <div class="year_box1">{{y.name}}</div>
-        <div class="year_box2">
-            <div>M  {{y.male}}</div>
-            <div>F  {{y.female}}</div>
-            <div>T  {{y.total}}</div>
+        <!-- Gender Counts -->
+        <div class="badge_group">
+            <div class="badge male">Male {{ c.male }}</div>
+            <div class="badge female">Female {{ c.female }}</div>
+            <div class="badge total">Total {{ c.total }}</div>
         </div>
     </div>
-    {% endfor %}
-</div>
-<br>
+{% empty %}
+    <div style="text-align: center; margin-top: 40px;">
+        <strong>No data found for this batch.</strong>
+    </div>
 {% endfor %}
-</div>

@@ -230,10 +230,10 @@
             {% if student_documents.aadhaar_card_front != None and student_documents.pan_card != None %}
                 <div style="display: grid;grid-template-columns: 300px 300px;">
                     <div style="width: 300px;height: 180px; overflow: hidden;border-radius: 10px;">
-                        <img style="width: 100%;object-fit: cover;height: 180px;" src="{{student_documents.aadhaar_card_front.url}}" alt="">
+                        <img style="width: 100%;object-fit: cover;height: 180px;" src="{% if student_documents.aadhaar_card_front %}{{student_documents.aadhaar_card_front.url}}{% endif %}" alt="">
                     </div>
                     <div style="width: 300px;height: 180px;overflow: hidden;border-radius: 10px;">
-                        <img style="width: 300px;height: 180px;object-fit: cover;" src="{{student_documents.pan_card.url}}" alt="">
+                        <img style="width: 300px;height: 180px;object-fit: cover;" src="{% if student_documents.pan_card %}{{student_documents.pan_card.url}}{% endif %}" alt="">
                     </div>
                 </div>
             {% endif %}

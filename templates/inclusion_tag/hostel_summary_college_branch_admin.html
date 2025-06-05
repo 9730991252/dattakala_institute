@@ -1,0 +1,61 @@
+<style>
+  .container {
+    max-width: 80%;
+    margin: 0px auto;
+    padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  .branch_box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    border-radius: 12px;
+    background: linear-gradient(to right, #0080ff8c, #00f7ff8c);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    margin-bottom: 16px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .branch_box:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+  }
+
+  .branch_name {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #343a40;
+    flex: 1;
+  }
+
+  .branch_student_box {
+    display: flex;
+    gap: 20px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #495057;
+    flex-shrink: 0;
+  }
+
+  .branch_student_box div {
+    background-color: #dee2e6;
+    padding: 6px 14px;
+    border-radius: 20px;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+</style>
+
+<div class="container">
+  {% for b in branch %}
+    <div class="branch_box">
+      <div class="branch_name">{{ b.branch.name }} <h style="font-size: small;">({{b.branch.college.name}})</h></div>
+      <div class="branch_student_box">
+        <div>👨 Male: {{ b.male_students }}</div>
+        <div>👩 Female: {{ b.female_students }}</div>
+        <div>👥 Total: {{ b.total_students }}</div>
+      </div>
+    </div>
+  {% endfor %}
+</div>

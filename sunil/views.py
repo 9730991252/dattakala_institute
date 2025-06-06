@@ -133,6 +133,7 @@ def sunil_home(request):
             'admins': Admin_detail.objects.all().order_by('name'),
             'employee_category':Employee_category.objects.all(),
             'employee':Employee.objects.all(),
+            'admin_used_count':admin_used_count.objects.all().first()
         }
         return render(request, 'sunil_home.html', context)
     else:

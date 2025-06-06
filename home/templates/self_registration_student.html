@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block head %}
 {% load static %}
+{% load home_tag %}
 <link rel="shortcut icon" type="jpg" href="{% static 'img/logo.jpg' %}" class="profile-image" >
 
     <meta property="og:type" content="website" />
@@ -555,7 +556,11 @@
           <form method="POST">
             {% csrf_token %}
             <input type="text " name="s_id" value="{{student.id}}" hidden>
-            <button type="submit" name="back_to_student_detail_form" class="btn btn-primary px-5"><i class="fa-solid fa-arrow-left"></i> Back</button>
+            {% check_student_approval student as check_student_approval %}
+            
+            {% if check_student_approval == True %}
+              <button type="submit" name="back_to_student_detail_form" class="btn btn-primary px-5"><i class="fa-solid fa-arrow-left"></i> Back</button>
+            {% endif %}
             {% if student.image %}
               <button type="submit" name="next_to_student_aadhaar_form" class="btn btn-primary px-5">
                   <i class="fa-solid fa-arrow-right"></i> Next

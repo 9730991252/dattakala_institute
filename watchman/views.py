@@ -38,7 +38,6 @@ def watchman_home(request):
             visit_reason = visit_reason,
             meat_to     = meat_to,
             added_by     = employee,
-            book_date_time    = datetime.now()
         )
         messages.success(request, "Appointment Booked Successfully")
         return redirect("watchman_home")

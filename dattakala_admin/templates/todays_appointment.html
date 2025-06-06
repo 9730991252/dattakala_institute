@@ -215,7 +215,7 @@
     <p><strong>Reason:</strong> {{ a.visit_reason }}</p>
     <p>
       {% if a.meeting_status == 0 %}
-      <span class="status-badge status-waiting">Waiting</span>
+      <span class="status-badge status-waiting">Waiting   <h id="timer{{a.id}}">{{a.book_date_time|date:'h:i:s a'}}</h></span>
       <form method="POST" style="margin-top: 12px;">
         {% csrf_token %}
         <input type="hidden" name="appointment_id" value="{{ a.id }}">
@@ -236,6 +236,27 @@
       {% endif %}
     </p>
   </div>
+<script>
+    const start_time = document.getElementById('timer{{a.id}}').innerText;
+    const current_time = new Date();
+
+// Format options
+const options = {
+  hour: '2-digit',
+  minute: '2-digit',
+  second: '2-digit',
+  hour12: true
+};
+
+// Convert to localized time string
+let formatted_time = current_time.toLocaleTimeString('en-IN', options);
+
+// Convert "AM"/"PM" to "a.m."/"p.m."
+formatted_time = formatted_time.replace('AM', 'a.m.').replace('PM', 'p.m.');
+console.log(current_time)
+
+const Waiting_time = start_time - current_time
+</script>
   {% endfor %}
 </div>
 <script>

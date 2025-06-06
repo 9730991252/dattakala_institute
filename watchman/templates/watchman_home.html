@@ -17,7 +17,7 @@ body {
   color: #1f2a44;
   min-height: 100vh;
 }
-
+ 
 /* Form Container */
 .form-container {
   max-width: 720px;
@@ -205,6 +205,8 @@ textarea {
 {% load admin_tag %}
 {% include 'peon_navbar.html' %}
 {% include 'alert.html' %}
+{% todayes_appointment_status_summary request %}
+
 
 
 

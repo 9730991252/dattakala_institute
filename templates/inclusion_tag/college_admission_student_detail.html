@@ -72,6 +72,15 @@
             <div class="badge badge-female">Female {{ c.female }}</div>
             <div class="badge badge-total">Total {{ c.total }}</div>
         </div>
+        <div>
+            <form method="POST">
+                {% csrf_token %}
+                <a href="" id="download_excel_btn{{c.id}}" class="btn btn-primary btn-sm"><i class="fa fa-download" aria-hidden="true"></i> Excel</a>
+                <script>
+                    document.getElementById('download_excel_btn{{c.id}}').href = '/report/download_student_admission_details_college/{{c.id}}/?'+ document.querySelector('input[name="csrfmiddlewaretoken"]').value +''
+                </script>
+            </form>
+        </div>
     </div>
 {% empty %}
     <div style="text-align: center; margin-top: 40px;">

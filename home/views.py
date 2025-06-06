@@ -50,6 +50,7 @@ def self_registration_student(request):
     batch = Batch.objects.filter(start_date__year__lte=date.today().year, end_date__year__gte=date.today().year).first()
     student = ''
     what_to_show_status = 'Basic_Form'
+    what_not_to_show_status = ''
     if 'submit_student_detail'in request.POST:
         registration_qr_count = Self_registration_qr_count.objects.filter().first()
         if registration_qr_count:
@@ -70,17 +71,18 @@ def self_registration_student(request):
                 if student_approval:
                     if student_approval.office_approval_status == 0 and student_approval.account_approval_status == 0 and student_approval.store_approval_status == 0:
                         print('yes')
-                        pass
-                    else:
-                        messages.success(request, 'Your Form Is Successfully Submitted. Please Visit to Office!')
-                        return redirect('/#home')
-            else:
+                        what_to_show_status = 'Detail_Form'
+                    else: 
+                        what_to_show_status = 'Upload_Image'
+                        what_not_to_show_status = 'Detail_Form'
+
+            else:   
                 Student.objects.create(
                     name=name,
                     aadhaar_number=aadhaar_number,
                 )
                 student = Student.objects.filter(aadhaar_number=aadhaar_number).first()
-        what_to_show_status = 'Detail_Form'
+                what_to_show_status = 'Detail_Form'
     if 'submit_student_full_detail'in request.POST:
         # Save in student start
         s_id = request.POST.get('s_id')
@@ -318,6 +320,7 @@ def self_registration_student(request):
         'what_to_show_status':what_to_show_status,
         'student_college_detail':student_college_detail,
         'documents':Student_document.objects.filter(student=student).first() if student else None,
+        'what_not_to_show_status':what_not_to_show_status
     }
     return render(request, 'self_registration_student.html', context)
 

@@ -1,6 +1,6 @@
 from dattakala_institute.includes import *
 from django.utils import timezone
-
+from datetime import datetime, timedelta
 # Create your views here.
 def admin_home(request):
     if request.session.has_key('admin_mobile'):
@@ -48,7 +48,6 @@ def todays_appointment(request):
             return redirect("todays_appointment")
         todays_appointments = []
         for t in Appointment.objects.filter(book_date_time__date=date.today(), meeting_status=0).order_by('order_by', 'meeting_status'):
-            waiting_from = timezone.localtime(t.book_date_time) - timezone.now()
             todays_appointments.append(
                                        {
                                         'id':t.id,
@@ -61,7 +60,6 @@ def todays_appointment(request):
                                         'order_by':t.order_by,
                                         'meat_to':t.meat_to,
                                         'meeting_status':t.meeting_status,
-                                        'waiting_from':waiting_from
                                        } 
                                        )
         context={

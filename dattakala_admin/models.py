@@ -11,7 +11,7 @@ class Appointment(models.Model):
     added_by = models.ForeignKey(Employee, on_delete=models.CASCADE, null=True)
     visitor = models.ForeignKey(Visitor, on_delete=models.CASCADE)
     visit_reason = models.CharField(max_length=100)
-    book_date_time = models.DateTimeField()
+    book_date_time = models.DateTimeField(auto_now_add=True)
     meeting_start_time = models.DateTimeField(null=True)
     meeting_end_time = models.DateTimeField(null=True)
     order_by = models.IntegerField(null=True)

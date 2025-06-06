@@ -263,7 +263,7 @@ def download_student_admission_details_college(request, id):
                 c.student.cast, # Cast
                 c.current_admission_type, # Current Admission Type
                 student_hostel_fee.form_number if student_hostel_fee else '', # Hostel Form Number
-                student_hostel_fee.form_issued_by.name if student_hostel_fee else '', # Hostel Form Issued By
+                student_hostel_fee.form_issued_by.name if student_hostel_fee and student_hostel_fee.form_issued_by else '', # Hostel Form Issued By
                 student_hostel_fee.form_issued_date if student_hostel_fee else '', # Hostel Form Issued Date
                 c.form_number, # College Form Number
                 c.form_issued_by.name, # College Form Issued By

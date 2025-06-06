@@ -17,3 +17,6 @@ class Appointment(models.Model):
     order_by = models.IntegerField(null=True)
     meat_to = models.CharField(max_length=100)
     meeting_status = models.IntegerField(default=0) #0 = waiting, 1 = Running ,2 = completed, 3 = cancelled,
+    
+class admin_used_count(models.Model):
+    count = models.IntegerField(default=0)

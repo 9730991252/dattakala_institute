@@ -6,6 +6,16 @@ def admin_home(request):
     if request.session.has_key('admin_mobile'):
         mobile = request.session['admin_mobile']
         a = Admin_detail.objects.filter(mobile=mobile).first()
+        if not request.session.has_key('sunil_mobile'):
+            used_count = admin_used_count.objects.filter().first()
+            if used_count is None:
+                used_count = admin_used_count()
+                used_count.count = 1
+                used_count.save()
+            else:
+                used_count.count += 1
+                used_count.save()
+        return redirect('/dattakala_admin/todays_appointment/')
         context={
             'a':a,
         }
@@ -24,37 +34,35 @@ def admin_student_hostel(request):
     else:
         return redirect('/')
     
+def admin_notice(request):
+    if request.session.has_key('admin_mobile'):
+        mobile = request.session['admin_mobile']
+        a = Admin_detail.objects.filter(mobile=mobile).first()
+        context={
+            'a':a,
+            'post':Employee_category.objects.all(),
+            'notices':Notice.objects.all(),
+        }
+        return render(request, 'admin_notice.html', context)
+    else:
+        return redirect('/')
+    
 def todays_appointment(request):
     if request.session.has_key('admin_mobile'):
         mobile = request.session['admin_mobile']
         a = Admin_detail.objects.filter(mobile=mobile).first()
-        if 'update_status_running'in request.POST:
-            appointment_id = request.POST.get('appointment_id')
-            Appointment.objects.filter(id=appointment_id).update(
-                meeting_status=1,
-                meeting_start_time=datetime.now()
-                )
-            return redirect("todays_appointment")
-        if 'update_status_cancelled'in request.POST:
-            appointment_id = request.POST.get('appointment_id')
-            Appointment.objects.filter(id=appointment_id).update(meeting_status=3)
-            return redirect("todays_appointment")
-        if 'update_status_completed'in request.POST:
-            appointment_id = request.POST.get('appointment_id')
-            Appointment.objects.filter(id=appointment_id).update(
-                meeting_status=2,
-                meeting_end_time=datetime.now()
-                )
-            return redirect("todays_appointment")
         todays_appointments = []
-        for t in Appointment.objects.filter(book_date_time__date=date.today(), meeting_status=0).order_by('order_by', 'meeting_status'):
+        for t in Appointment.objects.filter(book_date_time__date=date.today()).exclude(meeting_status=3).order_by('-meeting_status', '-order_by'):
             booked_date_time = timezone.localtime(t.book_date_time)
             now = timezone.localtime(timezone.now())  # Make sure both are timezone-aware and in same timezone
 
             waiting_from = now - booked_date_time
+            meeting_started_time = timezone.localtime(t.meeting_start_time)
 
+            meeting_started_time = now - meeting_started_time
 
-            todays_appointments.append(
+            if not t.meeting_status == 2:
+                todays_appointments.append(
                                        {
                                         'id':t.id,
                                         'visitor':t.visitor,
@@ -67,6 +75,8 @@ def todays_appointment(request):
                                         'meat_to':t.meat_to,
                                         'meeting_status':t.meeting_status,
                                         'waiting_from':waiting_from,
+                                        'meeting_started_time':meeting_started_time,
+                                        'meeting_started_total_seconds':meeting_started_time.total_seconds(),
                                         'waiting_from_total_seconds':waiting_from.total_seconds()
                                        } 
                                        )

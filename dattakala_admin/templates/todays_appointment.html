@@ -218,27 +218,6 @@
     <span class="status-badge status-waiting" style="display: flex; gap: 10px;width: fit-content;">
       Waiting  <h id="timer{{a.id}}" style="color:red;"> {{ a.waiting_from }}</h>
     </span>
-    <form method="POST" style="margin-top: 12px; display: none;">
-      {% csrf_token %}
-      <input type="hidden" name="appointment_id" value="{{ a.id }}">
-      <button type="submit" name="update_status_running" class="btn btn-success">Start Meeting</button>
-      <button type="submit" name="update_status_cancelled" class="btn btn-danger">Cancel</button>
-    </form>
-    {% elif a.meeting_status == 1 %}
-    <span class="status-badge status-running">Running</span>
-    <form method="POST" style="margin-top: 12px;">
-      {% csrf_token %}
-      <input type="hidden" name="appointment_id" value="{{ a.id }}">
-      <button type="submit" name="update_status_completed" class="btn btn-success">Mark Completed</button>
-    </form>
-    {% elif a.meeting_status == 2 %}
-    <span class="status-badge status-completed">Completed</span>
-    {% elif a.meeting_status == 3 %}
-    <span class="status-badge status-cancelled">Cancelled</span>
-    {% endif %}
-  </p>
-</div>
-
 <script>
 (function() {
   const totalSeconds = parseInt('{{ a.waiting_from_total_seconds }}');
@@ -261,12 +240,49 @@
   setInterval(countdown, 1000);
 })();
 </script>
+    {% elif a.meeting_status == 1 %}
+    <span class="status-badge status-running">
+      Running   <h id="meeting_started_timer{{a.id}}" style="color:red;"> {{ a.meeting_started_time }}</h>
+    </span>
+
+<script>
+(function() {
+  const totalSeconds = parseInt('{{ a.meeting_started_total_seconds }}');
+  const timerElement = document.getElementById('meeting_started_timer{{ a.id }}');
+  let secondsElapsed = totalSeconds;
+
+  function updateDisplay() {
+    const hrs = Math.floor(secondsElapsed / 3600).toString().padStart(2, '0');
+    const mins = Math.floor((secondsElapsed % 3600) / 60).toString().padStart(2, '0');
+    const secs = (secondsElapsed % 60).toString().padStart(2, '0');
+    timerElement.textContent = `${hrs}:${mins}:${secs}`;
+  }
+
+  function countdown() {
+    secondsElapsed++;
+    updateDisplay();
+  }
+
+  updateDisplay();
+  setInterval(countdown, 1000);
+})();
+</script>
+
+    {% elif a.meeting_status == 2 %}
+    <span class="status-badge status-completed">Completed</span>
+    {% elif a.meeting_status == 3 %}
+    <span class="status-badge status-cancelled">Cancelled</span>
+    {% endif %}
+  </p>
+</div>
+
+
 {% endfor %}
 
 </div>
 <script>
     window.onload = function(e){ 
-        setTimeout("location.reload(true);", 60000);
+        setTimeout("location.reload(true);", 30000);
     }
 </script>
 {% endblock content %}

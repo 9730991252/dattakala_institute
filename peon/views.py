@@ -15,7 +15,6 @@ def peon_home(request):
     if not employee:
         return redirect('office_login')
 
-        return redirect("peon_home")
     if 'update_order_by'in request.POST:
         appointment_id = request.POST.get('appointment_id')
         order_by = request.POST.get('order_by')
@@ -39,9 +38,33 @@ def peon_home(request):
             meeting_end_time=datetime.now()
             )
         return redirect("peon_home")
+    todays_appointments = []
+    for t in Appointment.objects.filter(book_date_time__date=date.today()).exclude(meeting_status=3).order_by('-meeting_status', '-order_by'):
+        booked_date_time = timezone.localtime(t.book_date_time)
+        now = timezone.localtime(timezone.now())  # Make sure both are timezone-aware and in same timezone
+
+        waiting_from = now - booked_date_time
+
+        if not t.meeting_status == 2:
+            todays_appointments.append(
+                                       {
+                                        'id':t.id,
+                                        'visitor':t.visitor,
+                                        'added_by':t.added_by,
+                                        'visit_reason':t.visit_reason,
+                                        'book_date_time':t.book_date_time,
+                                        'meeting_start_time':t.meeting_start_time,
+                                        'meeting_end_time':t.meeting_end_time,
+                                        'order_by':t.order_by,
+                                        'meat_to':t.meat_to,
+                                        'meeting_status':t.meeting_status,
+                                        'waiting_from':waiting_from,
+                                        'waiting_from_total_seconds':waiting_from.total_seconds()
+                                       } 
+                                       )
     context = {
         "employee": employee,
-        "todays_appointments": Appointment.objects.filter(book_date_time__date=date.today()).exclude(meeting_status=3).exclude(meeting_status=2).order_by('-order_by')
+        "todays_appointments":todays_appointments
         }
     return render(request, "peon_home.html", context)
 

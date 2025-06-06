@@ -48,6 +48,12 @@ def todays_appointment(request):
             return redirect("todays_appointment")
         todays_appointments = []
         for t in Appointment.objects.filter(book_date_time__date=date.today(), meeting_status=0).order_by('order_by', 'meeting_status'):
+            booked_date_time = timezone.localtime(t.book_date_time)
+            now = timezone.localtime(timezone.now())  # Make sure both are timezone-aware and in same timezone
+
+            waiting_from = now - booked_date_time
+
+
             todays_appointments.append(
                                        {
                                         'id':t.id,
@@ -60,6 +66,8 @@ def todays_appointment(request):
                                         'order_by':t.order_by,
                                         'meat_to':t.meat_to,
                                         'meeting_status':t.meeting_status,
+                                        'waiting_from':waiting_from,
+                                        'waiting_from_total_seconds':waiting_from.total_seconds()
                                        } 
                                        )
         context={

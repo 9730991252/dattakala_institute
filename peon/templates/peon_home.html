@@ -207,11 +207,11 @@
     <p>{{ a.visit_reason }}</p>
     <p>
       {% if a.meeting_status == 0 %}
-      <p class="text-warning">
-        Waiting     
+      <p class="text-warning" style="display: flex; gap: 10px;width: fit-content;" >
+        Waiting <h id="timer{{a.id}}" style="color:red;"> {{ a.waiting_from }}</h>
         <form method="POST" style="display: flex;justify-content: space-between;">
           <input type="hidden" name="appointment_id" value="{{ a.id }}">
-          <button type="submit" name="update_status_running" class="btn btn-success btn-sm">Running</button>
+          <button type="submit" name="update_status_running" class="btn btn-success btn-sm">Start Meeting</button>
           <button type="submit" name="update_status_cancelled" class="btn btn-danger btn-sm">Cancelled</button>
         </form>
       </p>
@@ -219,7 +219,7 @@
       <p class="">Running</p>
         <form method="POST">
           <input type="hidden" name="appointment_id" value="{{ a.id }}">
-          <button type="submit" name="update_status_completed" class="btn btn-success btn-sm">Completed</button>
+          <button type="submit" name="update_status_completed" class="btn btn-warning btn-sm">End Meeting</button>
         </form>
           {% elif a.meeting_status == 2 %}
           <p class="text-success">completed</p>
@@ -238,6 +238,29 @@
       </form>
     </div>
   </div>
+  
+<script>
+(function() {
+  const totalSeconds = parseInt('{{ a.waiting_from_total_seconds }}');
+  const timerElement = document.getElementById('timer{{ a.id }}');
+  let secondsElapsed = totalSeconds;
+
+  function updateDisplay() {
+    const hrs = Math.floor(secondsElapsed / 3600).toString().padStart(2, '0');
+    const mins = Math.floor((secondsElapsed % 3600) / 60).toString().padStart(2, '0');
+    const secs = (secondsElapsed % 60).toString().padStart(2, '0');
+    timerElement.textContent = `${hrs}:${mins}:${secs}`;
+  }
+
+  function countdown() {
+    secondsElapsed++;
+    updateDisplay();
+  }
+
+  updateDisplay();
+  setInterval(countdown, 1000);
+})();
+</script>
   {% endfor %}
 </div>
 

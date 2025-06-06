@@ -41,7 +41,6 @@ def admin_notice(request):
         context={
             'a':a,
             'post':Employee_category.objects.all(),
-            'notices':Notice.objects.all(),
         }
         return render(request, 'admin_notice.html', context)
     else:
